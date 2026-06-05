@@ -1,0 +1,45 @@
+<div class="card">
+  <!-- CARD HEADER -->
+  <div class="card-header d-flex justify-content-center is-clickable" (click)="openPageDetail(rootItem)">
+    <!-- COURSE IMAGE -->
+    <div class="course-image">
+      <img [src]="getActHeaderImg()" alt="course image" />
+    </div>
+
+    <!-- COURSE TAGS -->
+    @if (courseData.extraData[rootItem.activityId] && courseData.extraData[rootItem.activityId].tags.length > 0) {
+      <cmp-course-tags class="tags" [courseData]="courseData" [rootItem]="rootItem" [optionsObj]="{ isShowCatalog: true, isShowDefaults: true, isShowSpecials: true }"></cmp-course-tags>
+    }
+
+    <!-- SET EXPAND ICON -->
+    <div class="set-expand" [inlineSVG]="'assets/img/courses/expand_set.svg'" alt="Expand set"></div>
+    @if (isRequested) {
+      <div class="item-requested" [ngbTooltip]="'CATALOG_ACTIVITY_REQUEST_TOOLTIP' | translate" [inlineSVG]="'assets/img/header/mail.svg'" alt="Requested"></div>
+    }
+    @if (rootItem.accessId != 0) {
+      <div class="item-assigned" [ngbTooltip]="'CATALOG_ACTIVITY_ASSIGNED_TOOLTIP' | translate" [inlineSVG]="'assets/img/general/check.svg'" alt="Requested"></div>
+    }
+  </div>
+
+  <!-- CARD BODY FOR LINK -->
+  @if (environmentVars.isLinksAsSpecialCards && isActivityLink()) {
+    <div class="card-body link-body">
+      <h2 class="item-name" (click)="openPageDetail(rootItem)" [ngbTooltip]="courseData.activities[rootItem.activityId].localName" [openDelay]="500" [innerHTML]="courseData.activities[rootItem.activityId].localNameSafe"></h2>
+      <div class="play-section">
+        <button class="btn btn-secondary" (click)="gotoLinkActivity()">
+          {{ 'COURSES_LINK_BUTTON' | translate }}
+          <span [inlineSVG]="'assets/img/general/arrow-right.svg'"></span>
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- CARD BODY FOR NON-LINK -->
+  @if (!environmentVars.isLinksAsSpecialCards || !isActivityLink()) {
+    <div class="card-body">
+      <h2 class="item-name" (click)="openPageDetail(rootItem)" [ngbTooltip]="courseData.activities[rootItem.activityId].localName" [openDelay]="500" [innerHTML]="courseData.activities[rootItem.activityId].localNameSafe"></h2>
+      <!-- BASIC DATA - TYPE, LENGTH, DATES -->
+      <cmp-act-data-line class="act-data" [courseData]="courseData" [rootItem]="rootItem"></cmp-act-data-line>
+    </div>
+  }
+</div>

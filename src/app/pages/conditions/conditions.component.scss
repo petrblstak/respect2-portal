@@ -1,0 +1,11 @@
+@use '../../../assets/scss/theme-config';
+
+.conditions-page {
+  max-width: 798px;
+  padding: 0 24px;
+  margin: 80px auto 64px;
+
+  td {
+    padding: 5px 20px 5px 0;
+  }
+}

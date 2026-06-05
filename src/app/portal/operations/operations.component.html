@@ -1,0 +1,95 @@
+<div class="operations-page container">
+  <div class="row g-0 justify-content-center">
+    @if (optype === '') {
+      <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+        <h3 class="mt-4 mb-4 text-center" [innerHTML]="'OPERATIONS_NO_OP' | translate"></h3>
+      </div>
+    }
+
+    @if (optype === 'teacherRegistration' || optype === 'publicRegistration') {
+      <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+        <h2 class="mt-4 mb-4 text-center text-blue" [innerHTML]="'REGISTER_ACCOUNT_CREATED_HEADER' | translate"></h2>
+        <div class="mt-5 mb-4 text-center">
+          @if (!isRegistred) {
+            <div class="hb-normal text-center" [innerHTML]="'REGISTER_ACCOUNT_CREATED_WAIT' | translate"></div>
+          }
+          @if (isRegistred) {
+            <div class="hb-normal text-center mb-5" [innerHTML]="'REGISTER_ACCOUNT_CREATED_TEXT' | translate"></div>
+          }
+          @if (isRegistred) {
+            <button class="btn btn-primary" routerLink="/portal/auth" [innerHTML]="'LOGIN_HEADER' | translate"></button>
+          }
+        </div>
+      </div>
+    }
+
+    @if (optype === 'emailChange') {
+      <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+        <h2 class="mt-4 mb-4 text-center text-blue" [innerHTML]="'ACCOUNT_EMAIL_CHANGE' | translate"></h2>
+        <div class="mt-5 mb-4 text-center">
+          @if (!isEmailChanged) {
+            <div class="hb-normal text-center" [innerHTML]="'ACCOUNT_EMAIL_CHANGE_PROCESS' | translate"></div>
+          }
+          @if (isEmailChanged) {
+            <div class="hb-normal text-center mb-5" [innerHTML]="'ACCOUNT_EMAIL_CHANGE_SUCCESS_INFO' | translate"></div>
+          }
+          <!-- <button class="btn btn-primary" routerLink="/portal/auth" *ngIf="isRegistred"
+        [innerHTML]="'LOGIN_HEADER' | translate"></button> -->
+        </div>
+      </div>
+    }
+
+    @if (optype === 'pwdReset' || optype === 'firstPass') {
+      <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+        @if (optype === 'pwdReset') {
+          <h2 class="mt-4 mb-4 text-center text-blue" [innerHTML]="'FORGOT_HEADER' | translate"></h2>
+        }
+        @if (optype === 'firstPass') {
+          <h2 class="mt-4 mb-4 text-center text-blue" [innerHTML]="'FIRST_PASS_HEADER' | translate"></h2>
+        }
+        @if (!passChange.isNewPass) {
+          <div>
+            <div class="mb-4 text-center">
+              <div class="text-center mb-3" [innerHTML]="'FORGOT_SET_NEW_PASSWORD' | translate"></div>
+            </div>
+            <form [formGroup]="forgotPassForm" (ngSubmit)="onSubmitPassword()">
+              <div class="mb-4 input-with-icon">
+                <label class="text-16" [innerHTML]="'REGISTER_FIELD_PASSWORD' | translate"></label>
+                <div class="mb-4 input-with-icon">
+                  <input id="id-new-pass-input" [type]="passChange.isNewPassText ? 'text' : 'password'" class="form-control" formControlName="password" />
+                  <div
+                    [inlineSVG]="'assets/img/register/eye.svg'"
+                    class="input-icon"
+                    (click)="passChange.isNewPassText = !passChange.isNewPassText"
+                    [ngClass]="{ 'icon-active': passChange.isNewPassText }"></div>
+                </div>
+                @if (!forgotPassForm.get('password')?.valid && forgotPassForm.get('password')?.touched) {
+                  <div class="form-error" [innerHTML]="'REGISTER_FIELD_ERROR_NAME' | translate"></div>
+                }
+                @if (passChange.passError != null) {
+                  <div class="form-error">{{ passChange.passError }}</div>
+                }
+              </div>
+              <div>
+                <cmp-psw-strength-meter [pswStrengthPolicy]="passChange.passPolicy" [pswInputId]="'id-new-pass-input'"></cmp-psw-strength-meter>
+              </div>
+              <div class="d-flex justify-content-center mt-4">
+                <button class="btn btn-primary" type="submit" [innerHTML]="'GENERAL_SEND' | translate"></button>
+              </div>
+            </form>
+          </div>
+        }
+        @if (passChange.isNewPass) {
+          <div>
+            <div class="mb-4 text-center">
+              <div class="text-center mb-3" [innerHTML]="'FORGOT_SET_NEW_PASSWORD_OK' | translate"></div>
+            </div>
+            <div class="d-flex justify-content-center mt-4">
+              <button class="btn btn-primary" routerLink="/portal/auth" [innerHTML]="'LOGIN_HEADER' | translate"></button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

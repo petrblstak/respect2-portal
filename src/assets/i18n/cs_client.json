@@ -1,0 +1,20 @@
+{
+  "HOME_COURSE_INFO_TEXT1_HEAD": "Moje studovna",
+  "HOME_COURSE_INFO_TEXT2_HEAD": "Katalog kurzů",
+  "HOME_COURSE_INFO_TEXT3_HEAD": "Jak na studium?",
+  "NAVIGATION_RESULTS_NV": "Výsledky NV",
+  "RESULTS_NV_HEADER": "Výsledky NV",
+  "RESULTS_NV_SELECT_ALL": "Vše",
+  "RESULTS_NV_TOTAL_SUM": "Celkem",
+  "RESULTS_NV_ERROR_NO_USER": "Není přihlášený žádný uživatel.",
+  "RESULTS_NV_ERROR_NO_ACTIVITY_PARAM": "Není nastavený parametr '{{actParam}}' pro aktivitu.",
+  "RESULTS_NV_ERROR_NO_USER_PARAM": "Není nastavený parametr '{{usrParam}}' pro uživatele.",
+  "RESULTS_NV_ERROR_NO_USR_PARAM_DATA": "Uživatelský parametr '{{usrParam}}' neobsahuje žádná data.",
+  "RESULTS_NV_ERROR_FINAL": "Tento report nelze zobrazit",
+  "RESULTS_NV_TABLE_HEAD_COMPLETED": "Datum splnění",
+  "RESULTS_NV_TABLE_HEAD_ACTIVITY": "Název aktivity",
+  "RESULTS_NV_TABLE_HEAD_TIME": "Časová dotace",
+  "RESULTS_NV_DATA_LOADING": "Načítání dat...",
+  "RESULTS_NV_NO_DATA_ALL": "Nemáte žádné splněné aktivity.",
+  "RESULTS_NV_NO_DATA_YEAR": "Nemáte žádné splněné aktivity ve vybraném roce."
+}

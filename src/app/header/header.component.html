@@ -1,0 +1,190 @@
+<section class="hb-app-header">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid set-min-height">
+      <a routerLink="/" class="navbar-brand" (click)="isMenuCollapsed = true">
+        <img [src]="'assets/img/header/logo.png'" class="header-logo-full" />
+      </a>
+
+      <div class="header-left-part d-flex">
+        <div class="collapse navbar-collapse">
+          <ul class="navbar-nav align-items-start">
+            <!-- <li class="nav-item lang-select" *ngIf="!cmpUser.user">
+              <div
+                class="lang-item"
+                (click)="changeLanguage(langId)"
+                *ngFor="let langId of langsAvailable"
+                [ngClass]="{ selected: currentLang.langFileKey === langSetting.LANG_CONFIG[langId].langFileKey }">
+                {{ langSetting.LANG_CONFIG[langId].langCode }}
+              </div>
+              <div ngbDropdown class="d-inline-block header-lang-dropdown">
+                <div class="d-flex align-items-center" id="dropdownBasic1" ngbDropdownToggle aria-expanded="false">
+                  <img [src]="'assets/img/header/' + currentLang.langFileKey + '.png'" alt="mdo" width="21" height="16" />
+                  <span class="nav-link ms-2">{{ currentLang.langCode }}</span>
+                </div>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="show-selected">
+                  <button
+                    ngbDropdownItem
+                    (click)="changeLanguage(langId)"
+                    *ngFor="let langId of langSetting.LANGS_AVAILABLE"
+                    [ngClass]="{ selected: currentLang.langFileKey === langSetting.LANG_CONFIG[langId].langFileKey }">
+                    <img src="assets/img/courses/check.png" alt="course image" *ngIf="currentLang.langFileKey === langSetting.LANG_CONFIG[langId].langFileKey" />
+                    {{ langSetting.LANG_CONFIG[langId].langName }}
+                  </button>
+                </div>
+              </div>
+            </li> -->
+            @if (environment.redirectFromHome === null) {
+              <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <a class="nav-link" routerLink="/" (click)="isMenuCollapsed = true">{{ 'NAVIGATION_HOME' | translate }}</a>
+              </li>
+            }
+            @if (cmpUser.user && environment.isDashboardAllowed) {
+              <li class="nav-item ms-0" routerLinkActive="active">
+                <a class="nav-link" routerLink="/portal/dash" (click)="isMenuCollapsed = true">{{ 'NAVIGATION_DASH' | translate }}</a>
+              </li>
+            }
+            @if (cmpUser.user) {
+              <li class="nav-item" routerLinkActive="active">
+                <a class="nav-link" routerLink="/portal/courses" (click)="isMenuCollapsed = true">{{ 'NAVIGATION_COURSES' | translate }}</a>
+              </li>
+            }
+            @if (cmpUser.user && environment.isCatalogAllowed) {
+              <li class="nav-item" routerLinkActive="active">
+                <a class="nav-link" routerLink="/portal/catalog" (click)="isMenuCollapsed = true">{{ 'NAVIGATION_CATALOG' | translate }}</a>
+              </li>
+            }
+            <li class="nav-item" routerLinkActive="active" *ngIf="cmpUser.user">
+              <a class="nav-link" routerLink="/pages/help" (click)="isMenuCollapsed = true">
+                {{ 'NAVIGATION_STUDY' | translate }}
+              </a>
+            </li>
+            <!-- <li class="nav-item" *ngIf="cmpUser.user">
+      <a class="nav-link" [href]="environment.remoteServer">LMS</a>
+    </li> -->
+          </ul>
+        </div>
+      </div>
+
+      <div class="header-right-part">
+        <ul class="navbar-nav align-items-center flex-row">
+          <!-- <li class="nav-item lang-select d-lg-none" *ngIf="!cmpUser.user">
+    <div class="lang-item" (click)="changeLanguage(langId)" *ngFor="let langId of langsAvailable"
+      [ngClass]="{'selected': currentLang.langFileKey === langSetting.LANG_CONFIG[langId].langFileKey}">
+      {{ langSetting.LANG_CONFIG[langId].langCode}}
+    </div>
+  </li> -->
+          @if (!cmpUser.user && actRoute !== '/portal/auth' && actRoute !== '/portal/auth-form') {
+            <li class="nav-item">
+              <button
+                class="btn btn-secondary"
+                [routerLink]="actRoute === '/portal/forgot-form' ? '/portal/auth-form' : '/portal/auth'"
+                [innerHtml]="'NAVIGATION_LOGIN' | translate"
+                (click)="isMenuCollapsed = true"></button>
+            </li>
+          }
+          @if (!cmpUser.user && (actRoute === '/portal/auth' || actRoute === '/portal/auth-form') && environment.isRegistrationOpen) {
+            <li class="nav-item">
+              <button class="btn btn-secondary" routerLink="/portal/register" [innerHtml]="'NAVIGATION_REGISTER' | translate" (click)="isMenuCollapsed = true"></button>
+            </li>
+          }
+          @if (cmpUser.user) {
+            <li class="nav-item ms-0" routerLinkActive="active">
+              <a class="nav-link header-account" routerLink="/portal/report-nv" (click)="isMenuCollapsed = true">
+                <div [inlineSVG]="'assets/img/courses/results.svg'" class="header-account-ico svg-icon"></div>
+                <span class="header-account-text">{{ 'NAVIGATION_RESULTS_NV' | translate }}</span>
+              </a>
+            </li>
+          }
+          <!-- <li class="nav-item" routerLinkActive="active" *ngIf="cmpUser.user">
+  <a class="nav-link" routerLink="/portal/account" (click)="isMenuCollapsed = true">
+  {{ 'NAVIGATION_ACCOUNT' | translate }}</a>
+</li> -->
+          @if (cmpUser.user && (requestsControl.isReqestAccessAvailable || requestsControl.isRequestActivityAvailable)) {
+            <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link header-account" routerLink="/portal/requests" (click)="isMenuCollapsed = true">
+                <div [inlineSVG]="'assets/img/header/mail.svg'" class="header-account-ico"></div>
+                <span class="header-account-text">{{ 'NAVIGATION_REQUESTS' | translate }}</span>
+              </a>
+            </li>
+          }
+          <!-- <li class="nav-item" routerLinkActive="active" *ngIf="cmpUser.user">
+<a class="nav-link header-account" routerLink="/portal/account" (click)="isMenuCollapsed = true">
+  <div [inlineSVG]="'assets/img/header/user.svg'" class="header-account-ico"></div>
+  <span class="header-account-text">{{ 'NAVIGATION_ACCOUNT' | translate }}</span>
+</a>
+</li> -->
+
+          @if (cmpUser.user) {
+            <li class="nav-item" routerLinkActive="active">
+              <div ngbDropdown class="d-inline-block" #drop="ngbDropdown" (mouseenter)="over(drop)" (mouseleave)="out(drop)" (click)="over(drop)">
+                <div class="nav-link header-account" id="dropdownBasic2" ngbDropdownToggle aria-expanded="false">
+                  <div [inlineSVG]="'assets/img/header/user.svg'" class="header-account-ico"></div>
+                  <span class="header-account-text">{{ 'NAVIGATION_ACCOUNT' | translate }}</span>
+                </div>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+                  <div class="dropdown-header mb-2">
+                    <div>{{ cmpUser.user.email }}</div>
+                    <!-- <div class="hb-small" *ngIf="cmpUser.userType === 'teacher'">{{ 'REGISTER_ROLE_TEACHER' | translate
+          }}
+        </div>
+        <div class="hb-small" *ngIf="cmpUser.userType === 'student'">{{ 'REGISTER_ROLE_STUDENT' | translate
+          }}
+        </div>
+        <div class="hb-small" *ngIf="cmpUser.userType === 'public'">{{ 'REGISTER_ROLE_PUBLIC' | translate }}
+        </div> -->
+                  </div>
+                  @if (isUserAdmin) {
+                    <a class="hb-normal" ngbDropdownItem (click)="openLms()" [innerHtml]="'NAVIGATION_LMS' | translate" (click)="isMenuCollapsed = true"></a>
+                  }
+                  <a class="hb-normal" ngbDropdownItem routerLink="/portal/account" [innerHtml]="'NAVIGATION_SETTINGS' | translate" (click)="isMenuCollapsed = true"></a>
+                  <a class="hb-normal" ngbDropdownItem [innerHtml]="'NAVIGATION_LOGOUT' | translate" (click)="logOut()"></a>
+                </div>
+              </div>
+            </li>
+          }
+        </ul>
+        @if (cmpUser.user) {
+          <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" (click)="isMenuCollapsed = !isMenuCollapsed">
+            <span [inlineSVG]="'assets/img/header/hamburger.svg'" class="navbar-toggler-icon" [ngClass]="{ 'd-none': !isMenuCollapsed }"></span>
+            <span [inlineSVG]="'assets/img/general/close.svg'" class="navbar-toggler-icon" [ngClass]="{ 'd-none': isMenuCollapsed }"></span>
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="container-fluid d-lg-none mobile-menu">
+      <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse mobile-navbar" id="navbarSupportedContent">
+        <ul class="navbar-nav align-items-center">
+          @if (environment.redirectFromHome === null) {
+            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <a class="nav-link" routerLink="/" (click)="isMenuCollapsed = true">{{ 'NAVIGATION_HOME' | translate }}</a>
+            </li>
+          }
+          @if (cmpUser.user && environment.isDashboardAllowed) {
+            <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link" routerLink="/portal/dash" (click)="isMenuCollapsed = true">{{ 'NAVIGATION_DASH' | translate }}</a>
+            </li>
+          }
+          @if (cmpUser.user) {
+            <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link" routerLink="/portal/courses" (click)="isMenuCollapsed = true">{{ 'NAVIGATION_COURSES' | translate }}</a>
+            </li>
+          }
+          @if (cmpUser.user && environment.isCatalogAllowed) {
+            <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link" routerLink="/portal/catalog" (click)="isMenuCollapsed = true">{{ 'NAVIGATION_CATALOG' | translate }}</a>
+            </li>
+          }
+          <li class="nav-item" routerLinkActive="active" *ngIf="cmpUser.user">
+            <a class="nav-link" routerLink="/pages/help" (click)="isMenuCollapsed = true">
+              {{ 'NAVIGATION_STUDY' | translate }}
+            </a>
+          </li>
+          <!-- <li class="nav-item" *ngIf="cmpUser.user">
+    <a class="nav-link" [href]="environment.remoteServer">LMS</a>
+  </li> -->
+        </ul>
+      </div>
+    </div>
+  </nav>
+</section>

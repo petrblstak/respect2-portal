@@ -1,0 +1,301 @@
+@use '../../../../assets/scss/theme-config' as base;
+:host {
+  display: block;
+  width: 100%;
+}
+.card {
+  border: none;
+  border-radius: base.$card-border-radius;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: base.$card-shadow;
+  min-height: 180px;
+  background-color: base.$card-bg;
+
+  .card-top {
+    display: flex;
+    gap: 20px;
+    min-height: 180px;
+    height: 100%;
+
+    .card-header {
+      width: 220px;
+      max-width: 220px;
+      min-width: 220px;
+      height: 180px;
+      padding: 10px 0 10px 10px;
+      border-bottom: none;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      background-color: base.$card-bg;
+
+      .course-image {
+        min-width: 100%;
+        min-height: 160px;
+        object-fit: cover;
+        border-radius: base.$card-image-border-radius;
+      }
+
+      .set-expand {
+        position: absolute;
+        top: 20px;
+        right: 10px;
+        display: none;
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+        padding: 2px 4px 4px 2px;
+      }
+
+      &:hover {
+        .set-expand {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .card-body {
+    padding: 20px 20px 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: auto;
+    min-height: 180px;
+    width: 100%;
+
+    .top-part {
+      display: flex;
+      justify-content: space-between;
+      .left-part {
+        padding-right: 20px;
+        .act-name {
+          margin-bottom: 10px;
+          max-height: 50px;
+          overflow: hidden;
+          cursor: pointer;
+          display: -webkit-box;
+          line-clamp: 2;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .right-part {
+        width: 180px;
+        min-width: 180px;
+      }
+      // display: flex;
+      // flex-direction: column;
+    }
+
+    .middle-part {
+      .tags {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+
+      .act-data {
+        margin-bottom: 10px;
+      }
+    }
+
+    .bottom-part {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-grow: 1;
+      .left-part {
+        .expand-act-button {
+          margin-top: auto;
+          height: 24px;
+          display: flex;
+          padding: 0;
+          align-items: center;
+          border: none;
+        }
+      }
+      .right-part {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .btn-play {
+          width: 180px;
+        }
+
+        .btn-link {
+          text-transform: none;
+        }
+
+        .course-not-playable {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 6px;
+          padding-left: 12px;
+          height: 44px;
+          color: base.$general-text-color-disabled;
+          cursor: help;
+          user-select: none;
+
+          .status-text {
+            white-space: nowrap;
+          }
+
+          .info-icon {
+            font-size: 20px;
+            color: base.$general-text-color-disabled;
+          }
+        }
+      }
+
+      // .play-section {
+      // margin-top: auto;
+      // display: flex;
+      // gap: 10px;
+      // align-items: center;
+
+      // .btn-results .btn-outline-secondary {
+      //   padding: 0 7px;
+      // }
+
+      // .btn {
+      //   width: 100%;
+      // }
+
+      // .btn-play {
+      //   min-width: calc(100% - 52px);
+      // }
+
+      // &.with-results {
+      //   .btn {
+      //     width: auto;
+      //   }
+      // }
+      // }
+    }
+  }
+
+  .card-bottom {
+    .card-line {
+      min-height: 112px;
+      padding: 20px;
+      border-top: 1px solid base.$divider-color;
+    }
+  }
+
+  &.display-in-detail {
+    min-height: auto;
+    .card-top .card-body {
+      height: 133px;
+      padding: 25px 20px 20px 20px;
+
+      .data-part {
+        .act-name {
+          margin-bottom: 4px;
+        }
+        .act-data {
+          margin: 0 0 10px;
+        }
+      }
+    }
+    .card-bottom {
+      border-top: 1px solid base.$divider-color;
+    }
+  }
+}
+
+// @media only screen and (max-width: 1199px) {
+//   .card {
+//     .card-bottom .card-line {
+//       flex-direction: column;
+//       align-items: flex-start;
+//     }
+//   }
+// }
+
+@media only screen and (max-width: 991px) {
+  .card {
+    // .card-body {
+    //   height: auto;
+    //   min-height: 180px;
+    // }
+    .card-bottom .card-line {
+      height: auto;
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .card {
+    .card-top {
+      gap: 0;
+      flex-direction: column;
+      .card-header {
+        width: 100%;
+        .course-image {
+          max-width: 300px;
+        }
+      }
+    }
+    .card-body {
+      padding: 20px;
+      .top-part {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 10px;
+      }
+      // flex-direction: column-reverse;
+      // .action-part {
+      //   align-items: flex-start;
+      //   .play-section {
+      //     margin: 16px 0;
+      //   }
+      // }
+    }
+
+    // &.display-in-detail {
+    //   .card-top .card-body {
+    //     height: auto;
+    //     // flex-direction: column;
+
+    //     // .action-part {
+    //     //   margin-top: 16px;
+    //     //   .play-section {
+    //     //     margin-bottom: 0;
+    //     //   }
+    //     // }
+    //   }
+    // }
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .card {
+    .card-body {
+      .card-line {
+        min-height: 64px;
+        // height: auto;
+        padding: 5px 20px;
+        // flex-direction: column;
+
+        .btn {
+          margin: 10px auto;
+        }
+
+        .act-name {
+          padding-right: 0;
+        }
+      }
+    }
+  }
+}

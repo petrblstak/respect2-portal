@@ -1,0 +1,49 @@
+<div class="modal-content rating-modal">
+  <div class="modal-header">
+    @if (!ratingSettings.mandatory) {
+      <i class="fas fa-times close-icon" (click)="cancel()"></i>
+    }
+  </div>
+  <div class="modal-body">
+    <div class="header-wrapper">
+      <h2 [innerHtml]="'RATING_MODAL_HEADER' | translate: { actName: activityObj.localName }"></h2>
+      <h3 class="mb-0">{{ ratingQuestion }}</h3>
+      @if (ratingSettings.numberRating) {
+        <div class="stars-container">
+          <div class="stars-block">
+            @for (star of starArray; track $index) {
+              <img class="star-item" [src]="'assets/img/courses/stars/star_' + (star === 0 ? 'empty' : 'full') + '.png'" />
+            }
+          </div>
+          <!-- Interactive star buttons for user selection -->
+          <div class="interactive-stars">
+            <button class="star-btn" (click)="setRating(2)" (mouseover)="setRatingTemp(2)" (mouseleave)="setRatingTemp(userRating)">
+              <span class="visually-hidden">1 star</span>
+            </button>
+            <button class="star-btn" (click)="setRating(4)" (mouseover)="setRatingTemp(4)" (mouseleave)="setRatingTemp(userRating)">
+              <span class="visually-hidden">2 stars</span>
+            </button>
+            <button class="star-btn" (click)="setRating(6)" (mouseover)="setRatingTemp(6)" (mouseleave)="setRatingTemp(userRating)">
+              <span class="visually-hidden">3 stars</span>
+            </button>
+            <button class="star-btn" (click)="setRating(8)" (mouseover)="setRatingTemp(8)" (mouseleave)="setRatingTemp(userRating)">
+              <span class="visually-hidden">4 stars</span>
+            </button>
+            <button class="star-btn" (click)="setRating(10)" (mouseover)="setRatingTemp(10)" (mouseleave)="setRatingTemp(userRating)">
+              <span class="visually-hidden">5 stars</span>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+    @if (ratingSettings.textRating) {
+      <textarea class="comment-area" [(ngModel)]="userRatingText" placeholder="{{ 'RATING_MODAL_RATING_TEXT' | translate }}"></textarea>
+    }
+    @if (errors) {
+      <div class="modal-errors text-red" [innerHtml]="errors"></div>
+    }
+    <button class="btn btn-primary" (click)="submitRating()">
+      {{ 'RATING_MODAL_CONFIRM' | translate }}
+    </button>
+  </div>
+</div>

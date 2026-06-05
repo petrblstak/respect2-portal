@@ -1,0 +1,510 @@
+@use '../../../assets/scss/theme-config';
+
+.course-preparing-overlay {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.4);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+
+  .loading-message {
+    margin: auto;
+    color: black;
+    font-size: 26px;
+    border-radius: 30px;
+    background-color: white;
+    padding: 20px;
+  }
+}
+
+.more-filters-btn {
+  display: none;
+}
+
+.courses-top {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  max-width: theme-config.$container-max-width;
+  margin: 50px auto 0;
+  padding: 0 40px;
+
+  h1 {
+    margin: 0;
+  }
+
+  &.no-filter {
+    max-width: theme-config.$container-max-width-no-filter;
+  }
+}
+
+.page-body {
+  max-width: theme-config.$container-max-width;
+  margin: 0 auto;
+  display: flex;
+  gap: 40px;
+  padding: 0 40px;
+  position: relative;
+
+  &.no-filter {
+    max-width: theme-config.$container-max-width-no-filter;
+  }
+
+  &.no-banner {
+    padding: 0 40px 40px;
+  }
+
+  .filter-block {
+    width: 280px;
+    margin-top: 40px;
+    min-width: 200px;
+
+    .filter-section {
+      border-top: 1px solid theme-config.$divider-color;
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 120%; /* 16.8px */
+        text-transform: uppercase;
+        padding: 10px 0 8px;
+        cursor: pointer;
+
+        &:hover h3 {
+          color: theme-config.$general-text-color-hover;
+        }
+      }
+
+      .section-options {
+        display: none;
+        padding-bottom: 20px;
+
+        &.is-visible {
+          display: block;
+        }
+      }
+    }
+
+    .cancel-all {
+      padding: 3px 0 5px;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 120%;
+      color: theme-config.$general-icons-color-disabled;
+      cursor: default;
+
+      &.is-active {
+        color: theme-config.$general-icons-color;
+        cursor: pointer;
+
+        &:hover {
+          color: theme-config.$general-icons-color-hover;
+        }
+      }
+    }
+  }
+
+  .data-block {
+    max-width: 1200px;
+    min-width: 672px;
+    width: 100%;
+
+    .categories {
+      max-width: theme-config.$content-max-width;
+      margin: 40px auto 0;
+      padding-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-bottom: 2px solid theme-config.$divider-color;
+      .cat-item {
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%;
+        color: theme-config.$category-cat-text;
+        background-color: theme-config.$category-cat-bg;
+        border: 1px solid theme-config.$category-cat-border;
+        padding: 17px 24px;
+        border-radius: theme-config.$category-cat-border-radius;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 1px 1px 6px 0px rgba(0, 0, 0, 0.15);
+
+        &.calendar-item {
+          background-color: transparent;
+          padding: 13px 23px;
+          border: 1px solid theme-config.$calendar-item-border;
+          background-color: theme-config.$calendar-item-bg;
+
+          &.is-active {
+            border: 2px solid theme-config.$calendar-active-border;
+          }
+        }
+
+        &:hover {
+          border-color: theme-config.$category-cat-hover-border;
+          color: theme-config.$category-cat-hover-text;
+          background-color: theme-config.$category-cat-hover-bg;
+        }
+
+        &.is-active {
+          border-color: theme-config.$category-cat-active-border;
+          color: theme-config.$category-cat-active-text;
+          background-color: theme-config.$category-cat-active-bg;
+        }
+      }
+    }
+
+    .tag-section {
+      max-width: theme-config.$content-max-width;
+      margin: 20px auto 40px;
+
+      &.no-cats-gap {
+        margin: 40px auto;
+      }
+
+      .sub-cat-button {
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%;
+        padding: 9px 19px;
+        border-radius: theme-config.$subcategory-border-radius;
+        background-color: theme-config.$subcategory-bg;
+        border: 2px solid theme-config.$subcategory-border;
+        color: theme-config.$subcategory-text;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        box-shadow: 1px 1px 6px 0px rgba(0, 0, 0, 0.15);
+
+        &:hover {
+          color: theme-config.$subcategory-hover-text;
+          border-color: theme-config.$subcategory-hover-border;
+          background-color: theme-config.$subcategory-hover-bg;
+        }
+      }
+
+      .tags-block {
+        gap: 10px;
+        display: none;
+        margin-top: 10px;
+        &.is-open {
+          display: flex;
+          flex-wrap: wrap;
+        }
+        .tag-item {
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 120%;
+          color: theme-config.$subcategory-text;
+          background-color: theme-config.$subcategory-bg;
+          border: 2px solid theme-config.$subcategory-border;
+          padding: 9px 19px;
+          border-radius: theme-config.$subcategory-border-radius;
+          cursor: pointer;
+          box-shadow: 1px 1px 6px 0px rgba(0, 0, 0, 0.15);
+
+          &:hover {
+            color: theme-config.$subcategory-hover-text;
+            border-color: theme-config.$subcategory-hover-border;
+            background-color: theme-config.$subcategory-hover-bg;
+          }
+
+          &.is-active {
+            color: theme-config.$subcategory-active-text;
+            border-color: theme-config.$subcategory-active-border;
+            background-color: theme-config.$subcategory-active-bg;
+          }
+        }
+
+        .tag-reset {
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 120%;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          padding-left: 10px;
+
+          &:hover {
+            color: theme-config.$general-text-color-hover;
+          }
+        }
+      }
+    }
+
+    .count-and-sort {
+      max-width: 1200px;
+      margin: 20px auto 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 2px solid theme-config.$divider-color;
+
+      .items-count {
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+
+        .counter {
+          font-weight: 700;
+          padding-left: 5px;
+        }
+      }
+
+      .right-side {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+
+        .view-all-items {
+          margin-bottom: 0;
+          .form-check-label {
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 120%;
+            cursor: pointer;
+          }
+        }
+      }
+
+      .sorting {
+        .selected-sort-drop {
+          .selected-sort {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 120%;
+            cursor: pointer;
+
+            &:hover {
+              color: theme-config.$general-text-color-hover;
+            }
+
+            &::after {
+              display: none;
+            }
+          }
+          .dropdown-menu {
+            border-radius: 20px;
+          }
+        }
+      }
+    }
+
+    .carousel-multi-block {
+      padding: 20px 0;
+      max-width: 1240px;
+      border-bottom: 1px solid theme-config.$divider-color;
+
+      // .cat-items {
+      //   width: 100%;
+      //   display: flex;
+      //   flex-wrap: wrap;
+      //   gap: 20px;
+      //   padding: 20px 0;
+      // }
+    }
+
+    .courses-block-header {
+      padding-top: 20px;
+    }
+
+    .courses-block {
+      padding: 20px 0;
+      max-width: 1240px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    // ARICOMA BANNER
+    // .form-more-courses {
+    //   padding: 112px 120px;
+    //   max-width: 1200px;
+    //   margin: 40px auto 0;
+    //   height: 550px;
+    //   background-image: theme-config.$catalog-banner-bg;
+
+    //   .text-part {
+    //     max-width: 447px;
+    //     color: theme-config.$banner-text-color;
+
+    //     h1 {
+    //       color: theme-config.$banner-text-color;
+    //       margin-bottom: 24px;
+    //     }
+
+    //     .text-16 {
+    //       margin-bottom: 32px;
+    //     }
+    //   }
+    // }
+
+    // RESPECT BANNER
+    .form-more-courses {
+      margin: 20px auto 40px;
+      max-width: 1200px;
+      display: flex;
+      height: 402px;
+      padding: 48px 60px;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 30px;
+      flex: 1 0 0;
+      border-radius: 16px;
+      background-color: theme-config.$edu-color-main;
+      color: theme-config.$banner-text-color;
+      h1 {
+        color: theme-config.$banner-text-color;
+        margin: 0;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1250px) {
+  .page-body {
+    .data-block {
+      .form-more-courses {
+        padding: 60px;
+        height: 440px;
+        background-size: cover;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .more-filters-btn {
+    display: flex;
+    gap: 5px;
+    position: absolute;
+    top: -50px;
+    left: 0;
+    background-color: theme-config.$general-item-bg;
+    border-bottom-right-radius: 2px;
+    padding: 7px 17px;
+    transition: min-width 0.3s linear;
+    min-width: 0;
+
+    &.is-open {
+      min-width: 280px;
+      border-radius: 0;
+      box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1);
+    }
+  }
+  .courses-top,
+  .page-body {
+    padding: 0 20px;
+  }
+  .page-body {
+    &.no-banner {
+      padding: 0 20px 20px;
+    }
+    .filter-block {
+      margin-top: 0;
+      position: absolute;
+      z-index: 2;
+      background: white;
+      box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1);
+      left: -290px;
+      top: -53px;
+      padding: 10px 20px;
+      transition: left 0.3s linear;
+      &.is-open {
+        left: 0;
+      }
+      // .filter-section {
+      //   &.no-border {
+      //     border: none;
+      //   }
+      // }
+    }
+    .data-block {
+      min-width: 320px;
+      .courses-block {
+        max-width: 895px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 935px) {
+  .page-body {
+    .data-block {
+      .courses-block {
+        max-width: 590px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .courses-top {
+    display: block;
+    h1 {
+      margin-bottom: 24px;
+    }
+  }
+  .page-body {
+    .filter-block {
+      top: -117px;
+    }
+    .data-block {
+      .categories .cat-item {
+        padding: 10px 20px;
+      }
+      .tag-section {
+        .sub-cat-button,
+        .tags-block .tag-item {
+          padding: 9px 15px;
+        }
+
+        &.no-cats-gap {
+          margin: 20px auto;
+        }
+      }
+      .form-more-courses {
+        padding: 40px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 630px) {
+  .page-body {
+    .data-block {
+      .courses-block {
+        max-width: 285px;
+      }
+      .form-more-courses {
+        padding: 30px;
+      }
+    }
+  }
+}

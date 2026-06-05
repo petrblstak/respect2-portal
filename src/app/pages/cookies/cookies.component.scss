@@ -1,0 +1,13 @@
+@use '../../../assets/scss/theme-config';
+
+.cookies-page {
+  max-width: 798px;
+  padding: 0 24px;
+  margin: 80px auto 64px;
+
+  li {
+    padding-bottom: 20px;
+    font-weight: 400;
+    // font-size: 14px;
+  }
+}

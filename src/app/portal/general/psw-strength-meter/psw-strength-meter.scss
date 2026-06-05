@@ -1,0 +1,21 @@
+@use '../../../../assets/scss/theme-config';
+
+.psw-meter {
+  #id-psw-meter {
+    flex: 1;
+    background-color: theme-config.$psw-meter-bg;
+  }
+  #id-pswmeter-message {
+    text-align: right;
+    color: theme-config.$psw-meter-msg-text;
+    font-size: 13px;
+  }
+}
+
+.password-rules {
+  cursor: pointer;
+  margin-top: -5px;
+}
+.psw-label {
+  width: 25%;
+}

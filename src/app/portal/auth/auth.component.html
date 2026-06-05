@@ -1,0 +1,95 @@
+<div class="auth-page container">
+  <div class="row g-0 justify-content-center align-items-center flex-column">
+    <h2 class="text-center text-blue" [innerHTML]="'LOGIN_HEADER' | translate"></h2>
+
+    @if (environment.sso && environment.sso.loginDisplaySso === 'up') {
+      <div class="sso-box mt-4 mb-5 col-12 col-md-10 col-lg-8 col-xl-6">
+        <div class="text-16 mb-4" [innerHTML]="'LOGIN_SSO' | translate"></div>
+        <button class="mb-5 btn btn-primary" [innerHTML]="'LOGIN_SSO_BUTTON' | translate"></button>
+        <div class="text-16 divider-or-block">
+          -
+          <span [innerHTML]="'LOGIN_OR' | translate"></span>
+          -
+        </div>
+      </div>
+    }
+
+    <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+      <!-- <div class="login-box"> -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="mb-4">
+          <label for="login" class="text-16" [innerHTML]="'LOGIN_FIELD_LOGIN' | translate"></label>
+          <!-- <input type="input" [placeholder]="'LOGIN_FIELD_LOGIN_HINT' | translate" id="login" class="form-control"
+          ngModel name="login" required /> -->
+          <input type="input" id="login" class="form-control" formControlName="login" />
+          @if (!loginForm.get('login')?.valid && loginForm.get('login')?.touched) {
+            <div class="form-text" [innerHTML]="'REGISTER_FIELD_ERROR_EMAIL' | translate"></div>
+          }
+        </div>
+        <div class="mb-5">
+          <label for="password" class="text-16" [innerHTML]="'LOGIN_FIELD_PASSWORD' | translate"></label>
+          <div class="input-with-icon">
+            <input [type]="isPassText ? 'text' : 'password'" autocomplete="password" class="form-control mb-2" formControlName="password" />
+            <div [inlineSVG]="'assets/img/register/eye.svg'" class="input-icon" (click)="isPassText = !isPassText" [ngClass]="{ 'icon-active': isPassText }"></div>
+          </div>
+          @if (!loginForm.get('password')?.valid && loginForm.get('password')?.touched) {
+            <div class="form-text" [innerHTML]="'REGISTER_FIELD_ERROR_NAME' | translate"></div>
+          }
+          @if (loginError) {
+            <div class="mt-4 mb-2 text-14-bold text-red text-center">{{ loginError }}</div>
+          }
+        </div>
+        <div class="d-flex justify-content-center">
+          @if (isLoginRunning) {
+            <div [inlineSVG]="'assets/img/register/spinner_white.svg'" class="input-icon"></div>
+          }
+          @if (!isLoginRunning) {
+            <button class="btn btn-primary" type="submit" [innerHTML]="'LOGIN_FIELD_LOGIN_BUTTON' | translate"></button>
+          }
+        </div>
+      </form>
+      <!-- </div> -->
+
+      <div class="register-box">
+        <div class="d-none d-sm-flex mb-3 justify-content-between">
+          @if (environment.isRegistrationOpen) {
+            <div>
+              <span class="text-16 text-center mb-3" [innerHTML]="'LOGIN_REGISTER_PROMPT1' | translate"></span>
+              <a class="ms-1 text-16" [innerHTML]="'LOGIN_REGISTER_PROMPT2' | translate" routerLink="/portal/register"></a>
+            </div>
+          }
+          <a class="text-16" [innerHTML]="'LOGIN_FIELD_FORGOT' | translate" [routerLink]="isAuthFormPage ? '/portal/forgot-form' : '/portal/forgot'"></a>
+        </div>
+        <div class="d-flex d-sm-none mb-5 justify-content-center">
+          <a class="text-16" [innerHTML]="'LOGIN_FIELD_FORGOT' | translate" [routerLink]="isAuthFormPage ? '/portal/forgot-form' : '/portal/forgot'"></a>
+        </div>
+        @if (environment.isRegistrationOpen) {
+          <div class="d-flex d-sm-none mb-3 justify-content-center">
+            <div class="text-center">
+              <span class="text-16" [innerHTML]="'LOGIN_REGISTER_PROMPT1' | translate"></span>
+              <a class="ms-1 text-16" [innerHTML]="'LOGIN_REGISTER_PROMPT2' | translate" routerLink="/portal/register"></a>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (environment.sso && environment.sso.loginDisplaySso === 'down') {
+      <div class="sso-box col-12 col-md-10 col-lg-8 col-xl-6">
+        <div class="text-16 divider-or-block">
+          -
+          <span [innerHTML]="'LOGIN_OR' | translate"></span>
+          -
+        </div>
+        <div class="text-16 mt-5 mb-4" [innerHTML]="'LOGIN_SSO' | translate"></div>
+        <button class="mb-4 btn btn-primary" [innerHTML]="'LOGIN_SSO_BUTTON' | translate"></button>
+      </div>
+    }
+  </div>
+</div>
+
+<div class="version-indicator" [ngbTooltip]="htmlAppVersion"></div>
+
+<ng-template #htmlAppVersion>
+  <div [innerHTML]="appVersion" class="d-flex flex-column align-items-start text-start"></div>
+</ng-template>

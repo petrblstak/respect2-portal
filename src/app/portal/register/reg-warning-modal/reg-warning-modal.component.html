@@ -1,0 +1,13 @@
+<div class="modal-body text-center">
+  <div class="mb-5 hb-normal" [innerHTML]="'REGISTER_MESSAGE_NO_PASSWORD' | translate"></div>
+  <div class="mb-3">
+    <button type="button" class="btn btn-primary" (click)="activeModal.close('OK')">
+      {{'REGISTER_BACK_FILL_PASSWORD' | translate }}
+    </button>
+  </div>
+  <div class="mb-3">
+    <button type="button" class="btn btn-link" (click)="activeModal.dismiss('CANCEL')">
+      {{'REGISTER_BUTTON_REGISTER' | translate }}
+    </button>
+  </div>
+</div>

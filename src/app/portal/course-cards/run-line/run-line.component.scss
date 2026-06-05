@@ -1,0 +1,40 @@
+@use '../../../../assets/scss/theme-config';
+
+:host {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  color: theme-config.$act-run-line-color;
+  width: 100%;
+  gap: 10px;
+}
+
+.right-part {
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  .date-time {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .date-part {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .capacity {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &.is-disabled {
+    color: theme-config.$general-icons-color-disabled;
+  }
+}

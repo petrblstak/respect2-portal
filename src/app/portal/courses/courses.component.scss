@@ -1,0 +1,464 @@
+@use '../../../assets/scss/theme-config';
+
+:host .course-preparing-overlay {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.4);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+
+  .loading-message {
+    margin: auto;
+    color: black;
+    font-size: 26px;
+    border-radius: 30px;
+    background-color: white;
+    padding: 20px;
+  }
+}
+
+.more-filters-btn {
+  display: none;
+}
+
+.courses-top {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  max-width: theme-config.$container-max-width;
+  margin: 50px auto 0;
+  padding: 0 40px;
+  h1 {
+    margin: 0;
+  }
+
+  &.no-filter {
+    max-width: theme-config.$container-max-width-no-filter;
+  }
+}
+
+.page-body {
+  max-width: theme-config.$container-max-width;
+  margin: 0 auto;
+  display: flex;
+  gap: 40px;
+  padding: 0 40px;
+  position: relative;
+
+  &.no-filter {
+    max-width: theme-config.$container-max-width-no-filter;
+  }
+
+  &.no-banner {
+    padding: 0 40px 40px;
+  }
+
+  .filter-block {
+    width: 280px;
+    margin-top: 40px;
+    min-width: 200px;
+
+    .filter-section {
+      border-top: 1px solid theme-config.$divider-color;
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 120%; /* 16.8px */
+        text-transform: uppercase;
+        padding: 10px 0 8px;
+        cursor: pointer;
+
+        &:hover h3 {
+          color: theme-config.$general-text-color-hover;
+        }
+      }
+
+      .section-options {
+        display: none;
+        padding-bottom: 20px;
+
+        &.is-visible {
+          display: block;
+        }
+      }
+    }
+
+    .cancel-all {
+      padding: 3px 0 5px;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 120%;
+      color: theme-config.$general-icons-color-disabled;
+      cursor: default;
+
+      &.is-active {
+        color: theme-config.$general-icons-color;
+        cursor: pointer;
+
+        &:hover {
+          color: theme-config.$general-icons-color-hover;
+        }
+      }
+    }
+  }
+  .data-block {
+    max-width: 1200px;
+    min-width: 672px;
+    width: 100%;
+    .categories {
+      max-width: 1200px;
+      margin: 40px auto 0;
+      padding-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+
+      &::after {
+        content: '';
+        flex: 999 999 auto;
+        order: 999;
+        border-bottom: 1px solid theme-config.$divider-color;
+      }
+
+      .cat-item {
+        height: 41px;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%; /* 19.2px */
+        text-transform: uppercase;
+        color: theme-config.$category-study-text;
+        padding: 10px 15px;
+        border-radius: 0;
+        cursor: pointer;
+        border-bottom: 1px solid theme-config.$divider-color;
+
+        &:hover {
+          border-bottom: theme-config.$category-study-border-hover;
+          color: theme-config.$category-study-text-hover;
+        }
+
+        &.is-active {
+          border-bottom: theme-config.$category-study-border-active;
+          color: theme-config.$category-study-text-active;
+        }
+      }
+    }
+
+    .tag-section {
+      max-width: 1200px;
+      margin: 20px auto 40px;
+
+      &.no-cats-gap {
+        margin: 40px auto;
+      }
+
+      .sub-cat-button {
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%;
+        padding: 9px 19px;
+        border-radius: theme-config.$subcategory-border-radius;
+        background-color: theme-config.$subcategory-bg;
+        border: 2px solid theme-config.$subcategory-border;
+        color: theme-config.$subcategory-text;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        box-shadow: 1px 1px 6px 0px rgba(0, 0, 0, 0.15);
+
+        &:hover {
+          color: theme-config.$subcategory-hover-text;
+          border-color: theme-config.$subcategory-hover-border;
+          background-color: theme-config.$subcategory-hover-bg;
+        }
+      }
+
+      .tags-block {
+        gap: 10px;
+        display: none;
+        margin-top: 10px;
+        &.is-open {
+          display: flex;
+          flex-wrap: wrap;
+        }
+        .tag-item {
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 120%;
+          color: theme-config.$subcategory-text;
+          background-color: theme-config.$subcategory-bg;
+          border: 2px solid theme-config.$subcategory-border;
+          padding: 9px 19px;
+          border-radius: theme-config.$subcategory-border-radius;
+          cursor: pointer;
+          box-shadow: 1px 1px 6px 0px rgba(0, 0, 0, 0.15);
+
+          &:hover {
+            color: theme-config.$subcategory-hover-text;
+            border-color: theme-config.$subcategory-hover-border;
+            background-color: theme-config.$subcategory-hover-bg;
+          }
+
+          &.is-active {
+            color: theme-config.$subcategory-active-text;
+            border-color: theme-config.$subcategory-active-border;
+            background-color: theme-config.$subcategory-active-bg;
+          }
+        }
+
+        .tag-reset {
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 120%;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          padding-left: 10px;
+
+          &:hover {
+            color: theme-config.$general-text-color-hover;
+          }
+        }
+      }
+    }
+
+    .state-control {
+      max-width: 1200px;
+      margin: 20px auto 0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+
+      &.no-cats-gap {
+        margin: 40px auto 0;
+      }
+      .state-item {
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%;
+        color: theme-config.$subcategory-text;
+        background-color: theme-config.$subcategory-bg;
+        border: 2px solid theme-config.$subcategory-border;
+        border-radius: theme-config.$state-control-border-radius;
+        padding: 9px 19px;
+        cursor: pointer;
+        box-shadow: 1px 1px 6px 0px rgba(0, 0, 0, 0.15);
+
+        &:hover {
+          color: theme-config.$subcategory-hover-text;
+          border-color: theme-config.$subcategory-hover-border;
+          background-color: theme-config.$subcategory-hover-bg;
+        }
+
+        &.is-active {
+          color: theme-config.$subcategory-active-text;
+          border-color: theme-config.$subcategory-active-border;
+          background-color: theme-config.$subcategory-active-bg;
+        }
+      }
+    }
+
+    .count-and-sort {
+      max-width: 1200px;
+      margin: 40px auto 0;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .items-count {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 100%;
+
+        .counter {
+          font-weight: 700;
+          padding-left: 5px;
+        }
+      }
+
+      .right-side {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      .card-type {
+        display: flex;
+        justify-content: flex-end;
+        gap: 5px;
+        .c-type-item {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .courses-block {
+      padding: 20px 0;
+      max-width: 1200px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+  }
+}
+.catalog-banner {
+  padding: 112px 120px;
+  max-width: 1200px;
+  margin: 40px auto 0;
+  height: 550px;
+  background-image: theme-config.$courses-banner-bg;
+
+  .text-part {
+    max-width: 447px;
+    color: theme-config.$banner-text-color;
+
+    h1 {
+      color: theme-config.$banner-text-color;
+      margin-bottom: 24px;
+    }
+
+    .text-16 {
+      margin-bottom: 32px;
+    }
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .more-filters-btn {
+    display: flex;
+    gap: 5px;
+    position: absolute;
+    top: -50px;
+    left: 0;
+    background-color: theme-config.$general-item-bg;
+    border-bottom-right-radius: 2px;
+    padding: 7px 17px;
+    transition: min-width 0.3s linear;
+    min-width: 0;
+
+    &.is-open {
+      min-width: 280px;
+      border-radius: 0;
+      box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1);
+    }
+  }
+  .courses-top,
+  .page-body {
+    padding: 0 20px;
+  }
+  .page-body {
+    &.no-banner {
+      padding: 0 20px 20px;
+    }
+    .filter-block {
+      margin-top: 0;
+      position: absolute;
+      z-index: 2;
+      background: white;
+      box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1);
+      left: -290px;
+      top: -53px;
+      padding: 10px 20px;
+      transition: left 0.3s linear;
+      &.is-open {
+        left: 0;
+      }
+    }
+    .data-block {
+      min-width: 320px;
+      .courses-block.in-grid {
+        max-width: 895px;
+      }
+      .categories {
+        margin: 20px auto 0;
+      }
+
+      .state-control.no-cats-gap {
+        margin: 20px auto 0;
+      }
+    }
+  }
+  .catalog-banner {
+    padding: 60px;
+    height: 480px;
+    background-size: cover;
+  }
+}
+
+@media only screen and (max-width: 935px) {
+  .data-block {
+    .courses-block.in-grid {
+      max-width: 590px;
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .courses-top {
+    display: block;
+    h1 {
+      margin-bottom: 24px;
+    }
+  }
+  .page-body {
+    .filter-block {
+      top: -117px;
+    }
+    .data-block {
+      .categories .cat-item {
+        padding: 10px 20px;
+      }
+      .tag-section {
+        .sub-cat-button,
+        .tags-block .tag-item {
+          padding: 9px 15px;
+        }
+
+        &.no-cats-gap {
+          margin: 20px auto;
+        }
+      }
+      .catalog-banner {
+        padding: 40px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 630px) {
+  .page-body {
+    .data-block {
+      .courses-block.in-grid {
+        max-width: 285px;
+      }
+      .catalog-banner {
+        padding: 30px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .data-block {
+    .state-control .state-item {
+      padding: 9px;
+    }
+  }
+}

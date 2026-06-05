@@ -1,0 +1,172 @@
+<div class="forgot-pass-page container">
+  <h2 class="text-center text-blue" [innerHTML]="'FORGOT_HEADER' | translate"></h2>
+  <div class="row g-0 justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+      @if (selectedProfile === null) {
+        <div class="mt-5 mb-4 text-center">
+          <div class="hb-subtitle text-center mb-3" [innerHTML]="'FORGOT_HEADER_INFO' | translate"></div>
+        </div>
+      }
+
+      <!-- <div class="mb-4 d-flex justify-content-around">
+      <div class="user-type text-center" (click)="selectProfile('student')"
+        *ngIf=" selectedProfile === null ||  selectedProfile === 'student'">
+        <img src="assets/img/register/student.png" class="">
+        <div class=" text-violet hb-normal text-center" *ngIf=" selectedProfile === null"
+        [innerHTML]="'REGISTER_ROLE_STUDENT' | translate"></div>
+      </div>
+      <div class="user-type text-center" (click)="selectProfile('teacher')"
+        *ngIf=" selectedProfile === null ||  selectedProfile === 'teacher'">
+        <img src="assets/img/register/teacher.png" class="">
+        <div class="hb-normal text-center text-violet" *ngIf=" selectedProfile === null"
+        [innerHTML]="'REGISTER_ROLE_TEACHER' | translate"></div>
+      </div>
+      <div class="user-type text-center" (click)="selectReg('public')"
+        *ngIf=" selectedProfile === null ||  selectedProfile === 'public'">
+        <img src="assets/img/register/user.png" class="rounded-circle">
+        <div class="hb-normal text-center" *ngIf=" selectedProfile === null"
+        [innerHTML]="'REGISTER_ROLE_PUBLIC' | translate"></div>
+      </div>
+    </div> -->
+    </div>
+  </div>
+
+  <div class="row g-0 justify-content-center" [ngClass]="{ 'd-none': !isforgotDone }">
+    @if (selectedProfile !== 'student') {
+      <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+        <div class="mb-3 text-center">
+          <div class="text-center" [innerHTML]="'FORGOT_REQUEST_REGISTERED1' | translate: { email: registeredEmail }"></div>
+        </div>
+        <hr />
+        <div class="mb-3 text-center">
+          <div class="text-center" [innerHTML]="'FORGOT_REQUEST_REGISTERED2' | translate"></div>
+        </div>
+      </div>
+    }
+
+    @if (selectedProfile === 'student') {
+      <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+        <div class="mt-4 mb-4 text-center">
+          <div class="hb-normal text-center mb-4" [innerHTML]="'FORGOT_REQUEST_REGISTERED_STUDENT' | translate"></div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="row g-0 justify-content-center" [ngClass]="{ 'd-none': isforgotDone }">
+    <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+      @if (selectedProfile !== 'student') {
+        <div class="teacher-register mb-5">
+          <div class="mt-4 mb-4 text-center">
+            <div class="text-center mb-3" [innerHTML]="'FORGOT_TEACHER_PROMPT' | translate"></div>
+          </div>
+          <form [formGroup]="forgotFormGeneral" (ngSubmit)="onSubmitGeneral()">
+            <div class="mb-4">
+              <label class="text-14" [innerHTML]="'REGISTER_FIELD_EMAIL' | translate"></label>
+              <input type="input" id="email" class="form-control" formControlName="email" />
+              @if (!forgotFormGeneral.get('email')?.valid && forgotFormGeneral.get('email')?.touched) {
+                <div class="form-text" [innerHTML]="'REGISTER_FIELD_ERROR_EMAIL' | translate"></div>
+              }
+            </div>
+            <div class="d-flex justify-content-center">
+              <button class="btn btn-primary" type="submit" [innerHTML]="'FORGOT_BUTTON_SEND' | translate"></button>
+            </div>
+          </form>
+        </div>
+      }
+
+      @if (selectedProfile === 'student') {
+        <div class="teacher-register mb-5">
+          <div class="mb-3 text-center">
+            <div class="hb-normal text-center mb-3" [innerHTML]="'REGISTER_SET_SCHOOL_STUDENT' | translate"></div>
+          </div>
+          <div class="mb-3">
+            <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_COUNTRY' | translate"></label>
+            <ng-select [(ngModel)]="selectedState" (change)="loadSchoolsByState()" (clear)="resetSelects()">
+              @for (langId of langsAvailable; track langId) {
+                <ng-option [value]="langId">
+                  {{ langSettings.LANG_CONFIG[langId].countryName }}
+                </ng-option>
+              }
+            </ng-select>
+          </div>
+          @if (isDataLoading && selectedState) {
+            <div [innerHTML]="'REGISTER_SET_SCHOOL_LOADING' | translate"></div>
+          }
+          @if (!isDataLoading && selectedState) {
+            <div>
+              <div class="mb-3">
+                <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_REGION' | translate"></label>
+                <ng-select [(ngModel)]="selectedRegion" (clear)="resetSelects('region')">
+                  @for (region of schoolData.region | keyvalue; track region) {
+                    <ng-option [value]="region.key">{{ region.value.name }}</ng-option>
+                  }
+                </ng-select>
+              </div>
+              @if (selectedRegion) {
+                <div class="mb-3">
+                  <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_CITY' | translate"></label>
+                  <ng-select [(ngModel)]="selectedCity" (clear)="resetSelects('city')">
+                    @for (city of getCitiesToSelect(); track city) {
+                      <ng-option [value]="city">
+                        {{ schoolData.city[city].name }}
+                      </ng-option>
+                    }
+                  </ng-select>
+                </div>
+              }
+              @if (selectedCity) {
+                <div class="mb-3">
+                  <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_SCHOOL' | translate"></label>
+                  <ng-select [(ngModel)]="selectedSchool" (change)="getSchoolClasses()" (clear)="resetSelects('school')">
+                    @for (schoolId of getSchoolsToSelect(); track schoolId) {
+                      <ng-option [value]="schoolId">
+                        {{ schoolData.school[schoolId].name }}
+                      </ng-option>
+                    }
+                  </ng-select>
+                </div>
+              }
+              <form [formGroup]="forgotFormStudent" (ngSubmit)="onSubmitStudent()">
+                @if (selectedSchool) {
+                  <div class="mb-5">
+                    <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_CLASS' | translate"></label>
+                    <ng-select formControlName="selectedClass">
+                      @for (classId of availableClasses; track classId) {
+                        <ng-option [value]="classId">{{ classesData[classId].name }}</ng-option>
+                      }
+                    </ng-select>
+                  </div>
+                }
+                @if (forgotFormStudent.get('selectedClass')?.value !== null) {
+                  <fieldset>
+                    <div class="mb-3 text-center">
+                      <div class="hb-normal text-center" [innerHTML]="'FORGOT_SET_CLASS_PASS_AND_NICK' | translate"></div>
+                    </div>
+                    <div class="mb-3">
+                      <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_PASSWORD_CLASS' | translate"></label>
+                      <input type="password" id="classPass" class="form-control" formControlName="classPass" />
+                      @if (!forgotFormStudent.get('classPass')?.valid && forgotFormStudent.get('classPass')?.touched) {
+                        <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_PASSWORD' | translate"></div>
+                      }
+                    </div>
+                    <div class="mb-3">
+                      <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_LOGIN' | translate"></label>
+                      <input type="input" id="nickname" class="form-control" [placeholder]="'REGISTER_FIELD_NICKNAME' | translate" formControlName="nickname" />
+                      @if (!forgotFormStudent.get('nickname')?.valid && forgotFormStudent.get('nickname')?.touched) {
+                        <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_NAME' | translate"></div>
+                      }
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      <button class="btn btn-primary" type="submit" [innerHTML]="'FORGOT_BUTTON_SEND' | translate"></button>
+                    </div>
+                  </fieldset>
+                }
+              </form>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

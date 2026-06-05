@@ -1,0 +1,50 @@
+@use '../../assets/scss/theme-config' as schema;
+.hb-app-footer {
+  height: 140px;
+  padding: 40px;
+
+  .container {
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .left-part {
+      display: flex;
+      gap: 12px;
+      .soc-ico {
+        cursor: pointer;
+      }
+    }
+
+    .right-part {
+      text-align: right;
+      cursor: default;
+
+      a {
+        color: schema.$edu-color-white;
+        text-decoration: none;
+        &:hover {
+          color: schema.$edu-color-main-light3;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .hb-app-footer {
+    padding: 20px;
+    height: auto;
+    .container {
+      flex-direction: column;
+      .left-part {
+        padding-bottom: 20px;
+      }
+      .right-part {
+        text-align: left;
+      }
+    }
+  }
+}

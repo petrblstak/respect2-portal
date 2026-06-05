@@ -1,0 +1,39 @@
+@if (optionsObj.isShowMain === true) {
+  @for (tagObj of courseData.extraData[rootItem.activityId].tags; track tagObj.id) {
+    @if (tagObj.cats && tagObj.cats.main) {
+      <div class="tag-item cat-main">
+        {{ tagObj.localName }}
+      </div>
+    }
+  }
+}
+
+@if (optionsObj.isShowCatalog === true) {
+  @for (tagObj of courseData.extraData[rootItem.activityId].tags; track tagObj.id) {
+    @if (tagObj.cats && tagObj.cats.catalog) {
+      <div class="tag-item cat-catalog">
+        {{ tagObj.localName }}
+      </div>
+    }
+  }
+}
+
+@if (optionsObj.isShowSpecials === true) {
+  @for (tagObj of courseData.extraData[rootItem.activityId].tags; track tagObj.id) {
+    @if (tagObj.cats && tagObj.cats.special) {
+      <div class="tag-item" [ngClass]="'cat-special-' + tagObj.cats.specialSysName">
+        {{ tagObj.localName }}
+      </div>
+    }
+  }
+}
+
+@if (optionsObj.isShowDefaults === true) {
+  @for (tagObj of courseData.extraData[rootItem.activityId].tags; track tagObj.id) {
+    @if (!tagObj.isCategory) {
+      <div class="tag-item">
+        {{ tagObj.localName }}
+      </div>
+    }
+  }
+}

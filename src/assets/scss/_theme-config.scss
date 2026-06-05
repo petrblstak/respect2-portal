@@ -1,0 +1,348 @@
+// === MAIN THEME CONFIGURATION ===
+// This file contains all themeable variables that differ between customer projects
+// To switch themes: simply replace this file with customer-specific version
+
+// =================================
+// ======= GENERAL VARIABLES =======
+// =================================
+
+// General Colors
+$edu-color-black: #0e122d;
+$edu-color-white: #ffffff;
+$edu-color-error: #c0143c;
+$edu-color-main: #1f3b80;
+$edu-color-main-light: #3777bc;
+$edu-color-main-light2: #b9dbea;
+$edu-color-main-light3: #e4f4fb;
+$edu-color-main-dark: #0e122d;
+$edu-color-highlight: #f77c08;
+$edu-color-grey1: #7d7f91;
+$edu-color-grey-light1: #cecece;
+$edu-color-grey-light2: #e5e5e5;
+$edu-color-grey-light3: #f2f2f2;
+
+// Extra colors
+$edu-color-orange: #f77c08;
+$edu-color-lilac: #848ec1;
+$edu-color-mint: #699a8b;
+$edu-color-violet: #5b2c5b;
+$edu-color-pink: #bb7ab0;
+
+// Typography
+$font-family: 'Montserrat';
+$base-font-size: 16px;
+$base-font-size-mid: 14px;
+$base-font-size-sm: 14px;
+$h1-size: 48px;
+$h1-size-mid: 40px;
+$h1-size-sm: 40px;
+$h2-size: 22px;
+$h2-size-mid: 20px;
+$h2-size-sm: 18px;
+$h3-size: 14px;
+$h3-size-mid: 14px;
+$h3-size-sm: 14px;
+$h4-size: 24px;
+$h4-size-mid: 24px;
+$h4-size-sm: 24px;
+$font-bold: 700;
+$font-regular: 400;
+$headings-font-weight: $font-bold;
+$body-font-weight: $font-regular;
+
+$link-color: $edu-color-main-light;
+$link-color-hover: $edu-color-main-light;
+$link-decoration: none;
+$link-decoration-hover: underline;
+
+// Border radius
+$border-radius-small: 2px;
+$border-radius-medium: 8px;
+$border-radius-large: 50px;
+
+// Content widths
+$container-max-width: 1600px;
+$container-max-width-no-filter: 1280px;
+$content-max-width: 1200px;
+
+// =================================
+// ======== GENERAL ELEMENTS =======
+// =================================
+
+// input with icons
+$input-icon-active-color: $edu-color-main;
+
+// color for generally any icon's hover state
+$general-icons-color: $edu-color-main-dark;
+$general-icons-color-hover: $edu-color-main;
+$general-icons-color-disabled: $edu-color-grey1;
+$general-icons-color-active: $edu-color-main-dark;
+
+// color for generally any standard text
+$general-text-color: $edu-color-main-dark;
+$general-text-placeholder: $edu-color-grey1;
+$general-text-error-color: $edu-color-error;
+$general-text-color-hover: $edu-color-main;
+$general-text-color-disabled: $edu-color-grey1;
+$general-text-color-highlight: $edu-color-highlight;
+
+// selects
+$select-border-color: $edu-color-black;
+$select-border-focused-color: $edu-color-main;
+$select-header-border-color: $edu-color-grey-light2;
+$select-item-color: $edu-color-black;
+$select-item-selected-color: $edu-color-main;
+$select-item-bg-focus-color: $edu-color-grey-light2;
+$select-item-bg-selected-color: $edu-color-white;
+
+//dividers
+$divider-color: $edu-color-grey-light1;
+
+// =================================
+// ========= PAGE SECTIONS =========
+// =================================
+
+// Header
+$header-height: 80px;
+$header-height-sm: 70px;
+$header-logo-height: 68px;
+$header-logo-height-mid: 68px;
+$header-logo-height-sm: 60px;
+$header-font-weight: 500;
+$header-background: $edu-color-black;
+$header-text-color: $edu-color-white;
+$header-text-color-hover: $edu-color-main-light3;
+$header-text-color-active: $edu-color-main-light2;
+
+// Footer styling
+$footer-min-height: 140px;
+$footer-background: $edu-color-main-dark;
+$footer-link-color: $edu-color-white;
+$footer-link-hover: $edu-color-grey-light2;
+
+// body background
+$body-background: $edu-color-grey-light3;
+$body-background-dark: $edu-color-black;
+$general-item-bg: $edu-color-white;
+$general-item-border: $edu-color-grey-light1;
+
+// =================================
+// ============ BUTTONS ============
+// =================================
+
+// Button styling
+$btn-border-radius: $border-radius-large;
+
+// filled button variants
+$btn-primary-bg: $edu-color-main;
+$btn-primary-bg-hover: $edu-color-main-dark;
+$btn-primary-text-color: $edu-color-white;
+$btn-primary-text-color-hover: $edu-color-white;
+$btn-primary-border-color: $edu-color-main;
+$btn-primary-border-color-hover: $edu-color-main-dark;
+
+$btn-secondary-bg: $edu-color-white;
+$btn-secondary-bg-hover: $edu-color-grey-light2;
+$btn-secondary-text-color: $edu-color-main;
+$btn-secondary-text-color-hover: $edu-color-main;
+$btn-secondary-border-color: $edu-color-white;
+$btn-secondary-border-color-hover: $edu-color-grey-light2;
+
+// Outline button variants
+$btn-outline-primary-bg: transparent;
+$btn-outline-primary-bg-hover: transparent;
+$btn-outline-primary-text-color: $edu-color-main;
+$btn-outline-primary-text-color-hover: $edu-color-main-dark;
+$btn-outline-primary-border-color: $edu-color-main;
+$btn-outline-primary-border-color-hover: $edu-color-main-dark;
+
+$btn-outline-secondary-bg: transparent;
+$btn-outline-secondary-bg-hover: transparent;
+$btn-outline-secondary-text-color: $edu-color-white;
+$btn-outline-secondary-text-color-hover: $edu-color-grey-light2;
+$btn-outline-secondary-border-color: $edu-color-white;
+$btn-outline-secondary-border-color-hover: $edu-color-grey-light2;
+
+// link buttons
+$btn-link-text-color: $edu-color-main-dark;
+$btn-link-text-color-hover: $edu-color-main;
+
+// general button colors
+$btn-disabled-bg-color: $edu-color-grey1;
+$btn-disabled-text-color: $edu-color-white;
+$btn-disabled-border-color: $edu-color-grey1;
+
+// =================================
+// ============= FORMS =============
+// =================================
+
+$form-input-border-color: $edu-color-black;
+$form-input-border-color-focus: $edu-color-main;
+$form-check-border-color: $edu-color-grey1;
+$form-check-border-color-hover: $edu-color-main;
+$form-check-border-color-checked: $edu-color-main-dark;
+$form-check-label-color-hover: $edu-color-main;
+$form-check-bg-color-checked: $edu-color-white;
+$form-check-img-checked: url('/assets/img/general/check.svg');
+$form-switch-bg-color-off: $edu-color-white;
+$form-switch-bg-color-on: $edu-color-main-dark;
+$form-switch-border-color-off: $edu-color-main-dark;
+$form-switch-border-color-on: $edu-color-main-dark;
+
+// =================================
+// ========== JSON EDITOR ==========
+// =================================
+
+$json-editor-range-border-color: $edu-color-main-dark;
+$json-editor-range-slider-color: $edu-color-main;
+
+// =================================
+// =========== COMPONENTS ==========
+// =================================
+
+// modal styling
+$modal-header-bg-color: $edu-color-white;
+$modal-header-text-color: $edu-color-main-dark;
+$modal-body-dark-bg-color: $edu-color-black;
+$modal-border-radius: $border-radius-small;
+
+// progress bars
+$progress-bar-bg: $edu-color-main-light3;
+$progress-bar-fill: $edu-color-main-dark;
+$progress-bar-threshold: $edu-color-grey-light1;
+$progress-bar-text: $edu-color-grey1;
+$progress-bar-text-passed: $edu-color-main-dark;
+
+// rating modal
+$rating-modal-comment-bg: $edu-color-grey-light3;
+
+// banners
+$banner-text-color: $edu-color-white;
+
+// activity data line
+$act-data-line-color: $edu-color-main-dark;
+
+// activity run line
+$act-run-line-color: $edu-color-main-dark;
+
+// course card general
+$card-border-radius: $border-radius-medium;
+$card-image-border-radius: calc(#{$border-radius-medium} - 4px);
+$card-shadow: 1px 1px 6px 0px rgba(0, 0, 0, 0.15);
+$card-bg: $edu-color-white;
+
+// course card simple
+$card-simple-middle-bar-bg-color: $edu-color-main-light2;
+$card-simple-middle-bar-height: 30px;
+$card-simple-middle-bar-border-top: none;
+$card-simple-middle-bar-text-color: $edu-color-grey1;
+$card-simple-middle-bar-text-passed-color: $edu-color-main-dark;
+$card-simple-link-bg: $edu-color-main;
+$card-simple-link-text: $edu-color-main;
+$card-simple-icons-border: $border-radius-small;
+$card-simple-item-assigned-bg: $edu-color-white;
+$card-simple-item-assigned-border-color: $edu-color-orange;
+
+// Tags
+$tag-default-bg: $edu-color-white;
+$tag-default-text: $edu-color-main-dark;
+$tag-main-bg: $edu-color-highlight;
+$tag-main-text: $edu-color-white;
+$tag-border-radius: $border-radius-medium;
+
+// Search field
+$search-border-color: $edu-color-main-dark;
+
+// Password strength meter
+$psw-meter-bg: $edu-color-grey-light1;
+$psw-meter-msg-text: $edu-color-grey1;
+
+// Filter section styling
+$filter-border-color: $edu-color-grey-light1; // Both: grey-light
+$filter-hover-color: $edu-color-main; // Both: blue for hover
+$filter-text-color: $edu-color-main-dark; // Both: blue-dark
+$filter-inactive-color: $edu-color-grey1; // Both: grey1
+
+// ====================================
+// ======= SPECIFIC PAGE CONFIG =======
+// ====================================
+
+// Dashboard styling
+$dashboard-score-color: $edu-color-highlight;
+$dashboard-progress-bg: $edu-color-grey-light2;
+$dashboard-progress-fill: $edu-color-highlight;
+$dashboard-block-shadow: 1px 1px 6px 0px rgba(35, 30, 84, 0.15);
+$dashboard-tag-default: $edu-color-violet;
+$dashboard-tag-main: $edu-color-highlight;
+
+// Home Page Configuration
+$hero-height: 832px; // Aricoma: 832px, RESPECT: 735px
+
+// Activity detail page
+$act-detail-run-item-selected-border: $edu-color-highlight;
+$tab-text-color: $edu-color-main-dark;
+$tab-text-color-hover: $edu-color-main;
+$tab-text-color-active: $edu-color-main-dark;
+$tab-border-color-hover: $divider-color;
+$tab-border-color-active: $edu-color-main-dark;
+
+// login page
+$login-page-divider-bg: $edu-color-white;
+
+// Background images
+$courses-banner-bg: url('/assets/img/courses/catalog-banner.png'); // Aricoma: catalog-banner.png, RESPECT:
+$catalog-banner-bg: url('/assets/img/courses/catalog_banner2.png'); // Aricoma: catalog-banner.png, RESPECT:
+
+// Study categories
+$category-study-text: $edu-color-main-dark;
+$category-study-text-hover: $edu-color-main-dark;
+$category-study-text-active: $edu-color-main-dark;
+$category-study-border-hover: 1px solid $edu-color-orange;
+$category-study-border-active: 4px solid $edu-color-orange;
+
+// Catalog categories
+$category-cat-border-radius: $border-radius-large;
+$category-cat-bg: $edu-color-white;
+$category-cat-text: $edu-color-main-dark;
+$category-cat-border: $edu-color-white;
+$category-cat-hover-bg: $edu-color-main-light3;
+$category-cat-hover-text: $edu-color-main-dark;
+$category-cat-hover-border: $edu-color-highlight;
+$category-cat-active-bg: $edu-color-highlight;
+$category-cat-active-text: $edu-color-white;
+$category-cat-active-border: $edu-color-highlight;
+
+// Catalog Calendar item styling
+$calendar-item-bg: $edu-color-grey-light3; // Both: blue-dark-5p
+$calendar-item-border: $edu-color-grey-light3; // Both: blue-dark-5p
+$calendar-active-border: $edu-color-highlight; // Aricoma: gold, RESPECT: orange
+
+// Catalog and Study subcategories
+$subcategory-border-radius: $border-radius-large;
+$subcategory-bg: $edu-color-white;
+$subcategory-text: $edu-color-main-dark;
+$subcategory-border: $edu-color-white;
+$subcategory-hover-bg: $edu-color-white;
+$subcategory-hover-text: $edu-color-main-dark;
+$subcategory-hover-border: $edu-color-highlight;
+$subcategory-active-bg: $edu-color-white;
+$subcategory-active-text: $edu-color-main-dark;
+$subcategory-active-border: $edu-color-highlight;
+
+// Study state control
+$state-control-border-radius: $border-radius-large;
+
+// =================================
+// ========= ROOT OVERRIDES ========
+// =================================
+
+// Root css variables
+:root {
+  --bs-heading-color: #{$edu-color-main-dark};
+  --bs-body-color: #{$edu-color-main-dark};
+  --bs-body-font-family: #{$font-family};
+  --bs-border-color: #{$divider-color};
+  .tooltip {
+    --bs-tooltip-max-width: 350px;
+  }
+}

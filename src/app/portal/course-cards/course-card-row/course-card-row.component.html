@@ -1,0 +1,184 @@
+<div class="card" [ngClass]="{ 'display-in-detail': isInDetail }">
+  <div class="card-top">
+    <!-- CARD HEADER -->
+    @if (!isInDetail) {
+      <div class="card-header" (click)="openPageDetail(rootItem)">
+        <!-- COURSE IMAGE -->
+        <!-- <div class="course-image"> <img [src]="getActHeaderImg()" alt="course image"> </div> -->
+        <img class="course-image" [src]="getActHeaderImg()" alt="course image" />
+        <!-- SET EXPAND ICON -->
+        <div class="set-expand" [inlineSVG]="'assets/img/courses/expand_set.svg'" alt="Expand set"></div>
+      </div>
+    }
+
+    <!-- CARD BODY -->
+    <div
+      class="card-body"
+      [ngClass]="{ 'is-expanded': (courseData.extraData[rootItem.activityId] && courseData.extraData[rootItem.activityId].isExpanded) || courseData.activityData[rootItem.activityId].isExpanded }">
+      <!-- TOP PART -->
+      <div class="top-part">
+        <div class="left-part">
+          <!-- ACT NAME -->
+          <h2
+            class="act-name"
+            (click)="openPageDetail(rootItem)"
+            [ngClass]="{ 'is-expanded': courseData.extraData[rootItem.activityId] && courseData.extraData[rootItem.activityId].isExpanded }"
+            [innerHTML]="courseData.activities[rootItem.activityId].localNameSafe"></h2>
+        </div>
+
+        @if (!isCatalog) {
+          <div class="right-part">
+            <!-- PROGRESS BAR -->
+            <cmp-progress-bar
+              [completion]="getActCompletionPercentage()"
+              [treshold]="getActCompletionTreshold()"
+              [completionData]="getActCompletionData()"
+              class="completion-block"
+              [isInDetail]="isInDetail"></cmp-progress-bar>
+          </div>
+        }
+      </div>
+
+      <div class="middle-part">
+        <!-- COURSE TAGS -->
+        @if (!isInDetail && courseData.extraData[rootItem.activityId] && courseData.extraData[rootItem.activityId].tags.length > 0) {
+          <cmp-course-tags class="tags" [courseData]="courseData" [rootItem]="rootItem" [optionsObj]="{ isShowMain: true, isShowDefaults: true }"></cmp-course-tags>
+        }
+
+        <!-- BASIC DATA - TYPE, LENGTH, DATES -->
+        <cmp-act-data-line class="act-data" [courseData]="courseData" [rootItem]="rootItem" (clickedItem)="openPageDetail(rootItem, { tab: $event })"></cmp-act-data-line>
+      </div>
+
+      <!-- RIGHT PART -->
+      <div class="bottom-part">
+        <div class="left-part">
+          <!-- EXPAND BUTTON FOR SET -->
+          @if (courseData.children[rootItem.activityId] && !isTypeActivity(rootItem.activityId)) {
+            <button class="btn expand-act-button" (click)="toggleModuleExpand(rootItem.activityId)">
+              <span>{{ getChildLentghString(courseData.children[rootItem.activityId]) }}</span>
+              @if (courseData.activityData[rootItem.activityId].isExpanded) {
+                <span [inlineSVG]="'assets/img/general/expand_up.svg'"></span>
+              }
+              @if (!courseData.activityData[rootItem.activityId].isExpanded) {
+                <span [inlineSVG]="'assets/img/general/expand_down.svg'"></span>
+              }
+            </button>
+          }
+        </div>
+
+        <!-- ACTIVITY SECTION -->
+        @if (!isCatalog && isTypeActivity(rootItem.activityId)) {
+          <div class="right-part">
+            @if (rootItem.isRunAct || docs.certNum > 0) {
+              <div class="link-buttons d-flex align-items-center">
+                <!-- CERTIFICATES -->
+                @if (docs.certNum > 0) {
+                  <button class="btn btn-link" (click)="openPageDetail(rootItem, { tab: clickedItemType.materials })" [innerHTML]="'COURSES_MATERIALS_CERTIFICATES' | translate"></button>
+                }
+                @if (rootItem.isRunAct && docs.certNum > 0) {
+                  <span class="text-20">&bull;</span>
+                }
+                <!-- RUN ACTIVITY -->
+                @if (rootItem.isRunAct) {
+                  <button
+                    class="btn btn-link"
+                    (click)="openPageDetail(rootItem, { tab: clickedItemType.runs })"
+                    [innerHTML]="(courseData.accesses[rootItem.accessId].idActivityRun ? 'COURSES_RUNS_SIGN_OFF_SHORT' : 'COURSES_RUNS_CHOOSE') | translate"></button>
+                }
+              </div>
+            }
+            <!-- PLAY SECTION - WITH CONTENT -->
+            <!-- @if (hasPlayableContent(rootItem.activityId)) { -->
+            <!-- <button
+                class="btn btn-play"
+                [ngClass]="{ 'btn-primary': !courseData.accesses[rootItem.accessId].passed, 'btn-outline-primary': courseData.accesses[rootItem.accessId].passed }"
+                [disabled]="!courseData.activityData[rootItem.activityId].isPlayable"
+                (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+                {{ 'COURSES_PLAY' | translate }}
+              </button> -->
+            @if (courseData.activityData[rootItem.activityId].canDisplayPassedContent) {
+              <button class="btn btn-play btn-outline-primary" (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+                {{ 'COURSES_PLAY_DISPLAY' | translate }}
+              </button>
+            } @else if (courseData.activityData[rootItem.activityId].isPlayable) {
+              <button
+                class="btn btn-play"
+                [ngClass]="{ 'btn-primary': !courseData.accesses[rootItem.accessId].passed, 'btn-outline-primary': courseData.accesses[rootItem.accessId].passed }"
+                (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+                {{ 'COURSES_PLAY' | translate }}
+              </button>
+            } @else {
+              <div
+                class="course-not-playable"
+                [ngbTooltip]="courseData.activityData[rootItem.activityId].noPlayReason || ('COURSES_NOT_PLAYABLE_DEFAULT' | translate)"
+                placement="top"
+                role="status"
+                [attr.aria-label]="'COURSES_NOT_PLAYABLE' | translate">
+                <span class="status-text">{{ 'COURSES_NOT_PLAYABLE' | translate }}</span>
+                <span class="material-icons-round info-icon">info_outline</span>
+              </div>
+            }
+            <!-- } -->
+          </div>
+        }
+
+        <!-- SET SECTION - PLAY BUTTON DISPLAY -->
+        @if (!isCatalog && !isTypeActivity(rootItem.activityId)) {
+          <div class="right-part">
+            <!-- CERTIFICATES -->
+            @if (docs.certNum > 0) {
+              <button class="btn btn-link" (click)="openPageDetail(rootItem, { tab: clickedItemType.materials })" [innerHTML]="'COURSES_MATERIALS_CERTIFICATES' | translate"></button>
+            }
+            <!-- @if (isSimpleSet(rootItem.activityId) && isSetAllowedPlay) {
+              <button
+                class="btn btn-play"
+                [ngClass]="{ 'btn-primary': !courseData.accesses[rootItem.accessId].passed, 'btn-outline-primary': courseData.accesses[rootItem.accessId].passed }"
+                [disabled]="!isSetPlayable(rootItem.activityId)"
+                (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+                {{ 'COURSES_PLAY' | translate }}
+              </button>
+            } -->
+            @if (isSimpleSet(rootItem.activityId) && isSetAllowedPlay) {
+              @if (isSetPlayable(rootItem.activityId)) {
+                <button
+                  class="btn btn-play"
+                  [ngClass]="{ 'btn-primary': !courseData.accesses[rootItem.accessId].passed, 'btn-outline-primary': courseData.accesses[rootItem.accessId].passed }"
+                  (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+                  {{ 'COURSES_PLAY' | translate }}
+                </button>
+              } @else {
+                <div
+                  class="course-not-playable"
+                  [ngbTooltip]="'COURSE_ACTIVITY_NOT_PLAYABLE_REASON.NO_PLAYABLE_ACTIVITY_IN_SET' | translate"
+                  placement="top"
+                  role="status"
+                  [attr.aria-label]="'COURSES_NOT_PLAYABLE' | translate">
+                  <span class="status-text">{{ 'COURSES_NOT_PLAYABLE' | translate }}</span>
+                  <span class="material-icons-round info-icon">info_outline</span>
+                </div>
+              }
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPANDED CARD - SET CHILDREN -->
+  @if (courseData.activityData[rootItem.activityId].isExpanded) {
+    <div class="card-bottom">
+      <!-- <div class="card-line" *ngFor="let activityId of courseData.children[rootItem.activityId]"> -->
+      @for (activityId of courseData.children[rootItem.activityId]; track activityId) {
+        <cmp-course-card-activity-row
+          class="card-line"
+          [isCatalog]="isCatalog"
+          (courseLaunched)="playCourse($event)"
+          [courseData]="courseData"
+          [activityId]="activityId"
+          [isRunAct]="courseData.activityData[activityId].isRunAct"
+          [isInDetail]="isInDetail"></cmp-course-card-activity-row>
+      }
+      <!-- </div> -->
+    </div>
+  }
+</div>

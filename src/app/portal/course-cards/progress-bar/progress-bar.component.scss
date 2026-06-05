@@ -1,0 +1,33 @@
+@use '../../../../assets/scss/theme-config';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.completion-data {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 100%;
+  color: theme-config.$progress-bar-text;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+
+  &.is-detail {
+    justify-content: flex-start;
+  }
+
+  &.is-passed {
+    color: theme-config.$progress-bar-text-passed;
+    font-weight: 500;
+  }
+
+  &.no-gap {
+    gap: 0;
+  }
+}

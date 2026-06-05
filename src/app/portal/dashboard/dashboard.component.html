@@ -1,0 +1,260 @@
+<div #dashboardContainer>
+  <div class="dash-header">
+    <h1 [innerHTML]="'DASHBOARD_HEADER' | translate"></h1>
+    <div class="text-16" [innerHTML]="'DASHBOARD_DESCRIPTION' | translate"></div>
+  </div>
+
+  @if (!isDataLoading && !isBannerLoading) {
+    <div class="dash-top">
+      <div class="block-summary">
+        <div class="header">{{ 'DASHBOARD_TOP_HELLO' | translate }} {{ userFirstName }}!</div>
+        <div class="text-16" [innerHTML]="'DASHBOARD_TOP_THANKS' | translate"></div>
+        <div class="total-score">
+          <div class="score-num">{{ completionData.sections.all.percent }} %</div>
+          <div class="progress-bar">
+            <div class="progress-bar-inner" [style.width.%]="completionData.sections.all.percent"></div>
+          </div>
+        </div>
+        <div class="text-16 text-grey" [innerHTML]="'DASHBOARD_TOP_STATUS' + completionData.stateMsg.top | translate"></div>
+      </div>
+      <ngb-carousel class="block-banner-wrapper">
+        @for (rootItem of bannerData.topRootItems; track rootItem; let index = $index) {
+          <ng-template ngbSlide>
+            <div class="block-banner" [ngClass]="{ 'is-even': index % 2 === 0 }">
+              <h2 [innerHTML]="bannerData.activities[rootItem.activityId].localNameSafe"></h2>
+              @if (bannerData.extraData[rootItem.activityId] && bannerData.extraData[rootItem.activityId].tags.length > 0) {
+                <cmp-course-tags
+                  class="tag-items"
+                  [courseData]="bannerData"
+                  [rootItem]="rootItem"
+                  [optionsObj]="{ isShowMain: true, isShowCatalog: true, isShowDefaults: true, isShowSpecials: true }"></cmp-course-tags>
+              }
+              <cmp-act-data-line
+                class="event-details"
+                [courseData]="bannerData"
+                [rootItem]="rootItem"
+                [options]="{ isShowType: false, isShowRunCapacity: false, isShowFirstRun: true, isShowNoRunText: false }"></cmp-act-data-line>
+              @if (bannerData.activities[rootItem.activityId].launchUrl || (bannerParamLinkId && bannerData.activities[rootItem.activityId].params[bannerParamLinkId])) {
+                <div class="banner-bottom">
+                  @if (bannerData.activities[rootItem.activityId].launchUrl) {
+                    <a class="btn btn-outline-secondary" [href]="bannerData.activities[rootItem.activityId].launchUrl">
+                      {{ 'DASHBOARD_BANNER_SHOW_DETAILS' | translate }}
+                    </a>
+                  }
+                  @if (bannerParamLinkId && bannerData.activities[rootItem.activityId].params[bannerParamLinkId]) {
+                    <a class="btn btn-outline-secondary" target="_blank" [href]="bannerData.activities[rootItem.activityId].params[bannerParamLinkId]">
+                      {{ 'DASHBOARD_BANNER_ADD_TO_CALENDAR' | translate }}
+                    </a>
+                  }
+                </div>
+              }
+            </div>
+          </ng-template>
+        }
+      </ngb-carousel>
+    </div>
+  }
+
+  @if (isDataLoading || isBannerLoading) {
+    <div class="dash-top justify-content-center">
+      <div [inlineSVG]="'assets/img/register/spinner.svg'" class="input-icon"></div>
+    </div>
+  }
+
+  <div class="dash-overview-back">
+    <div class="dash-overview">
+      <h1 [innerHTML]="'DASHBOARD_OVER_HEADER' | translate"></h1>
+
+      @if (!isDataLoading) {
+        <div class="overview-blocks">
+          <div class="block-item" (click)="goToCourses(completionData.tagIds.mandatory)">
+            <h4 [innerHTML]="'DASHBOARD_OVER_BLOCK1_HEAD' | translate"></h4>
+            <div class="subheader text-16 text-grey" [innerHTML]="'DASHBOARD_OVER_BLOCK1_TEXT' | translate"></div>
+            <div class="total-score">
+              <div class="score-num">{{ completionData.sections.mandatory.completed }}/{{ completionData.sections.mandatory.total }}</div>
+              <div class="progress-bar">
+                <div class="progress-bar-inner" [style.width.%]="completionData.sections.mandatory.percent"></div>
+              </div>
+            </div>
+            <div class="result-text text-16" [innerHTML]="'DASHBOARD_OVER_STATE' + completionData.stateMsg.mandatory | translate"></div>
+            @if (completionData.reminderMsg.mandatory.dueDate) {
+              <div class="text-12" [innerHTML]="'DASHBOARD_OVER_REMINDER_DUE_DATE' | translate"></div>
+            }
+            @if (completionData.reminderMsg.mandatory.file) {
+              <div class="text-12" [innerHTML]="'DASHBOARD_OVER_REMINDER_FILE' | translate"></div>
+            }
+            @if (completionData.reminderMsg.mandatory.term) {
+              <div class="text-12" [innerHTML]="'DASHBOARD_OVER_REMINDER_TERM' | translate"></div>
+            }
+          </div>
+          @if (completionData.sections.manager.total > 0) {
+            <div class="block-item" (click)="goToCourses(completionData.tagIds.manager, 'mng')">
+              <h4 [innerHTML]="'DASHBOARD_OVER_BLOCK21_HEAD' | translate"></h4>
+              <div class="subheader text-16 text-grey" [innerHTML]="'DASHBOARD_OVER_BLOCK21_TEXT' | translate"></div>
+              <div class="total-score">
+                <div class="score-num">{{ completionData.sections.manager.completed }}/{{ completionData.sections.manager.total }}</div>
+                <div class="progress-bar">
+                  <div class="progress-bar-inner" [style.width.%]="completionData.sections.manager.percent"></div>
+                </div>
+              </div>
+              <div class="result-text text-16" [innerHTML]="'DASHBOARD_OVER_STATE' + completionData.stateMsg.manager | translate"></div>
+              @if (completionData.reminderMsg.manager.dueDate) {
+                <div class="text-12" [innerHTML]="'DASHBOARD_OVER_REMINDER_DUE_DATE' | translate"></div>
+              }
+              @if (completionData.reminderMsg.manager.file) {
+                <div class="text-12" [innerHTML]="'DASHBOARD_OVER_REMINDER_FILE' | translate"></div>
+              }
+              @if (completionData.reminderMsg.manager.term) {
+                <div class="text-12" [innerHTML]="'DASHBOARD_OVER_REMINDER_TERM' | translate"></div>
+              }
+            </div>
+          }
+          <div class="block-item" (click)="goToCourses(completionData.tagIds.optional, 'opt')">
+            <h4 [innerHTML]="'DASHBOARD_OVER_BLOCK22_HEAD' | translate"></h4>
+            <div class="subheader text-16 text-grey" [innerHTML]="'DASHBOARD_OVER_BLOCK22_TEXT' | translate"></div>
+            <div class="total-score">
+              <div class="score-num">{{ completionData.sections.optional.completed }}/{{ completionData.sections.optional.total }}</div>
+              <div class="progress-bar">
+                <div class="progress-bar-inner" [style.width.%]="completionData.sections.optional.percent"></div>
+              </div>
+            </div>
+            <div class="result-text text-16" [innerHTML]="'DASHBOARD_OVER_STATE' + completionData.stateMsg.optional | translate"></div>
+            @if (completionData.reminderMsg.optional.dueDate) {
+              <div class="text-12" [innerHTML]="'DASHBOARD_OVER_REMINDER_DUE_DATE' | translate"></div>
+            }
+            @if (completionData.reminderMsg.optional.file) {
+              <div class="text-12" [innerHTML]="'DASHBOARD_OVER_REMINDER_FILE' | translate"></div>
+            }
+            @if (completionData.reminderMsg.optional.term) {
+              <div class="text-12" [innerHTML]="'DASHBOARD_OVER_REMINDER_TERM' | translate"></div>
+            }
+          </div>
+          @if (completionData.sections.certs.completed > 0) {
+            <div class="block-item" (click)="goToCourses(completionData.tagIds.certs)">
+              <h4 [innerHTML]="'DASHBOARD_OVER_BLOCK3_HEAD' | translate"></h4>
+              <div class="subheader text-16 text-grey" [innerHTML]="'DASHBOARD_OVER_BLOCK3_TEXT' | translate"></div>
+              <div class="total-score">
+                <div class="score-num certs">{{ completionData.sections.certs.completed }}</div>
+                <div class="progress-bar">
+                  <div class="progress-bar-inner" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="result-text text-16" [innerHTML]="'DASHBOARD_OVER_CERT_STATE' | translate"></div>
+              @if (completionData.reminderMsg.certs.dueDateSoon) {
+                <div class="text-12" [innerHTML]="'DASHBOARD_OVER_REMINDER_CERT_SOON' | translate"></div>
+              }
+              @if (completionData.reminderMsg.certs.dueDateAfter) {
+                <div class="text-12" [innerHTML]="'DASHBOARD_OVER_REMINDER_CERT_AFTER' | translate"></div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (isDataLoading) {
+        <div class="dash-top justify-content-center">
+          <div [inlineSVG]="'assets/img/register/spinner_white.svg'" class="input-icon"></div>
+        </div>
+      }
+
+      <div class="catalog-banner">
+        <div class="text-part">
+          <h1 [innerHTML]="'COURSES_CATALOG_BANNER_HEADER' | translate"></h1>
+          <div class="text-16" [innerHTML]="'COURSES_CATALOG_BANNER_TEXT' | translate"></div>
+          <button class="btn btn-outline-secondary" routerLink="/portal/catalog">
+            {{ 'COURSES_CATALOG_BANNER_BUTTON' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="signpost-background">
+    <div class="signpost">
+      @if (!isSignpostLoading && signpostData[dashFolderIds.library] && signpostData[dashFolderIds.library].length > 0) {
+        <div class="carousel-multi-block">
+          <h1 [innerHTML]="'DASHBOARD_SIGNPOST_HEADER1' | translate"></h1>
+          <div class="result-text text-16" [innerHTML]="'DASHBOARD_SIGNPOST_TEXT1' | translate"></div>
+          <ngb-carousel id="id-cat-carousel-library" [wrap]="false" [interval]="0" [animation]="false" [showNavigationIndicators]="false">
+            @for (actObj of signpostData[dashFolderIds.library]; track actObj; let first = $first) {
+              <ng-template ngbSlide>
+                <div class="signpost-item">
+                  <div class="item-header">
+                    <img class="header-image" [src]="getSignpostHeaderImg(actObj)" alt="course image" />
+                  </div>
+                  <div class="item-body">
+                    <h2 class="act-name" [innerHTML]="actObj.localNameSafe"></h2>
+                    <div class="act-desc text-16" [innerHTML]="actObj.localDescSafe"></div>
+                    @if (actObj.launchUrl) {
+                      <a class="btn btn-primary" [href]="actObj.launchUrl" target="_blank">
+                        {{ 'DASHBOARD_SIGNPOST_BUTTON1' | translate }}
+                        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M10.5 7L15.5 12L10.5 17" stroke="white" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                      </a>
+                    }
+                  </div>
+                </div>
+              </ng-template>
+            }
+          </ngb-carousel>
+        </div>
+      }
+
+      @if (!isSignpostLoading && signpostData[dashFolderIds.community] && signpostData[dashFolderIds.community].length > 0) {
+        <div class="carousel-multi-block">
+          <h1 [innerHTML]="'DASHBOARD_SIGNPOST_HEADER2' | translate"></h1>
+          <ngb-carousel id="id-cat-carousel-community" [wrap]="false" [interval]="0" [animation]="false" [showNavigationIndicators]="false">
+            @for (actObj of signpostData[dashFolderIds.community]; track actObj; let first = $first) {
+              <ng-template ngbSlide>
+                <div class="signpost-item">
+                  <div class="item-header">
+                    <img class="header-image" [src]="getSignpostHeaderImg(actObj)" alt="course image" />
+                  </div>
+                  <div class="item-body">
+                    <h2 class="act-name" [innerHTML]="actObj.localNameSafe"></h2>
+                    <div class="act-desc text-16" [innerHTML]="actObj.localDescSafe"></div>
+                    @if (actObj.launchUrl) {
+                      <a class="btn btn-primary" [href]="actObj.launchUrl" target="_blank">
+                        {{ 'DASHBOARD_SIGNPOST_BUTTON1' | translate }}
+                        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M10.5 7L15.5 12L10.5 17" stroke="white" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                      </a>
+                    }
+                  </div>
+                </div>
+              </ng-template>
+            }
+          </ngb-carousel>
+        </div>
+      }
+
+      @if (isSignpostLoading) {
+        <div class="justify-content-center mb-5">
+          <div [inlineSVG]="'assets/img/register/spinner.svg'" class="input-icon"></div>
+        </div>
+      }
+
+      <div class="catalog-banner">
+        <div class="text-part">
+          <h1 [innerHTML]="'DASHBOARD_BANNER_HEADER' | translate"></h1>
+          <div class="text-16" [innerHTML]="'DASHBOARD_BANNER_TEXT' | translate"></div>
+          <a class="btn btn-outline-secondary" href="https://www.aricoma.com/cs/co-delame/akademie" target="_blank">
+            {{ 'DASHBOARD_BANNER_BUTTON' | translate }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feedback-form-back">
+    <div class="feedback-form">
+      <h1 [innerHTML]="'DASHBOARD_FORM_HEADER' | translate"></h1>
+      <div class="form-right">
+        <div class="text-16" [innerHTML]="'DASHBOARD_FORM_MESSAGE' | translate"></div>
+        <a class="btn btn-primary" href="https://forms.office.com/e/FvZNsiuHJJ" target="_blank" [innerHTML]="'DASHBOARD_FORM_BUTTON' | translate"></a>
+      </div>
+    </div>
+  </div>
+</div>

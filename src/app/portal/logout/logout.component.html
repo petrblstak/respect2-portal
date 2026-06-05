@@ -1,0 +1,18 @@
+<div class="logout-page container">
+  <div class="row g-0 justify-content-center">
+    <h2 class="text-center" [innerHTML]="'LOGOUT_HEADER' | translate"></h2>
+    <div class="box-options">
+      @if (environment.isHomePublic) {
+        <div>
+          <div class="text-20" [innerHTML]="'LOGOUT_GO_HOME' | translate"></div>
+          <a class="btn btn-primary mb-4" [routerLink]="['/']" [innerHTML]="'NAVIGATION_HOME' | translate"></a>
+          <hr class="mb-4">
+        </div>
+      }
+      <div>
+        <div class="text-20" [innerHTML]="'LOGOUT_GO_LOGIN' | translate"></div>
+        <a class="btn btn-primary" [routerLink]="['/portal/auth']" [innerHTML]="'NAVIGATION_LOGIN' | translate"></a>
+      </div>
+    </div>
+  </div>
+</div>

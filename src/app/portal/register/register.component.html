@@ -1,0 +1,500 @@
+@if (!environment.isRegistrationOpen) {
+  <div class="register-page container">
+    <h2 class="text-center text-blue" [innerHTML]="'REGISTER_HEADER' | translate"></h2>
+    <div class="mt-3 text-center" [innerHTML]="'REGISTER_INFO_DISABLED' | translate"></div>
+  </div>
+}
+@if (environment.isRegistrationOpen) {
+  <div class="register-page container">
+    @if (!isRegisterDone) {
+      <h2 class="text-center text-blue" [innerHTML]="'REGISTER_HEADER' | translate"></h2>
+    }
+    <div class="row g-0 justify-content-center">
+      <div class="col col-sm-8 col-md-6">
+        @if (selectedReg === null) {
+          <div class="mb-4 text-center">
+            <div class="hb-subtitle text-center mb-3" [innerHTML]="'REGISTER_SET_ROLE' | translate"></div>
+          </div>
+        }
+        <!-- <div class="mb-4 d-flex justify-content-around">
+        <div class="user-type text-center" (click)="selectReg('student')"
+          *ngIf="selectedReg === null || selectedReg === 'student'">
+          <img src="assets/img/register/student.png" class="">
+          <div class="hb-normal text-center" *ngIf="selectedReg === null"
+          [innerHTML]="'REGISTER_ROLE_STUDENT' | translate"></div>
+        </div>
+        <div class="user-type text-center" (click)="selectReg('teacher')"
+          *ngIf="selectedReg === null || selectedReg === 'teacher'">
+          <img src="assets/img/register/teacher.png" class="">
+          <div class="hb-normal text-center" *ngIf="selectedReg === null"
+          [innerHTML]="'REGISTER_ROLE_TEACHER' | translate"></div>
+        </div>
+        <div class="user-type text-center" (click)="selectReg('public')"
+          *ngIf="selectedReg === null || selectedReg === 'public'">
+          <img src="assets/img/register/user.png" class="">
+          <div class="hb-normal text-center" *ngIf="selectedReg === null"
+          [innerHTML]="'REGISTER_ROLE_PUBLIC' | translate"></div>
+        </div>
+      </div> -->
+      </div>
+    </div>
+    @if (isRegisterDone) {
+      <div class="row g-0 justify-content-center">
+        @if (selectedReg === 'teacher' || selectedReg === 'public') {
+          <div class="col-12 col-md-8 col-xl-6">
+            <div class="mb-3 text-center">
+              <div class="hb-normal text-center" [innerHTML]="'REGISTER_REQUEST_REGISTERED1' | translate"></div>
+            </div>
+            <div class="mb-5 text-center">
+              <div class="hb-normal text-center">
+                {{ 'REGISTER_REQUEST_REGISTERED2' | translate }}
+                <span class="hb-normal-bold text-blue">{{ registeredEmail }}</span>
+              </div>
+            </div>
+            <hr />
+            <div class="mt-5 mb-3 text-center">
+              <div class="hb-normal text-center" [innerHTML]="'REGISTER_REQUEST_REGISTERED3' | translate"></div>
+            </div>
+          </div>
+        }
+        @if (selectedReg === 'student') {
+          <div class="col-12 col-md-8 col-xl-6">
+            <div class="mt-4 mb-4 text-center">
+              <div class="hb-normal text-center mb-4" [innerHTML]="'REGISTER_ACCOUNT_CREATED_TEXT' | translate"></div>
+              <button class="btn btn-primary" routerLink="/portal/auth" [innerHTML]="'LOGIN_HEADER' | translate"></button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+    <div class="row g-0 justify-content-center" [ngClass]="{ 'd-none': isRegisterDone }">
+      <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+        @if (selectedReg === 'teacher') {
+          <div class="teacher-register mb-5">
+            <div class="mb-3 text-center" [ngClass]="{ 'd-none': regFormTeacher.get('selectedSchool')?.value !== null }">
+              <div class="hb-subtitle text-center" [innerHTML]="'REGISTER_SET_SCHOOL' | translate"></div>
+            </div>
+            @if (regFormTeacher.get('selectedSchool')?.value !== null) {
+              <div class="hb-link text-center mb-3" (click)="resetSchool(true)">
+                {{ schoolData.school[regFormTeacher.get('selectedSchool')?.value].name }}
+              </div>
+            }
+            @if (regFormTeacher.get('selectedSchool')?.value !== null) {
+              <div class="hb-normal text-center mb-3" [innerHTML]="'REGISTER_FILL_PERSONAL' | translate"></div>
+            }
+            <div class="mb-3" [ngClass]="{ 'd-none': regFormTeacher.get('selectedSchool')?.value !== null }">
+              <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_COUNTRY' | translate"></label>
+              <ng-select [(ngModel)]="selectedState" [searchable]="!isTouchDevice" (change)="loadSchoolsByState(true)" (clear)="resetSelects('state', true)">
+                @for (langId of langsAvailable; track langId) {
+                  <ng-option [value]="langId">
+                    {{ langSettings.LANG_CONFIG[langId].countryName }}
+                  </ng-option>
+                }
+              </ng-select>
+            </div>
+            @if (isDataLoading && selectedState) {
+              <div [innerHTML]="'REGISTER_SET_SCHOOL_LOADING' | translate"></div>
+            }
+            @if (!isDataLoading && selectedState) {
+              <div>
+                <div class="mb-3" [ngClass]="{ 'd-none': regFormTeacher.get('selectedSchool')?.value !== null }">
+                  <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_REGION' | translate"></label>
+                  <ng-select [(ngModel)]="selectedRegion" [searchable]="!isTouchDevice" (change)="resetSelects('region', false)" (clear)="resetSelects('region', true)">
+                    @for (region of schoolData.region | keyvalue; track region) {
+                      <ng-option [value]="region.key">{{ region.value.name }}</ng-option>
+                    }
+                  </ng-select>
+                </div>
+                @if (selectedRegion) {
+                  <div class="mb-3" [ngClass]="{ 'd-none': regFormTeacher.get('selectedSchool')?.value !== null }">
+                    <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_CITY' | translate"></label>
+                    <ng-select
+                      [(ngModel)]="selectedCity"
+                      [searchable]="!isTouchDevice"
+                      (change)="setSchoolsEnabled('teacher')"
+                      (clear)="resetSelects('city', true)"
+                      [disabled]="selectedRegion == null">
+                      @for (city of getCitiesToSelect(); track city) {
+                        <ng-option [value]="city">
+                          {{ schoolData.city[city].name }}
+                        </ng-option>
+                      }
+                    </ng-select>
+                  </div>
+                }
+                <form [formGroup]="regFormTeacher" (ngSubmit)="onSubmitTeacher()">
+                  @if (selectedCity) {
+                    <div class="mb-3" [ngClass]="{ 'd-none': regFormTeacher.get('selectedSchool')?.value !== null }">
+                      <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_SCHOOL' | translate"></label>
+                      <ng-select formControlName="selectedSchool" [searchable]="!isTouchDevice">
+                        @for (schoolId of getSchoolsToSelect(); track schoolId) {
+                          <ng-option [value]="schoolId">
+                            {{ schoolData.school[schoolId].name }}
+                          </ng-option>
+                        }
+                      </ng-select>
+                    </div>
+                  }
+                  @if (regFormTeacher.get('selectedSchool')?.value !== null) {
+                    <fieldset>
+                      <div class="mb-3">
+                        <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_NAME' | translate"></label>
+                        <input type="input" autocomplete="off" id="firstName" class="form-control" formControlName="firstName" />
+                        @if (!regFormTeacher.get('firstName')?.valid && regFormTeacher.get('firstName')?.touched) {
+                          <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_NAME' | translate"></div>
+                        }
+                      </div>
+                      <div class="mb-4">
+                        <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_SURNAME' | translate"></label>
+                        <input type="input" autocomplete="off" id="lastName" class="form-control" formControlName="lastName" />
+                        @if (!regFormTeacher.get('lastName')?.valid && regFormTeacher.get('lastName')?.touched) {
+                          <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_NAME' | translate"></div>
+                        }
+                      </div>
+                      <div class="mb-3">
+                        <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_EMAIL' | translate"></label>
+                        <input type="input" id="email" class="form-control" formControlName="email" />
+                        @if (!regFormTeacher.get('email')?.valid && regFormTeacher.get('email')?.touched) {
+                          <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_EMAIL' | translate"></div>
+                        }
+                      </div>
+                      <div class="mb-3">
+                        <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_PASSWORD' | translate"></label>
+                        <div class="input-with-icon">
+                          <input
+                            [type]="isTeacherPassText ? 'text' : 'password'"
+                            autocomplete="new-password"
+                            class="form-control mb-2"
+                            formControlName="password"
+                            [placeholder]="'REGISTER_FIELD_PASSWORD_HINT' | translate" />
+                          <div [inlineSVG]="'assets/img/register/eye.svg'" class="input-icon" (click)="isTeacherPassText = !isTeacherPassText" [ngClass]="{ 'icon-active': isTeacherPassText }"></div>
+                        </div>
+                        @if (!regFormTeacher.get('password')?.valid && regFormTeacher.get('password')?.touched) {
+                          <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_PASSWORD' | translate"></div>
+                        }
+                      </div>
+                      <div class="mb-4 form-check">
+                        <input type="checkbox" class="form-check-input" id="gdpr" formControlName="gdpr" />
+                        <a
+                          class="hb-normal text-violet"
+                          for="gdpr"
+                          [innerHTML]="'REGISTER_CONDITIONS' | translate"
+                          [href]="'../../assets/doc/conditions_' + getActualLang() + '.pdf'"
+                          download="conditions.pdf"
+                          target="_self"></a>
+                        @if (!regFormTeacher.get('gdpr')?.valid && regFormTeacher.get('gdpr')?.touched) {
+                          <div class="form-text ms-3 text-red" [innerHTML]="'REGISTER_FIELD_ERROR_CONDITIONS' | translate"></div>
+                        }
+                      </div>
+                      @if (isUseCaptcha) {
+                        <div class="mb-5 text-center">
+                          <div class="d-flex justify-content-center">
+                            <re-captcha (resolved)="captchaResolved($event)" [siteKey]="recaptchaKey"></re-captcha>
+                          </div>
+                          @if (isShowCaptchaPrompt) {
+                            <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_CAPTCHA' | translate"></div>
+                          }
+                        </div>
+                      }
+                      <div class="d-flex justify-content-center">
+                        <div>
+                          @if (isRegistrationRunning) {
+                            <div [inlineSVG]="'assets/img/register/spinner.svg'" class="input-icon"></div>
+                          }
+                          @if (isRegistrationRunning) {
+                            <div class="hb-normal text-violet" [innerHTML]="'REGISTER_INFO_REGISTRATION_RUNNING' | translate"></div>
+                          }
+                        </div>
+                        @if (!isRegistrationRunning) {
+                          <button class="btn btn-primary" type="submit" [innerHTML]="'REGISTER_BUTTON_REGISTER' | translate"></button>
+                        }
+                      </div>
+                    </fieldset>
+                  }
+                </form>
+              </div>
+            }
+          </div>
+        }
+        @if (selectedReg === 'student') {
+          <div class="teacher-register mb-5">
+            <div class="mb-3 text-center" [ngClass]="{ 'd-none': regFormStudent.get('selectedClass')?.value !== null }">
+              <div class="hb-normal text-center" [innerHTML]="'REGISTER_SET_SCHOOL_STUDENT' | translate"></div>
+            </div>
+            @if (regFormStudent.get('selectedClass')?.value !== null) {
+              <div class="hb-link text-center mb-3" (click)="resetSchool(false)">
+                {{ schoolData.school[regFormStudent.get('selectedSchool')?.value].name }},
+                {{ classesData[regFormStudent.get('selectedClass')?.value].name }}
+              </div>
+            }
+            @if (regFormStudent.get('selectedClass')?.value !== null) {
+              <div class="hb-normal text-center mb-3" [innerHTML]="'REGISTER_FILL_PERSONAL_STUDENT' | translate"></div>
+            }
+            <div class="mb-3" [ngClass]="{ 'd-none': regFormStudent.get('selectedClass')?.value !== null }">
+              <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_COUNTRY' | translate"></label>
+              <ng-select [(ngModel)]="selectedState" [searchable]="!isTouchDevice" (change)="loadSchoolsByState(false)" (clear)="resetSelects('state', false)">
+                @for (langId of langsAvailable; track langId) {
+                  <ng-option [value]="langId">
+                    {{ langSettings.LANG_CONFIG[langId].countryName }}
+                  </ng-option>
+                }
+              </ng-select>
+            </div>
+            @if (isDataLoading && selectedState) {
+              <div [innerHTML]="'REGISTER_SET_SCHOOL_LOADING' | translate"></div>
+            }
+            @if (!isDataLoading && selectedState) {
+              <div>
+                <div class="mb-3" [ngClass]="{ 'd-none': regFormStudent.get('selectedClass')?.value !== null }">
+                  <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_REGION' | translate"></label>
+                  <ng-select [(ngModel)]="selectedRegion" [searchable]="!isTouchDevice" (change)="resetSelects('region', false)" (clear)="resetSelects('region', false)">
+                    @for (region of schoolData.region | keyvalue; track region) {
+                      <ng-option [value]="region.key">{{ region.value.name }}</ng-option>
+                    }
+                  </ng-select>
+                </div>
+                @if (selectedRegion) {
+                  <div class="mb-3" [ngClass]="{ 'd-none': regFormStudent.get('selectedClass')?.value !== null }">
+                    <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_CITY' | translate"></label>
+                    <ng-select
+                      [(ngModel)]="selectedCity"
+                      [searchable]="!isTouchDevice"
+                      (change)="setSchoolsEnabled('student')"
+                      [disabled]="selectedRegion == null"
+                      (clear)="resetSelects('city', false)">
+                      @for (city of getCitiesToSelect(); track city) {
+                        <ng-option [value]="city">
+                          {{ schoolData.city[city].name }}
+                        </ng-option>
+                      }
+                    </ng-select>
+                  </div>
+                }
+                <form [formGroup]="regFormStudent" (ngSubmit)="onSubmitStudent()">
+                  @if (selectedCity) {
+                    <div class="mb-3" [ngClass]="{ 'd-none': regFormStudent.get('selectedClass')?.value !== null }">
+                      <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_SCHOOL' | translate"></label>
+                      <ng-select formControlName="selectedSchool" [searchable]="!isTouchDevice" (change)="getSchoolClasses()" (clear)="resetSelects('school', false)">
+                        @for (schoolId of getSchoolsToSelect(); track schoolId) {
+                          <ng-option [value]="schoolId">
+                            {{ schoolData.school[schoolId].name }}
+                          </ng-option>
+                        }
+                      </ng-select>
+                    </div>
+                  }
+                  @if (regFormStudent.get('selectedSchool')?.value !== null) {
+                    <div class="mb-3" [ngClass]="{ 'd-none': regFormStudent.get('selectedClass')?.value !== null }">
+                      <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_CLASS' | translate"></label>
+                      <ng-select formControlName="selectedClass" [searchable]="!isTouchDevice">
+                        @for (classId of availableClasses; track classId) {
+                          <ng-option [value]="classId">{{ classesData[classId].name }}</ng-option>
+                        }
+                      </ng-select>
+                    </div>
+                  }
+                  @if (regFormStudent.get('selectedClass')?.value !== null) {
+                    <fieldset>
+                      <div class="mb-4">
+                        <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_PASSWORD_CLASS' | translate"></label>
+                        <input type="password" autocomplete="new-password" id="classPass" class="form-control" formControlName="classPass" />
+                        @if (!regFormStudent.get('classPass')?.valid && regFormStudent.get('classPass')?.touched) {
+                          <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_PASSWORD' | translate"></div>
+                        }
+                      </div>
+                      <div class="mb-3">
+                        <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_LOGIN' | translate"></label>
+                        <input type="input" autocomplete="off" id="nickname" class="form-control" [placeholder]="'REGISTER_FIELD_NICKNAME' | translate" formControlName="nickname" />
+                        @if (!regFormStudent.get('nickname')?.valid && regFormStudent.get('nickname')?.touched) {
+                          <div class="form-text text-red" [innerHTML]="('REGISTER_FIELD_ERROR_NAME' | translate) + ', ' + ('REGISTER_FIELD_PASSWORD_HINT' | translate)"></div>
+                        }
+                      </div>
+                      <div class="mb-3">
+                        <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_PASSWORD' | translate"></label>
+                        <div class="input-with-icon">
+                          <input
+                            [type]="isStudentPassText ? 'text' : 'password'"
+                            autocomplete="new-password"
+                            class="form-control mb-2"
+                            formControlName="password"
+                            [placeholder]="'REGISTER_FIELD_PASSWORD_HINT' | translate" />
+                          <div [inlineSVG]="'assets/img/register/eye.svg'" class="input-icon" (click)="isStudentPassText = !isStudentPassText" [ngClass]="{ 'icon-active': isStudentPassText }"></div>
+                        </div>
+                        @if (!regFormStudent.get('password')?.valid && regFormStudent.get('password')?.touched) {
+                          <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_PASSWORD' | translate"></div>
+                        }
+                      </div>
+                      <div class="mb-4">
+                        <label class="hb-normal text-violet" [innerHTML]="'REGISTER_FIELD_PASSWORD_REPEAT' | translate"></label>
+                        <div class="input-with-icon">
+                          <input
+                            [type]="isStudentRepPassText ? 'text' : 'password'"
+                            autocomplete="new-password"
+                            class="form-control mb-2"
+                            formControlName="confirmPassword"
+                            [placeholder]="'REGISTER_FIELD_PASSWORD_REPEAT_HINT' | translate" />
+                          <div
+                            [inlineSVG]="'assets/img/register/eye.svg'"
+                            class="input-icon"
+                            (click)="isStudentRepPassText = !isStudentRepPassText"
+                            [ngClass]="{ 'icon-active': isStudentRepPassText }"></div>
+                        </div>
+                        @if (!regFormStudent.get('confirmPassword')?.valid && regFormStudent.get('confirmPassword')?.touched) {
+                          <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_PASSWORD_REPEAT' | translate"></div>
+                        }
+                      </div>
+                      @if (isUseCaptcha) {
+                        <div class="mb-5 text-center">
+                          <div class="d-flex justify-content-center">
+                            <re-captcha (resolved)="captchaResolved($event)" [siteKey]="recaptchaKey"></re-captcha>
+                          </div>
+                          @if (isShowCaptchaPrompt) {
+                            <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_CAPTCHA_STUDENT' | translate"></div>
+                          }
+                        </div>
+                      }
+                      <div class="d-flex justify-content-center">
+                        <div>
+                          @if (isRegistrationRunning) {
+                            <div [inlineSVG]="'assets/img/register/spinner.svg'" class="input-icon"></div>
+                          }
+                          @if (isRegistrationRunning) {
+                            <div class="hb-normal text-violet" [innerHTML]="'REGISTER_INFO_REGISTRATION_RUNNING' | translate"></div>
+                          }
+                        </div>
+                        @if (!isRegistrationRunning) {
+                          <button class="btn btn-primary" type="submit" [innerHTML]="'REGISTER_BUTTON_REGISTER' | translate"></button>
+                        }
+                      </div>
+                    </fieldset>
+                  }
+                </form>
+              </div>
+            }
+          </div>
+        }
+        @if (selectedReg === 'public') {
+          <div class="teacher-register mb-5">
+            <div class="my-3 text-center text-16-bold" [innerHTML]="'REGISTER_INTRO' | translate"></div>
+            <form [formGroup]="regFormPublic" (ngSubmit)="onSubmitPublic()">
+              <div class="mb-3">
+                <label class="text-16" [innerHTML]="'REGISTER_FIELD_NAME' | translate"></label>
+                <input type="input" id="firstName" class="form-control" formControlName="firstName" />
+                @if (!regFormPublic.get('firstName')?.valid && regFormPublic.get('firstName')?.touched) {
+                  <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_NAME' | translate"></div>
+                }
+              </div>
+              <div class="mb-3">
+                <label class="text-16" [innerHTML]="'REGISTER_FIELD_SURNAME' | translate"></label>
+                <input type="input" id="lastName" class="form-control" formControlName="lastName" />
+                @if (!regFormPublic.get('lastName')?.valid && regFormPublic.get('lastName')?.touched) {
+                  <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_NAME' | translate"></div>
+                }
+              </div>
+              <div class="mb-3">
+                <label [innerHTML]="'REGISTER_FIELD_EMAIL' | translate"></label>
+                <input type="input" id="email" class="form-control" formControlName="email" />
+                @if (!regFormPublic.get('email')?.valid && regFormPublic.get('email')?.touched) {
+                  <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_EMAIL' | translate"></div>
+                }
+              </div>
+              <div class="mb-3">
+                <label class="text-16" [innerHTML]="'REGISTER_FIELD_JOB' | translate"></label>
+                <input type="input" id="position" class="form-control" formControlName="position" />
+                @if (!regFormPublic.get('position')?.valid && regFormPublic.get('position')?.touched) {
+                  <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_NAME' | translate"></div>
+                }
+              </div>
+              <div class="mb-3">
+                <label class="text-16" [innerHTML]="'REGISTER_FIELD_SIZE' | translate"></label>
+                <ng-select formControlName="compSize" [searchable]="false" [placeholder]="'&nbsp;&nbsp; zvolte velikost'">
+                  @for (position of availableSizes; track position) {
+                    <ng-option [value]="position">
+                      {{ position }}
+                    </ng-option>
+                  }
+                </ng-select>
+                @if (!regFormPublic.get('compSize')?.valid && regFormPublic.get('compSize')?.touched) {
+                  <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_NAME' | translate"></div>
+                }
+              </div>
+              <div class="mb-5">
+                <label class="text-16" [innerHTML]="'REGISTER_FIELD_SOURCE' | translate"></label>
+                <ng-select formControlName="selectedSource" [searchable]="false" [placeholder]="'&nbsp;&nbsp; zvolte možnost'">
+                  @for (source of availableSources; track source) {
+                    <ng-option [value]="source.name">
+                      {{ source.desc }}
+                    </ng-option>
+                  }
+                </ng-select>
+                @if (!regFormPublic.get('selectedSource')?.valid && regFormPublic.get('selectedSource')?.touched) {
+                  <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_NAME' | translate"></div>
+                }
+              </div>
+              <hr class="mb-5 text-grey" />
+              <div class="my-3 text-center text-16-bold" [innerHTML]="'REGISTER_INTRO2' | translate"></div>
+              <div class="mb-5">
+                <label [innerHTML]="'REGISTER_FIELD_PASSWORD' | translate"></label>
+                <div class="input-with-icon">
+                  <input
+                    [type]="isTeacherPassText ? 'text' : 'password'"
+                    autocomplete="new-password"
+                    class="form-control mb-2"
+                    formControlName="password"
+                    [placeholder]="'REGISTER_FIELD_PASSWORD_HINT' | translate" />
+                  <div [inlineSVG]="'assets/img/register/eye.svg'" class="input-icon" (click)="isTeacherPassText = !isTeacherPassText" [ngClass]="{ 'icon-active': isTeacherPassText }"></div>
+                </div>
+                @if (!regFormPublic.get('password')?.valid && regFormPublic.get('password')?.touched) {
+                  <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_PASSWORD' | translate"></div>
+                }
+              </div>
+              <hr class="mb-5 text-grey" />
+              <div class="my-3 text-center text-16-bold" [innerHTML]="'REGISTER_INTRO3' | translate"></div>
+              <div class="form-check d-flex justify-content-center">
+                <input type="checkbox" class="form-check-input" id="gdpr" formControlName="gdpr" />
+                <div class="pt-1 ps-2 text-16">
+                  <span [innerHTML]="'REGISTER_CONDITIONS' | translate"></span>
+                  &nbsp;-&nbsp;
+                  <a class="text-16" [innerHTML]="'FOOTER_GDPR' | translate" routerLink="/pages/gdpr" target="_blank"></a>
+                  ,&nbsp;
+                  <a class="text-16" [innerHTML]="'FOOTER_COOKIES' | translate" routerLink="/pages/cookies" target="_blank"></a>
+                  &nbsp;
+                  <span [innerHTML]="'REGISTER_CONDITIONS_AND' | translate"></span>
+                  &nbsp;
+                  <a class="text-16" [innerHTML]="'FOOTER_CONDITIONS' | translate" routerLink="/pages/conditions" target="_blank"></a>
+                  .
+                </div>
+              </div>
+              @if (!regFormPublic.get('gdpr')?.valid && regFormPublic.get('gdpr')?.touched) {
+                <div class="mt-1 form-text text-red text-center" [innerHTML]="'REGISTER_FIELD_ERROR_CONDITIONS' | translate"></div>
+              }
+              @if (isUseCaptcha) {
+                <div class="mb-5 mt-4 text-center">
+                  <div class="d-flex justify-content-center">
+                    <re-captcha #captchaRefPublic (resolved)="captchaResolved($event)" [siteKey]="recaptchaKey"></re-captcha>
+                  </div>
+                  @if (isShowCaptchaPrompt) {
+                    <div class="form-text text-red" [innerHTML]="'REGISTER_FIELD_ERROR_CAPTCHA' | translate"></div>
+                  }
+                </div>
+              }
+              <div class="mt-4 d-flex justify-content-center">
+                <div>
+                  @if (isRegistrationRunning) {
+                    <div [inlineSVG]="'assets/img/register/spinner_white.svg'" class="input-icon"></div>
+                  }
+                  @if (isRegistrationRunning) {
+                    <div class="" [innerHTML]="'REGISTER_INFO_REGISTRATION_RUNNING' | translate"></div>
+                  }
+                </div>
+                @if (!isRegistrationRunning) {
+                  <button class="btn btn-primary" type="submit" [innerHTML]="'REGISTER_BUTTON_REGISTER' | translate"></button>
+                }
+              </div>
+            </form>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

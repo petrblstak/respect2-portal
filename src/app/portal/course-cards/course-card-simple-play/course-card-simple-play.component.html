@@ -1,0 +1,142 @@
+<div class="card simple-play">
+  <!-- CARD HEADER -->
+  <div class="card-header d-flex justify-content-center is-clickable" (click)="openPageDetail(rootItem)">
+    <!-- COURSE IMAGE -->
+    <div class="course-image">
+      <img [src]="getActHeaderImg()" alt="course image" />
+    </div>
+
+    <!-- COURSE TAGS -->
+    @if (courseData.extraData[rootItem.activityId] && courseData.extraData[rootItem.activityId].tags.length > 0) {
+      <cmp-course-tags class="tags" [courseData]="courseData" [rootItem]="rootItem" [optionsObj]="{ isShowMain: true, isShowDefaults: true }"></cmp-course-tags>
+    }
+
+    <!-- SET EXPAND ICON -->
+    <div class="set-expand" [inlineSVG]="'assets/img/courses/expand_set.svg'" alt="Expand set"></div>
+    @if (isRequested) {
+      <div class="item-requested" [ngbTooltip]="'CATALOG_ACTIVITY_REQUEST_TOOLTIP' | translate" [inlineSVG]="'assets/img/header/mail.svg'" alt="Requested"></div>
+    }
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="card-mid">
+    @if (rootItem) {
+      <cmp-progress-bar
+        [completion]="getActCompletionPercentage()"
+        [treshold]="getActCompletionTreshold()"
+        [completionData]="getActCompletionData()"
+        class="completion-block"
+        [isInDetail]="true"></cmp-progress-bar>
+    }
+    <svg width="285" height="4" viewBox="0 0 285 3" fill="none" xmlns="http://www.w3.org/2000/svg" class="progress-bar-svg">
+      <g clip-path="url(#clip0_2468_1516)">
+        <rect class="progress-bg" width="285" height="3" transform="translate(0 0.5)" />
+        <rect class="progress-threshold" y="0.5" [attr.width]="getActCompletionTreshold() * 2.85" height="3" />
+        <rect class="progress-fill" y="0.5" [attr.width]="getActCompletionPercentage() * 2.85" height="3" />
+      </g>
+      <defs>
+        <clipPath id="clip0_2468_1516">
+          <rect width="285" height="3" fill="white" transform="translate(0 0.5)" />
+        </clipPath>
+      </defs>
+    </svg>
+  </div>
+
+  <!-- CARD BODY FOR LINK -->
+  @if (environmentVars.isLinksAsSpecialCards && isActivityLink()) {
+    <div class="card-body link-body">
+      <div class="top-part">
+        <h2
+          class="item-name"
+          (click)="openPageDetail(rootItem)"
+          [ngbTooltip]="courseData.activities[rootItem.activityId].localName"
+          [openDelay]="500"
+          [innerHTML]="courseData.activities[rootItem.activityId].localNameSafe"></h2>
+      </div>
+      <div class="play-section">
+        <button class="btn btn-secondary" (click)="gotoLinkActivity()">
+          {{ 'ACTIVITY_LINK_STUDY_SHOW' | translate }}
+          <span [inlineSVG]="'assets/img/general/arrow-right.svg'"></span>
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- CARD BODY FOR NON-LINK -->
+  @if (!environmentVars.isLinksAsSpecialCards || !isActivityLink()) {
+    <div class="card-body">
+      <div class="top-part">
+        <h2
+          class="item-name"
+          (click)="openPageDetail(rootItem)"
+          [ngbTooltip]="courseData.activities[rootItem.activityId].localName"
+          [openDelay]="500"
+          [innerHTML]="courseData.activities[rootItem.activityId].localNameSafe"></h2>
+        <!-- BASIC DATA - TYPE, LENGTH, DATES -->
+        <cmp-act-data-line class="act-data" [courseData]="courseData" [rootItem]="rootItem"></cmp-act-data-line>
+      </div>
+      <!-- PLAY SECTION - WITH CONTENT -->
+      @if (isTypeActivity(rootItem.activityId)) {
+        <!-- <button
+          class="btn btn-play"
+          [ngClass]="{ 'btn-primary': !courseData.accesses[rootItem.accessId].passed, 'btn-outline-primary': courseData.accesses[rootItem.accessId].passed }"
+          [disabled]="!courseData.activityData[rootItem.activityId].isPlayable"
+          (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+          {{ 'COURSES_PLAY' | translate }}
+        </button> -->
+
+        @if (courseData.activityData[rootItem.activityId].canDisplayPassedContent) {
+          <button class="btn btn-play btn-outline-primary" (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+            {{ 'COURSES_PLAY_DISPLAY' | translate }}
+          </button>
+        } @else if (courseData.activityData[rootItem.activityId].isPlayable) {
+          <button
+            class="btn btn-play"
+            [ngClass]="{ 'btn-primary': !courseData.accesses[rootItem.accessId].passed, 'btn-outline-primary': courseData.accesses[rootItem.accessId].passed }"
+            (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+            {{ 'COURSES_PLAY' | translate }}
+          </button>
+        } @else {
+          <div
+            class="course-not-playable"
+            [ngbTooltip]="courseData.activityData[rootItem.activityId].noPlayReason || ('COURSES_NOT_PLAYABLE_DEFAULT' | translate)"
+            placement="top"
+            role="status"
+            [attr.aria-label]="'COURSES_NOT_PLAYABLE' | translate">
+            <span class="status-text">{{ 'COURSES_NOT_PLAYABLE' | translate }}</span>
+            <span class="material-icons-round info-icon">info_outline</span>
+          </div>
+        }
+      }
+
+      <!-- SET SECTION - PLAY BUTTON DISPLAY -->
+      @if (!isTypeActivity(rootItem.activityId) && isSimpleSet(rootItem.activityId) && isSetAllowedPlay) {
+        <!-- <button
+          class="btn btn-play"
+          [ngClass]="{ 'btn-primary': !courseData.accesses[rootItem.accessId].passed, 'btn-outline-primary': courseData.accesses[rootItem.accessId].passed }"
+          [disabled]="!isSetPlayable(rootItem.activityId)"
+          (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+          {{ 'COURSES_PLAY' | translate }}
+        </button> -->
+        @if (isSetPlayable(rootItem.activityId)) {
+          <button
+            class="btn btn-play"
+            [ngClass]="{ 'btn-primary': !courseData.accesses[rootItem.accessId].passed, 'btn-outline-primary': courseData.accesses[rootItem.accessId].passed }"
+            (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+            {{ 'COURSES_PLAY' | translate }}
+          </button>
+        } @else {
+          <div
+            class="course-not-playable"
+            [ngbTooltip]="'COURSE_ACTIVITY_NOT_PLAYABLE_REASON.NO_PLAYABLE_ACTIVITY_IN_SET' | translate"
+            placement="top"
+            role="status"
+            [attr.aria-label]="'COURSES_NOT_PLAYABLE' | translate">
+            <span class="status-text">{{ 'COURSES_NOT_PLAYABLE' | translate }}</span>
+            <span class="material-icons-round info-icon">info_outline</span>
+          </div>
+        }
+      }
+    </div>
+  }
+</div>

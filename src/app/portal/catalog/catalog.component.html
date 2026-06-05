@@ -1,0 +1,223 @@
+@if (isCoursePreparing) {
+  <div class="course-preparing-overlay">
+    <div class="loading-message">
+      <div [inlineSVG]="'assets/img/register/spinner.svg'" class="input-icon"></div>
+      <div>{{ 'CATALOG_SIGNUP_RUNNING' | translate }}</div>
+    </div>
+  </div>
+}
+
+@if (courseData != null && courseData.parentSetId == null) {
+  <div class="courses-top" [ngClass]="{ 'no-filter': !isCatalogFilterEnabled }">
+    @if (isCatalogFilterEnabled) {
+      <div class="btn more-filters-btn" role="button" (click)="filterPanel.isSideOpen = !filterPanel.isSideOpen" [ngClass]="{ 'is-open': filterPanel.isSideOpen }">
+        <span class="material-icons-round">tune</span>
+        @if (!filterPanel.isSideOpen) {
+          <span [innerHTML]="'CATALOG_FILTER_MORE_FILERS' | translate"></span>
+        }
+        @if (filterPanel.isSideOpen) {
+          <span [innerHTML]="'CATALOG_FILTER_HIDE_FILERS' | translate"></span>
+        }
+      </div>
+    }
+    <h1 [innerHTML]="'CATALOG_HEADER' | translate"></h1>
+    @if (displayControl.category >= 0) {
+      <cmp-search-field #searchFieldRef [initialValue]="displayControl.search" (searchChanged)="runSearchName($event)"></cmp-search-field>
+    }
+  </div>
+}
+
+@if (isCoursesLoading) {
+  <div class="row g-0 my-5">
+    <div class="col hb-normal text-center" [innerHTML]="'COURSES_LOADING' | translate"></div>
+  </div>
+}
+
+@if (!isCoursesLoading && courseData.actualRootItems.length < 1) {
+  <div class="row g-0 my-5">
+    <div class="col hb-normal text-center" [innerHTML]="'COURSES_NO_DATA_CATALOG' | translate"></div>
+  </div>
+}
+
+<div class="page-body" #catalogContainer [ngClass]="{ 'no-filter': !isCatalogFilterEnabled, 'no-banner': !isCatalogBannerEnabled }">
+  @if (isCatalogFilterEnabled) {
+    <div class="filter-block" [ngClass]="{ 'is-open': filterPanel.isSideOpen }">
+      @for (filterName of filterPanel.filterOrder; track filterName; let first = $first) {
+        @if (filterPanel.filters[filterName].options.length > 0) {
+          <div class="filter-section" [ngClass]="{ 'no-border': first }">
+            <div class="section-header" (click)="filterPanel.filters[filterName].isExpanded = !filterPanel.filters[filterName].isExpanded">
+              <h3>{{ filterPanel.filters[filterName].filterName | translate }}</h3>
+              @if (filterPanel.filters[filterName].isExpanded) {
+                <span [inlineSVG]="'assets/img/general/expand_up.svg'"></span>
+              }
+              @if (!filterPanel.filters[filterName].isExpanded) {
+                <span [inlineSVG]="'assets/img/general/expand_down.svg'"></span>
+              }
+            </div>
+            <div class="section-options" [ngClass]="{ 'is-visible': filterPanel.filters[filterName].isExpanded }">
+              @for (fOption of filterPanel.filters[filterName].options; track fOption) {
+                <div class="form-check" (click)="filterPanelChange(fOption)">
+                  <input type="checkbox" class="form-check-input" [checked]="fOption.isChecked" />
+                  <div class="check-label" [innerHTML]="fOption.name | translate"></div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      }
+      @if (filterPanel.isActive) {
+        <div class="cancel-all" [ngClass]="{ 'is-active': filterPanel.isActive }" (click)="clearFilterPanel()">
+          <span [innerHTML]="'CATALOG_FILTER_CANCEL_ALL' | translate"></span>
+          <span [inlineSVG]="'assets/img/general/close.svg'"></span>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="data-block">
+    @if (courseData != null && courseData.parentSetId == null && categories.catOrder.length > 0) {
+      <div class="categories">
+        <div class="cat-item" [innerHTML]="'COURSES_STATE_CONTROL_ALL' | translate" [ngClass]="{ 'is-active': displayControl.category == 0 }" (click)="changeCategoryDisplay(0)"></div>
+        @for (catId of categories.catOrder; track catId) {
+          <div class="cat-item" [ngClass]="{ 'is-active': displayControl.category === catId }" (click)="changeCategoryDisplay(catId)">
+            {{ categories.catObjects[catId] }}
+          </div>
+        }
+        @if (isCatalogBannerEnabled) {
+          <div class="cat-item" [ngClass]="{ 'is-active': displayControl.category == -1 }" (click)="scrollToBottom()">
+            <span [innerHTML]="'COURSES_STATE_CONTROL_OTHER' | translate"></span>
+            <span [inlineSVG]="'assets/img/courses/plus.svg'"></span>
+          </div>
+        }
+        <div class="cat-item calendar-item" [ngClass]="{ 'is-active': displayControl.category == -2 }" (click)="changeCategoryDisplay(-2)">
+          <span class="svg-icon" [inlineSVG]="'assets/img/courses/calendar.svg'"></span>
+          <span [innerHTML]="'COURSES_STATE_CONTROL_CALENDAR' | translate"></span>
+        </div>
+      </div>
+    }
+
+    @if (courseData != null && courseData.parentSetId == null && displayControl.category >= 0 && tags.catTags.length > 0) {
+      <div class="tag-section" [ngClass]="{ 'no-cats-gap': categories.catOrder.length <= 0 }">
+        @if (displayControl.category == 0) {
+          <button class="sub-cat-button" [ngClass]="{ 'is-open': tags.isSubCatOpen }" (click)="tags.isSubCatOpen = !tags.isSubCatOpen">
+            <span>{{ 'COURSES_TAGS_SUBCAT' | translate }}</span>
+            @if (!tags.isSubCatOpen) {
+              <span [inlineSVG]="'assets/img/courses/plus.svg'"></span>
+            }
+            @if (tags.isSubCatOpen) {
+              <span [inlineSVG]="'assets/img/courses/minus.svg'"></span>
+            }
+          </button>
+        }
+        @if (tags.catTags.length > 0) {
+          <div class="tags-block" [ngClass]="{ 'is-open': tags.isSubCatOpen }">
+            @for (tagObj of tags.catTags; track tagObj; let index = $index) {
+              <div class="tag-item" [ngClass]="{ 'is-active': tagObj.isActive }" (click)="toggleSelectedTag(index)">
+                {{ courseData.tags[tagObj.tagId].localName }}
+              </div>
+            }
+            @if (tags.activeCount > 0) {
+              <div class="tag-reset" (click)="resetSelectedTags()">
+                <span>{{ 'COURSES_TAGS_CANCEL_SELECT' | translate }}</span>
+                <span [inlineSVG]="'assets/img/general/close.svg'"></span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @if (courseData != null && courseData.parentSetId == null && displayControl.category !== -1) {
+      <div class="count-and-sort">
+        <div class="items-count">
+          <span>{{ 'COURSES_ITEMS_COUNT' | translate }}:</span>
+          <span class="counter">{{ rootItems.length }}</span>
+        </div>
+        <div class="right-side">
+          @if (displayControl.category >= 0) {
+            <div class="sorting">
+              <div ngbDropdown class="selected-sort-drop">
+                <div class="selected-sort" id="is-selected-sort" ngbDropdownToggle aria-expanded="false">
+                  <span>{{ 'COURSES_SORTING_HEADER' | translate }}:&nbsp;</span>
+                  <span>{{ 'COURSES_SORTING_' + displayControl.sort | translate }}</span>
+                  <span class="arrow-ico" [inlineSVG]="'assets/img/general/arrow-down.svg'"></span>
+                </div>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                  @for (sortType of displayControlSort; track sortType) {
+                    <button ngbDropdownItem (click)="changeSorting(sortType)" [ngClass]="{ selected: displayControl.sort === sortType }">
+                      {{ 'COURSES_SORTING_' + sortType | translate }}
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+          <div class="view-all-items form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" [checked]="isShowAssigned" (click)="changeShowAssigned()" [disabled]="isCoursesLoading" />
+            <label class="form-check-label" for="switchCheckDefault" [innerHTML]="'CATALOG_ACTIVITY_SHOW_ASSIGNED' | translate"></label>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (!isCoursesLoading && !displayControl.isAnyFilterActive && specCats.catIds.length > 0 && displayControl.category !== -2) {
+      @for (catId of specCats.catIds; track catId) {
+        <div class="carousel-multi-block">
+          <div class="text-descriptor">{{ specCats.catObj[catId].name }}</div>
+          <ngb-carousel [id]="'cat-carousel-' + catId">
+            @for (actId of specCats.catObj[catId].items; track actId; let first = $first) {
+              <ng-template ngbSlide>
+                <cmp-course-card-simple
+                  [ngClass]="{ active: first }"
+                  [courseData]="courseData"
+                  [rootItem]="courseData.activityData[actId]"
+                  [isRequested]="reqStates[actId] && (reqStates[actId].isProcessed || reqStates[actId].isRejected)"></cmp-course-card-simple>
+              </ng-template>
+            }
+          </ngb-carousel>
+        </div>
+      }
+    }
+
+    @if (!isCoursesLoading && displayControl.category !== -1 && rootItems.length > 0) {
+      @if (!displayControl.isAnyFilterActive && displayControl.category !== -2) {
+        <div class="courses-block-header text-descriptor" [innerHTML]="'COURSES_SEARCH_RESULTS' | translate"></div>
+      }
+      <div class="courses-block mx-auto">
+        @for (rootItem of rootItems; track rootItem) {
+          <cmp-course-card-simple
+            [courseData]="courseData"
+            [rootItem]="rootItem"
+            [isRequested]="reqStates[rootItem.activityId] && (reqStates[rootItem.activityId].isProcessed || reqStates[rootItem.activityId].isRejected)"></cmp-course-card-simple>
+        }
+      </div>
+    }
+
+    <!-- NO ITEMS -->
+    @if (!isCoursesLoading && courseData.actualRootItems.length > 0 && rootItems.length <= 0) {
+      <div class="courses-block mx-auto">
+        <div class="col hb-normal text-center" [innerHTML]="'COURSES_NO_CATEGORY_DATA' | translate"></div>
+      </div>
+    }
+
+    @if (!isCoursesLoading && isCatalogBannerEnabled) {
+      <div class="form-more-courses" id="id-form-more-courses">
+        <h1>{{ 'COURSES_FORM_MORE_HEADER' | translate }}</h1>
+        <div class="text-16">{{ 'COURSES_FORM_MORE_TEXT' | translate }}</div>
+        <button class="btn btn-secondary" (click)="showRequestActivityModal()">
+          <span [innerHTML]="'COURSES_FORM_MORE_BUTTON' | translate"></span>
+          <span class="arrow-ico" [inlineSVG]="'assets/img/general/arrow-right.svg'"></span>
+        </button>
+      </div>
+    }
+
+    <!-- <div class="form-more-courses" id="id-form-more-courses" *ngIf="!isCoursesLoading">
+  <h1>{{'COURSES_FORM_MORE_HEADER' | translate}}</h1>
+  <div class="text-16">{{'COURSES_FORM_MORE_TEXT' | translate}}</div>
+  <a class="btn btn-secondary" href="" target="_blank">
+    <span [innerHTML]="'COURSES_FORM_MORE_BUTTON' | translate"></span>
+    <span class="arrow-ico" [inlineSVG]="'assets/img/general/arrow-right.svg'"></span>
+  </a>
+</div> -->
+  </div>
+</div>

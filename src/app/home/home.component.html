@@ -1,0 +1,60 @@
+<!-- <div class="hp-homepage">
+  <div class="block-intro d-flex align-items-center">
+    <div class="container">
+      <div class="row">
+        <div class="header-info">
+          <h1 class="text-white" [innerHTML]="'HOME_HEADER' | translate"></h1>
+          <div class="subtitle text-blue" [innerHTML]="'HOME_HEADER_INFO' | translate"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block-course-info">
+    <div class="container">
+      <div class="row g-0">
+        <div class="col text-center">
+          <h2 class="">{{ 'HOME_COURSE_INFO_HEADER' | translate }}</h2>
+        </div>
+      </div>
+      <div class="row g-0">
+        @for (infoId of [1, 2, 3, 4]; track infoId) {
+          <div class="col-12 col-sm-6 col-lg-3 info-item">
+            <img class="info-img" [src]="'assets/img/hp/ikona_' + infoId + '.png'" />
+            <h4>{{ 'HOME_COURSE_INFO_TEXT' + infoId + '_HEAD' | translate }}</h4>
+            <div class="info-text">{{ 'HOME_COURSE_INFO_TEXT' + infoId | translate }}</div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="hp-homepage">
+  <div class="block-intro d-flex align-items-center">
+    <div class="container">
+      <div class="row">
+        <!-- <div class="header-info">
+          <h1 class="text-white" [innerHTML]="'HOME_HEADER' | translate"></h1>
+          <div class="subtitle text-green" [innerHTML]="'HOME_HEADER_INFO' | translate"></div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="block-course-info">
+    <div class="container">
+      <div class="row g-0">
+        <div class="col text-center">
+          <h2 class="">Studovna je e-learningový vzdělávací portál pro RESPECT.</h2>
+          <div class="text-20">Najdeš tu všechno – od certifikací a zákonných kurzů přes následné vzdělávání až po kurzy rozvoje, které jsou přizpůsobené přímo tvým potřebám a tvé pracovní roli.</div>
+        </div>
+      </div>
+      <div class="info-item-wrapper">
+        <a class="info-item" *ngFor="let infoId of [1, 2, 3]" [routerLink]="links[infoId]">
+          <img class="info-img" [src]="'assets/img/hp/ikona_' + infoId + '.png'" />
+          <h4>{{ 'HOME_COURSE_INFO_TEXT' + infoId + '_HEAD' | translate }}</h4>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,237 @@
+@use '../../assets/scss/theme-config';
+.hb-app-header {
+  z-index: 1;
+  .navbar {
+    padding: 0;
+    background: theme-config.$header-background;
+
+    .navbar-toggler {
+      padding: 0 0 0 20px;
+      border: none;
+      &:focus {
+        box-shadow: none;
+      }
+      .navbar-toggler-icon {
+        background-image: none;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .container-fluid.set-min-height {
+      min-height: theme-config.$header-height;
+      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
+      padding: 0 40px;
+    }
+
+    .header-right-part {
+      // padding-right: 15px;
+      display: flex;
+    }
+
+    .nav-item {
+      margin-left: 32px;
+
+      // &.lang-select {
+      //   height: theme-config.$header-height;
+      //   display: flex;
+      //   align-items: center;
+      //   margin-right: 20px;
+
+      //   .lang-item {
+      //     font-weight: 600;
+      //     font-size: 12px;
+      //     cursor: pointer;
+      //     height: 24px;
+      //     width: 24px;
+      //     line-height: 24px;
+      //     text-align: center;
+      //     margin-right: 8px;
+
+      //     &.selected {
+      //       color: theme-config.$select-item-color;
+      //       background-color: theme-config.$select-item-bg-selected-color;
+      //     }
+      //   }
+      // }
+
+      &.active .nav-link {
+        color: theme-config.$header-text-color-active !important;
+      }
+
+      .nav-link {
+        padding: 0;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: theme-config.$header-font-weight;
+        line-height: 120%;
+        color: theme-config.$header-text-color;
+        height: theme-config.$header-height;
+        display: flex;
+        align-items: center;
+        // text-transform: uppercase;
+
+        &.header-account {
+          padding-left: 5px;
+        }
+
+        &:hover {
+          color: theme-config.$header-text-color-hover;
+          text-decoration: none;
+        }
+        .header-account-ico {
+          margin-right: 6px;
+        }
+      }
+
+      .dropdown {
+        cursor: pointer;
+
+        .dropdown-toggle::after {
+          display: none;
+        }
+        .dropdown-menu {
+          top: 50px;
+          left: auto;
+          position: absolute;
+          .dropdown-item {
+            font-size: 14px;
+            // text-transform: uppercase;
+            // color: theme-config.$header-text-color;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+
+    .navbar-brand {
+      height: theme-config.$header-height;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      margin: 0 40px 0 0;
+
+      .header-logo-full {
+        height: theme-config.$header-logo-height;
+      }
+    }
+    .mobile-menu {
+      padding: 0;
+      .mobile-navbar {
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
+        .nav-item {
+          margin-left: 0;
+          margin: 15px 0 10px;
+
+          .nav-link {
+            padding: 0 2px;
+            height: 20px;
+            margin-bottom: 5px;
+          }
+
+          // &.active {
+          //   border-bottom: 3px solid theme-config.$header-text-color-active;
+          //   .nav-link {
+          //     height: 12px;
+          //     margin-top: 3px;
+          //     color: theme-config.$header-text-color-active;
+          //   }
+          // }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .hb-app-header {
+    .navbar {
+      .nav-item {
+        .nav-link {
+          &.header-account {
+            .header-account-text {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .hb-app-header {
+    .navbar {
+      .container-fluid.set-min-height {
+        min-height: theme-config.$header-height-sm;
+        padding: 0 20px;
+
+        .nav-item {
+          max-height: theme-config.$header-height-sm;
+          &.active {
+            border-bottom-width: 3px;
+          }
+          .nav-link {
+            height: theme-config.$header-height-sm;
+            margin-top: 0;
+          }
+        }
+
+        .navbar-brand {
+          height: theme-config.$header-height-sm;
+          margin: 0 30px 0 0;
+
+          .header-logo-full {
+            height: theme-config.$header-logo-height-mid;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .hb-app-header {
+    .navbar {
+      .container-fluid.set-min-height {
+        .navbar-brand {
+          height: theme-config.$header-height-sm;
+          margin-right: 20px;
+
+          .header-logo-full {
+            height: theme-config.$header-logo-height-sm;
+          }
+        }
+      }
+
+      .nav-item {
+        margin-left: 20px;
+        &.lang-select {
+          margin-right: 10px;
+        }
+        .nav-link {
+          &.header-account {
+            padding: 0;
+            .header-account-ico {
+              margin-right: 0;
+            }
+
+            .header-account-text {
+              display: none;
+            }
+          }
+        }
+      }
+      .navbar-toggler {
+        padding: 0 0 0 15px;
+      }
+
+      // .header-right-part {
+      //   padding-right: 10px;
+      // }
+    }
+  }
+}

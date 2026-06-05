@@ -1,0 +1,193 @@
+<div class="container account-page">
+  <!-- PERSONAL DATA -->
+  <h2 [innerHTML]="'ACCOUNT_HEADER' | translate"></h2>
+  <div class="row g-0 account-forms-divider">
+    <div class="col-12 col-md-9 border-bottom"></div>
+    <div class="d-none d-md-block col-3"></div>
+  </div>
+
+  @if (!isPersonalDataEdited) {
+    <div class="personal-info-text">
+      <div class="row g-0 d-flex align-items-center">
+        <div class="col-12 col-md-2 overflow-hidden">{{ 'ACCOUNT_FORM_NAME' | translate }}</div>
+        <div class="col-12 col-md-10 text-16 ps-3">
+          {{ cmpUser.user!.firstName }}
+        </div>
+      </div>
+      <div class="row g-0 d-flex align-items-center">
+        <div class="col-12 col-md-2 overflow-hidden">{{ 'ACCOUNT_FORM_SURNAME' | translate }}</div>
+        <div class="col-12 col-md-10 text-16 ps-3">
+          {{ cmpUser.user!.lastName }}
+        </div>
+      </div>
+      <div class="row g-0">
+        @if (!isUpdateRunning) {
+          <div class="col-12 col-md-9 d-flex justify-content-end">
+            <button class="btn btn-primary" [innerHTML]="'GENERAL_EDIT' | translate" (click)="personalDataEdit()"></button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  @if (isPersonalDataEdited) {
+    <form [formGroup]="accFormPersonal" (ngSubmit)="onPersonalDataSave()" class="personal-info-form">
+      <div class="row g-0">
+        <div class="col-12 col-md-2 form-label d-flex align-items-center">{{ 'ACCOUNT_FORM_NAME' | translate }}*</div>
+        <div class="col-12 col-md-7">
+          <input type="text" formControlName="name" class="form-control" />
+        </div>
+        <div class="col-12 col-md-3 d-flex align-items-center">
+          @if (!accFormPersonal.get('name')?.valid && accFormPersonal.get('name')?.touched) {
+            <span class="form-error" [innerHTML]="'ACCOUNT_FORM_ERROR_REQUIRED' | translate"></span>
+          }
+        </div>
+      </div>
+      <div class="row g-0">
+        <div class="col-12 col-md-2 form-label d-flex align-items-center">{{ 'ACCOUNT_FORM_SURNAME' | translate }}*</div>
+        <div class="col-12 col-md-7">
+          <input type="text" formControlName="surname" class="form-control" />
+        </div>
+        <div class="col-12 col-md-3 d-flex align-items-center">
+          @if (!accFormPersonal.get('surname')?.valid && accFormPersonal.get('surname')?.touched) {
+            <span class="form-error" [innerHTML]="'ACCOUNT_FORM_ERROR_REQUIRED' | translate"></span>
+          }
+        </div>
+      </div>
+      <div class="row g-0">
+        @if (!isUpdateRunning) {
+          <div class="col-12 col-md-9 d-flex justify-content-end">
+            <button class="btn btn-link" [innerHTML]="'ACCOUNT_BUTTON_CANCEL_CHANGES' | translate" (click)="personalDataCancelEdit()"></button>
+            <button class="ms-3 btn btn-primary" type="submit" [innerHTML]="'GENERAL_SAVE' | translate"></button>
+          </div>
+        }
+      </div>
+    </form>
+  }
+
+  <div class="row g-0 account-forms-divider">
+    <div class="col-12 col-md-9 border-bottom"></div>
+    <div class="d-none d-md-block col-3"></div>
+  </div>
+
+  <!-- LOGIN DATA -->
+  <h2 class="section-space" [innerHTML]="'NAVIGATION_LOGIN' | translate"></h2>
+  <div class="row g-0 account-forms-divider">
+    <div class="col-12 col-md-9 border-bottom"></div>
+    <div class="d-none d-md-block col-3"></div>
+  </div>
+  <div class="personal-info-text">
+    <div class="row g-0 d-flex align-items-center">
+      <div class="col-12 col-md-2 overflow-hidden">{{ 'REGISTER_FIELD_EMAIL' | translate }}</div>
+      <div class="col-12 col-md-10 text-16 ps-3">
+        {{ cmpUser.user!.login }}
+      </div>
+    </div>
+    @if (!passChange.isPassChange) {
+      <div class="row g-0 d-flex align-items-center">
+        <div class="col-12 col-md-2 overflow-hidden">{{ 'REGISTER_FIELD_PASSWORD' | translate }}</div>
+        <div class="col-12 col-md-10 text-16 ps-3">•••••••••••</div>
+      </div>
+    }
+    @if (!passChange.isPassChange) {
+      <div class="row g-0">
+        @if (!isUpdateRunning) {
+          <div class="col-12 col-md-9 d-flex justify-content-end">
+            <button class="btn btn-primary" [innerHTML]="'GENERAL_CHANGE' | translate" (click)="changePasswordOpen()"></button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (passChange.isPassChange) {
+    <form [formGroup]="accFormPassword" (ngSubmit)="onChangePassword()" class="personal-info-form">
+      <div class="row g-0">
+        <div class="col-12 col-md-2 form-label d-flex align-items-center">
+          {{ 'ACCOUNT_PASSWORD_OLD' | translate }}
+        </div>
+        <div class="col-12 col-md-7 input-with-icon ps-3">
+          <input [type]="isOldPassText ? 'text' : 'password'" formControlName="oldpassword" class="form-control" />
+          <div [inlineSVG]="'assets/img/register/eye.svg'" class="input-icon" (click)="isOldPassText = !isOldPassText" [ngClass]="{ 'icon-active': isOldPassText }"></div>
+        </div>
+        <div class="col-12 col-md-3 d-flex align-items-center">
+          @if (!accFormPassword.get('oldpassword')?.valid && accFormPassword.get('oldpassword')?.touched) {
+            <span class="form-error" [innerHTML]="'REGISTER_FIELD_ERROR_NAME' | translate"></span>
+          }
+        </div>
+      </div>
+      <div class="row g-0">
+        <div class="col-12 col-md-2 form-label d-flex align-items-center">
+          {{ 'ACCOUNT_PASSWORD_NEW' | translate }}
+        </div>
+        <div class="col-12 col-md-7 input-with-icon ps-3">
+          <input id="id-new-pass-input" [type]="isNewPassText ? 'text' : 'password'" formControlName="newpassword" class="form-control" />
+          <div [inlineSVG]="'assets/img/register/eye.svg'" class="input-icon" (click)="isNewPassText = !isNewPassText" [ngClass]="{ 'icon-active': isNewPassText }"></div>
+        </div>
+        <div class="col-12 col-md-3 d-flex align-items-center">
+          @if (!accFormPassword.get('newpassword')?.valid && accFormPassword.get('newpassword')?.touched) {
+            <span class="form-error" [innerHTML]="'REGISTER_FIELD_ERROR_PASSWORD' | translate"></span>
+          }
+          @if (passChange.passError != null) {
+            <span class="form-error">{{ passChange.passError }}</span>
+          }
+        </div>
+      </div>
+      <div class="row g-0">
+        <cmp-psw-strength-meter class="col-12 col-md-9" [pswStrengthPolicy]="passChange.passPolicy" [pswInputId]="'id-new-pass-input'"></cmp-psw-strength-meter>
+      </div>
+      <div class="row g-0">
+        @if (!isUpdateRunning) {
+          <div class="col-12 col-md-9 d-flex justify-content-end">
+            <button class="btn btn-link" [innerHTML]="'ACCOUNT_BUTTON_CANCEL_CHANGES' | translate" (click)="cancelChangePassword()"></button>
+            <button class="ms-3 btn btn-primary" type="submit" [innerHTML]="'GENERAL_SAVE' | translate"></button>
+          </div>
+        }
+      </div>
+    </form>
+  }
+  <div class="row g-0 account-forms-divider">
+    <div class="col-12 col-md-9 border-bottom"></div>
+    <div class="d-none d-md-block col-3"></div>
+  </div>
+
+  <!-- LANGUAGE DATA -->
+  <!-- <h2 class="section-space" [innerHTML]="'ACCOUNT_LANGAUAGE_HEADER' | translate"></h2>
+  <div class="row g-0 account-forms-divider">
+    <div class="col-12 col-md-9 border-bottom"></div>
+    <div class="d-none d-md-block col-3"></div>
+  </div>
+  <div class="row g-0 d-flex align-items-center">
+    <div class="col-12 col-md-2 overflow-hidden">{{ 'ACCOUNT_LANGAUAGE' | translate }}</div>
+    <div class="col-12 col-md-10 text-16 ps-3">
+      <div ngbDropdown class="lang-dropdown">
+        <div class="lang-dropdown-current" ngbDropdownToggle aria-expanded="false">
+          <span class="">{{ currentLang.langName }}</span>
+          <span class="arrow-ico" [inlineSVG]="'assets/img/general/arrow-down.svg'"></span>
+        </div>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="show-selected">
+          @for (langId of langsAvailable; track langId) {
+            <button ngbDropdownItem (click)="changeLanguage(langId)" [ngClass]="{ selected: currentLang.langFileKey === langSetting.LANG_CONFIG[langId].langFileKey }">
+              {{ langSetting.LANG_CONFIG[langId].langName }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row g-0 account-forms-divider">
+    <div class="col-12 col-md-9 border-bottom"></div>
+    <div class="d-none d-md-block col-3"></div>
+  </div> -->
+
+  <div class="col-12 col-md-9 d-flex justify-content-between section-space">
+    <button class="btn btn-outline-primary" (click)="logOut()" [innerHTML]="'NAVIGATION_LOGOUT' | translate"></button>
+    <button class="btn btn-primary" [innerHTML]="'ACCOUNT_LOGIN_BUTTON_BACK' | translate" routerLink="/portal/courses"></button>
+  </div>
+</div>
+
+<div class="version-indicator" [ngbTooltip]="htmlAppVersion"></div>
+
+<ng-template #htmlAppVersion>
+  <div [innerHTML]="appVersion" class="d-flex flex-column align-items-start text-start"></div>
+</ng-template>

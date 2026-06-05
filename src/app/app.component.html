@@ -1,0 +1,9 @@
+<app-header [ngClass]="{ 'd-none': playerData.coursePlaying }"></app-header>
+<div class="main-container" [ngClass]="{ 'dark-back': isDarkPage, 'd-none': playerData.coursePlaying }">
+  <router-outlet (activate)="onActivate()"></router-outlet>
+  <!-- <div class="main-container" [ngClass]="{'d-none': playerData.coursePlaying}">
+  <router-outlet></router-outlet> -->
+  <app-footer class="hb-app-footer"></app-footer>
+</div>
+<iframe class="course-player-frame" src="" id="id-course-player-frame" frameborder="0" [ngClass]="{ 'd-block': playerData.coursePlaying, 'd-none': !playerData.coursePlaying }"></iframe>
+<!-- <iframe class="course-player-frame" src="" id="id-course-player-frame" frameborder="0" [ngClass]="{ 'd-block': playerData.coursePlaying, 'd-none': !playerData.coursePlaying }" sandbox="allow-scripts allow-same-origin allow-forms"></iframe> -->

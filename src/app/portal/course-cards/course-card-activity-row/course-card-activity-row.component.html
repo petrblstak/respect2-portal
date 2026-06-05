@@ -1,0 +1,194 @@
+<!-- [ngClass]="{'display-in-detail': isInDetail}" -->
+<div class="top-part">
+  <!-- ACTIVITY NAME -->
+  <div class="left-part">
+    <div class="act-name" (click)="openPageDetail(activityId)" [innerHTML]="courseData.activities[activityId].localNameSafe"></div>
+  </div>
+  <!-- COMPLETION -->
+  @if (!isCatalog) {
+    <div class="right-part" [ngClass]="{ 'display-in-detail': isInDetail }">
+      <cmp-progress-bar
+        [completion]="getActCompletionPercentage()"
+        [treshold]="getActCompletionTreshold()"
+        [completionData]="getActCompletionData()"
+        class="completion-block"
+        [isInDetail]="isInDetail"></cmp-progress-bar>
+    </div>
+  }
+</div>
+
+<div class="bottom-part">
+  <!-- ACTIVITY DATA -->
+  <div class="left-part">
+    <cmp-act-data-line class="act-data" [courseData]="courseData" [rootItem]="courseData.activityData[activityId]" (clickedItem)="openPageDetail(activityId, { tab: $event })"></cmp-act-data-line>
+  </div>
+
+  <!-- PLAY SECTION - RUN ACTIVITY -->
+  @if (!isCatalog && isTypeActivity(activityId)) {
+    <div class="right-part">
+      @if (isRunAct || docs.certNum > 0) {
+        <div class="link-buttons d-flex align-items-center">
+          <!-- CERTIFICATES -->
+          @if (docs.certNum > 0) {
+            <button class="btn btn-link" (click)="openPageDetail(activityId, { tab: clickedItemType.materials })" [innerHTML]="'COURSES_MATERIALS_CERTIFICATES' | translate"></button>
+          }
+          @if (isRunAct && docs.certNum > 0) {
+            <span class="text-20">&bull;</span>
+          }
+          <!-- RUN ACTIVITY -->
+          @if (isRunAct) {
+            <button
+              class="btn btn-link"
+              (click)="openPageDetail(activityId, { tab: clickedItemType.runs })"
+              [innerHTML]="(courseData.accesses[accessId].idActivityRun ? 'COURSES_RUNS_SIGN_OFF_SHORT' : 'COURSES_RUNS_CHOOSE') | translate"></button>
+          }
+        </div>
+      }
+      <!-- ACTIVITY WITH CONTENT -->
+      <!-- @if (hasPlayableContent()) { -->
+      @if (courseData.activityData[activityId].canDisplayPassedContent) {
+        <button class="btn btn-play btn-outline-primary" (click)="playCourse()">
+          {{ 'COURSES_PLAY_DISPLAY' | translate }}
+        </button>
+      } @else if (courseData.activityData[activityId].isPlayable) {
+        <button class="btn btn-play" [ngClass]="{ 'btn-primary': !courseData.accesses[accessId].passed, 'btn-outline-primary': courseData.accesses[accessId].passed }" (click)="playCourse()">
+          {{ 'COURSES_PLAY' | translate }}
+        </button>
+      } @else {
+        <div
+          class="course-not-playable"
+          [ngbTooltip]="courseData.activityData[activityId].noPlayReason || ('COURSES_NOT_PLAYABLE_DEFAULT' | translate)"
+          placement="top"
+          role="status"
+          [attr.aria-label]="'COURSES_NOT_PLAYABLE' | translate">
+          <span class="status-text">{{ 'COURSES_NOT_PLAYABLE' | translate }}</span>
+          <span class="material-icons-round info-icon">info_outline</span>
+        </div>
+      }
+      <!-- } -->
+    </div>
+  }
+
+  <!-- SET PLAY BUTTON -->
+  @if (!isCatalog && !isTypeActivity(activityId)) {
+    <div class="right-part">
+      <!-- CERTIFICATES -->
+      @if (docs.certNum > 0) {
+        <button class="btn btn-link" (click)="openPageDetail(activityId, { tab: clickedItemType.materials })" [innerHTML]="'COURSES_MATERIALS_CERTIFICATES' | translate"></button>
+      }
+      <!-- PLAY BUTTON -->
+      @if (isSimpleSet(activityId) && isSetAllowedPlay) {
+        @if (isSetPlayable(activityId)) {
+          <button class="btn btn-play" [ngClass]="{ 'btn-primary': !courseData.accesses[accessId].passed, 'btn-outline-primary': courseData.accesses[accessId].passed }" (click)="playCourse()">
+            {{ 'COURSES_PLAY' | translate }}
+          </button>
+        } @else {
+          <div
+            class="course-not-playable"
+            [ngbTooltip]="'COURSE_ACTIVITY_NOT_PLAYABLE_REASON.NO_PLAYABLE_ACTIVITY_IN_SET' | translate"
+            placement="top"
+            role="status"
+            [attr.aria-label]="'COURSES_NOT_PLAYABLE' | translate">
+            <span class="status-text">{{ 'COURSES_NOT_PLAYABLE' | translate }}</span>
+            <span class="material-icons-round info-icon">info_outline</span>
+          </div>
+        }
+      }
+    </div>
+  }
+</div>
+
+<!-- BUTTONS FOR ACTIVITY -->
+<!-- <div class="right-part" *ngIf="!isCatalog" [ngClass]="{'display-in-detail': isInDetail}"> -->
+
+<!-- <cmp-progress-bar [completion]="getActCompletionPercentage()" [treshold]="getActCompletionTreshold()"
+[completionData]="getActCompletionData()" class="completion-block"></cmp-progress-bar> -->
+
+<!-- <div class="play-section" *ngIf="hasPlayableContent()"
+[ngClass]="{'with-results': courseData.activities[activityId].launchType === activityLaunchTypes.ITRIVIO && courseData.accesses[accessId].idBestAttempt}">
+<div
+  *ngIf="courseData.activities[activityId].launchType === activityLaunchTypes.ITRIVIO && courseData.accesses[accessId].idBestAttempt"
+  class="btn-results"
+  [ngbTooltip]="(courseData.activities[activityId].launchContent_object?.course?.availableInUserReports == 0 ? 'COURSES_BTN_RESULTS_DISABLED' : 'COURSES_BTN_RESULTS') | translate">
+  <button [disabled]="courseData.activities[activityId].launchContent_object?.course?.availableInUserReports == 0"
+    class="btn btn-outline-secondary" [inlineSVG]="'assets/img/courses/results.svg'"
+  (click)="openResultLinkById()"></button>
+</div>
+
+<button class="btn btn-primary btn-play" *ngIf="!courseData.accesses[accessId].passed"
+  [disabled]="!courseData.activityData[activityId].isPlayable" (click)="playCourse()">
+  {{'COURSES_PLAY' | translate}}
+</button>
+<button class="btn btn-outline-secondary btn-play" *ngIf="courseData.accesses[accessId].passed"
+  [disabled]="!courseData.activityData[activityId].isPlayable" (click)="playCourse()">
+  {{'COURSES_PLAY' | translate}}
+</button>
+</div>
+
+<div class="play-section" *ngIf="isRunAct">
+  <button class="btn btn-primary btn-play" *ngIf="courseData.accesses[accessId].idActivityRun == null"
+    (click)="openPageDetail(activityId)">
+    {{'COURSES_RUNS_CHOOSE' | translate}}
+  </button>
+  <button class="btn btn-outline-secondary btn-play" *ngIf="courseData.accesses[accessId].idActivityRun"
+    (click)="openPageDetail(activityId)">
+    {{'COURSES_RUNS_SIGN_OFF_SHORT' | translate}}
+  </button>
+</div> -->
+
+<!-- ACTIVITY SECTION -->
+<!-- <ng-container *ngIf="isTypeActivity(activityId)"> -->
+<!-- PLAY SECTION - RUN ACTIVITY -->
+<!-- <div class="play-section" *ngIf="isRunAct">
+<button class="btn btn-play"
+  [ngClass]="{'btn-primary': courseData.accesses[accessId].idActivityRun == null, 'btn-outline-secondary': courseData.accesses[accessId].idActivityRun}"
+        (click)="openPageDetail(activityId)" [innerHTML]="(courseData.accesses[accessId].idActivityRun ? 'COURSES_RUNS_SIGN_OFF_SHORT' :
+        'COURSES_RUNS_CHOOSE') | translate">
+</button>
+</div> -->
+
+<!-- PLAY SECTION - WITH CONTENT -->
+<!-- <div class="play-section" *ngIf="hasPlayableContent()"
+[ngClass]="{'with-results': courseData.activities[activityId].launchType === activityLaunchTypes.ITRIVIO && courseData.accesses[accessId].idBestAttempt}">
+<div
+  *ngIf="courseData.activities[activityId].launchType === activityLaunchTypes.ITRIVIO && courseData.accesses[accessId].idBestAttempt"
+  class="btn-results"
+  [ngbTooltip]="(courseData.activities[activityId].launchContent_object?.course?.availableInUserReports == 0 ? 'COURSES_BTN_RESULTS_DISABLED' : 'COURSES_BTN_RESULTS') | translate">
+  <button [disabled]="courseData.activities[activityId].launchContent_object?.course?.availableInUserReports == 0"
+    class="btn btn-outline-secondary" [inlineSVG]="'assets/img/courses/results.svg'"
+  (click)="openResultLinkById()"></button>
+</div>
+
+<button class="btn btn-play"
+  [ngClass]="{'btn-primary': !courseData.accesses[accessId].passed, 'btn-outline-secondary': courseData.accesses[accessId].passed}"
+  [disabled]="!courseData.activityData[activityId].isPlayable" (click)="playCourse()">
+  {{'COURSES_PLAY' | translate}}
+</button>
+</div>
+</ng-container> -->
+
+<!-- <ng-container *ngIf="!isTypeActivity(activityId)"> -->
+<!-- SET SECTION - PLAY BUTTON DISPLAY -->
+<!-- <div class="play-section" *ngIf="isSimpleSet(activityId) && isSetAllowedPlay">
+<button class="btn btn-play"
+  [ngClass]="{'btn-primary': !courseData.accesses[accessId].passed, 'btn-outline-secondary': courseData.accesses[accessId].passed}"
+  [disabled]="!isSetPlayable(activityId)" (click)="playCourse()">
+  {{'COURSES_PLAY' | translate}}
+</button>
+</div> -->
+
+<!-- SET SECTION - PLAY BUTTON HIDDEN -->
+<!-- <div class="play-section" *ngIf="!isSimpleSet(activityId) || !isSetAllowedPlay">
+<button class="btn btn-primary btn-play" (click)="openPageDetail(activityId)">
+  {{'COURSES_DETAIL_SHOW_DETAIL' | translate}}
+</button>
+</div> -->
+<!-- </ng-container>
+</div> -->
+
+<!-- BUTTONS FOR ACTIVITY -->
+<!-- <div class="right-part" *ngIf="isCatalog" [ngClass]="{'display-in-detail': isInDetail}">
+<button class="btn btn-primary btn-play" (click)="openPageDetail(activityId)">
+  {{'COURSES_DETAIL_SHOW_DETAIL' | translate}}
+</button>
+</div> -->

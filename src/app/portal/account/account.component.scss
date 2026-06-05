@@ -1,0 +1,68 @@
+@use '../../../assets/scss/theme-config';
+
+.account-page {
+  max-width: 798px;
+  padding: 0 24px;
+  margin: 80px auto 64px;
+
+  .account-forms-divider {
+    margin: 14px 0;
+  }
+
+  .personal-info-form,
+  .personal-info-text {
+    .row {
+      min-height: 49px;
+      margin-bottom: 12px;
+
+      .form-error {
+        padding-left: 20px;
+        color: theme-config.$general-text-error-color;
+      }
+      .form-label {
+        margin: 0;
+      }
+    }
+  }
+  .personal-info-text {
+    position: relative;
+    .info-overlay {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      background-color: rgba($color: #fff, $alpha: 0.8);
+      padding: 90px 0 0 0;
+    }
+  }
+
+  .section-space {
+    margin-top: 60px;
+  }
+
+  .form-check {
+    padding-left: 20px;
+  }
+
+  .input-partial-width {
+    width: 70%;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .account-page {
+    .personal-info-form,
+    .personal-info-text {
+      .row {
+        .form-error {
+          padding-left: 0;
+        }
+      }
+    }
+
+    .personal-info-text {
+      .info-overlay {
+        padding: 30px 0 0 0;
+      }
+    }
+  }
+}

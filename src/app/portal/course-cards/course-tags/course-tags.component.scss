@@ -1,0 +1,30 @@
+@use '../../../../assets/scss/theme-config';
+
+.tag-item {
+  background-color: theme-config.$tag-default-bg;
+  color: theme-config.$tag-default-text;
+  padding: 4px 8px;
+  border-radius: theme-config.$tag-border-radius;
+  box-shadow: theme-config.$card-shadow;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  cursor: default;
+
+  &.cat-main,
+  &.cat-catalog {
+    background-color: theme-config.$tag-main-bg;
+    color: theme-config.$tag-main-text;
+  }
+
+  &.cat-special-novinky {
+    background-color: theme-config.$edu-color-mint;
+  }
+  &.cat-special-bestsellery {
+    background-color: theme-config.$edu-color-pink;
+  }
+  &.cat-special-lastminute {
+    background-color: theme-config.$edu-color-lilac;
+  }
+}

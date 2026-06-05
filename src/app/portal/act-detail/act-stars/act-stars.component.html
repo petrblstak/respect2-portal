@@ -1,0 +1,5 @@
+<div class="stars-block">
+  @for (star of starArray; track $index) {
+    <img class="star-item" [src]="'assets/img/courses/stars/star_' + (star === 0 ? 'empty' : star === 1 ? 'full' : 'half') + '.png'" />
+  }
+</div>

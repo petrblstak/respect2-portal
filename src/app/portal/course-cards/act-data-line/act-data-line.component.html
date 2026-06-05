@@ -1,0 +1,117 @@
+@if (!rootItem.isActivity && options!.isShowType) {
+  <div class="data-item">
+    <span class="item-ico" [inlineSVG]="'assets/img/courses/set.svg'"></span>
+    <span class="item-name">{{ 'COURSES_ACT_TYPE_SET' | translate }}</span>
+  </div>
+}
+@if (rootItem.isActivity && rootItem.isRunAct && options!.isShowType) {
+  <div class="data-item">
+    <span class="item-ico" [inlineSVG]="'assets/img/courses/term.svg'"></span>
+    <span class="item-name">{{ 'COURSES_ACT_TYPE_PREZ' | translate }}</span>
+  </div>
+}
+@if (rootItem.isActivity && !rootItem.isRunAct && options!.isShowType) {
+  <div class="data-item">
+    <span class="item-ico" [inlineSVG]="'assets/img/courses/elearn.svg'"></span>
+    <span class="item-name">{{ 'COURSES_ACT_TYPE_ELEARN' | translate }}</span>
+  </div>
+}
+@if (courseData.activities[rootItem.activityId]?.timeDemand != null && options!.isShowTime) {
+  <div class="data-item">
+    <span class="item-ico" [inlineSVG]="'assets/img/courses/clock.svg'"></span>
+    <span class="item-name">{{ courseTime }}</span>
+  </div>
+}
+@if (rootItem.accessId || options!.isShowFirstRun) {
+  @if (!rootItem.isRunAct && rootItem.accessId && options!.isShowCompleteUntil) {
+    <div class="data-item">
+      <span class="item-ico" [inlineSVG]="'assets/img/courses/calendar.svg'"></span>
+      <span class="calendar-text">{{ 'COURSES_DATE_COMPLETE_UNTIL' | translate }}:</span>
+      @if (courseData.accesses[rootItem.accessId].completeUntil) {
+        <span class="calendar-text">
+          {{ courseData.accesses[rootItem.accessId].completeUntil | date: 'dd. MM. yyyy' }}
+        </span>
+      }
+      @if (courseData.accesses[rootItem.accessId].completeUntil == null) {
+        <span class="calendar-text">{{ 'COURSES_DATE_COMPLETE_UNTIL_UNLIMITED' | translate }}</span>
+      }
+    </div>
+  }
+  @if (rootItem.isRunAct && options!.isShowRun && options!.isShowNoRunText && runObj == null) {
+    <div class="data-item clickable" (click)="onClickItem(clickedItemType.runs)">
+      <span class="item-ico" [inlineSVG]="'assets/img/courses/calendar.svg'"></span>
+      <span class="item-name">{{ 'COURSES_NO_THERM' | translate }}</span>
+    </div>
+  }
+  @if (rootItem.isRunAct && options!.isShowRun && options!.isShowRunTime && runObj) {
+    <div class="data-item clickable" (click)="onClickItem(clickedItemType.runs)">
+      <span class="item-ico" [inlineSVG]="'assets/img/courses/calendar.svg'"></span>
+      @if (visualType === 0) {
+        <div class="date-time">
+          <span>{{ runObj.runStart | date: 'dd.MM.yyyy' }},</span>
+          <span>{{ runObj.runStart | date: 'HH:mm' }}-{{ runObj.runEnd | date: 'HH:mm' }}</span>
+        </div>
+      }
+      @if (visualType === 1) {
+        <div class="date-time">
+          <span>{{ runObj.runStart | date: 'dd.MM. HH:mm' }} - {{ runObj.runEnd | date: 'dd.MM.yyyy HH:mm' }}</span>
+        </div>
+      }
+      @if (visualType === 2) {
+        <div class="date-time">
+          <span>{{ runObj.runStart | date: 'dd.MM.yyyy HH:mm' }} - {{ runObj.runEnd | date: 'dd.MM.yyyy HH:mm' }}</span>
+        </div>
+      }
+    </div>
+  }
+  @if (rootItem.isRunAct && options!.isShowRun && options!.isShowRunLocation && runObj && runObj.idPlace) {
+    <div class="data-item clickable" (click)="onClickItem(clickedItemType.runs)">
+      <span [inlineSVG]="'assets/img/courses/location.svg'"></span>
+      <span>{{ courseData.places[runObj.idPlace].name }}</span>
+    </div>
+  }
+  @if (rootItem.isRunAct && options!.isShowRun && options!.isShowRunCapacity && runObj) {
+    <div class="data-item clickable" (click)="onClickItem(clickedItemType.runs)">
+      <span [inlineSVG]="'assets/img/courses/users.svg'"></span>
+      <span>{{ runObj.participantCount }}/{{ runObj.capacity ? runObj.capacity : '&infin;' }}</span>
+    </div>
+  }
+  @if (rootItem.isRunAct && options!.isShowRun && options!.isShowRunStaff && runStaff) {
+    <div class="data-item clickable" (click)="onClickItem(clickedItemType.runs)" [ngbTooltip]="htmlStaffContent">
+      <span [inlineSVG]="'assets/img/courses/lector.svg'"></span>
+      <span>{{ 'COURSES_ACT_DATA_LINE_STAFF' | translate }}</span>
+    </div>
+  }
+}
+@if (options!.isShowDocs && courseData.extraData[rootItem.activityId] && courseData.extraData[rootItem.activityId].docs && courseData.extraData[rootItem.activityId].docs.length > 0) {
+  <div class="data-item clickable" (click)="onClickItem(clickedItemType.materials)">
+    <span [inlineSVG]="'assets/img/courses/attachment.svg'"></span>
+    <span>{{ courseData.extraData[rootItem.activityId].docs.length }}</span>
+  </div>
+}
+
+@if (rootItem.future != null) {
+  @if (options!.isHighlightBox) {
+    <div class="break-line"></div>
+    <div class="data-item color-disabled">
+      <span [inlineSVG]="'assets/img/courses/next.svg'"></span>
+      @if (courseData.accesses[rootItem.future.accessId].period != null) {
+        <span>{{ 'COURSES_ACT_NEXT_ACCESS_PERIOD' | translate }} |</span>
+      }
+      <span>{{ 'COURSES_ACT_NEXT_ACCESS_START' | translate }}:</span>
+      <span>{{ courseData.accesses[rootItem.future.accessId].accessStart | date: 'dd. MM. yyyy' }}</span>
+    </div>
+  } @else {
+    <div class="data-item color-disabled">
+      <span [inlineSVG]="'assets/img/courses/next.svg'"></span>
+      @if (courseData.accesses[rootItem.future.accessId].period != null) {
+        <span>{{ 'COURSES_ACT_NEXT_ACCESS_PERIOD' | translate }}:</span>
+      }
+      <span>{{ courseData.accesses[rootItem.future.accessId].accessStart | date: 'dd. MM. yyyy' }}</span>
+    </div>
+  }
+}
+
+<ng-template #htmlStaffContent>
+  <div [innerHTML]="runStaff" class="d-flex flex-column align-items-start text-start"></div>
+</ng-template>

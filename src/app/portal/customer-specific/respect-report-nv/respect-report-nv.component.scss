@@ -1,0 +1,115 @@
+@use '../../../../assets/scss/theme-config' as schema;
+
+.report-nv-page {
+  max-width: 1280px;
+  padding: 0 40px;
+  margin: 50px auto;
+
+  h1 {
+    margin-bottom: 50px;
+  }
+
+  .data-report {
+    display: flex;
+    gap: 20px;
+
+    .select-part {
+      width: 285px;
+
+      .total-sum {
+        padding: 0 20px;
+      }
+
+      .report-nv-dropdown {
+        .drop-btn {
+          min-width: 180px;
+          background-color: schema.$edu-color-grey-light1;
+          border-color: schema.$edu-color-grey-light1;
+          cursor: pointer;
+          margin-bottom: 30px;
+          color: schema.$edu-color-black;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-weight: 600;
+
+          &:hover {
+            background-color: schema.$edu-color-main-light2;
+            border-color: schema.$edu-color-main-light2;
+          }
+        }
+
+        .dropdown-toggle::after {
+          display: none;
+        }
+
+        .report-nv-dropdown-menu {
+          box-shadow: 1px 1px 6px 0px rgba(0, 0, 0, 0.3);
+          border: none;
+          padding: 0;
+          overflow: hidden;
+          left: 0 !important;
+          top: 41px !important;
+          position: absolute !important;
+          min-width: 180px;
+          transform: none !important;
+          border-radius: 20px;
+
+          .dropdown-item {
+            height: 40px;
+            padding: 6px 20px;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 100%;
+
+            &:hover {
+              background-color: schema.$edu-color-grey-light3;
+            }
+
+            &.is-disabled {
+              cursor: default;
+            }
+
+            &.selected {
+              background-color: schema.$edu-color-main-light;
+              color: schema.$edu-color-white;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+    }
+
+    .table-part {
+      width: 100%;
+      table {
+        width: 100%;
+        th {
+          font-size: 14px;
+          font-weight: 700;
+          line-height: 120%; /* 16.8px */
+          text-transform: uppercase;
+          color: schema.$edu-color-grey1;
+          height: 40px;
+
+          &.slim-col {
+            width: 200px;
+          }
+        }
+        td {
+          min-height: 60px;
+        }
+
+        td,
+        th {
+          padding: 20px 0;
+          border-bottom: 1px solid schema.$edu-color-grey-light2;
+        }
+      }
+    }
+  }
+}

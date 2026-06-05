@@ -1,0 +1,115 @@
+@use '../../../../assets/scss/theme-config';
+
+.rating-modal {
+  .modal-header {
+    padding: 0;
+    position: relative;
+    height: 32px;
+    .close-icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      color: theme-config.$modal-header-text-color;
+      font-size: 26px;
+      padding: 10px;
+    }
+  }
+
+  .modal-body {
+    padding: 0 32px 32px;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 30px;
+
+    .header-wrapper {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+
+      h2,
+      h3 {
+        text-align: center;
+      }
+
+      .stars-container {
+        margin-top: 20px;
+        position: relative;
+
+        .stars-block {
+          height: 16px;
+          display: flex;
+          gap: 4px;
+
+          .star-item {
+            height: 16px;
+          }
+        }
+
+        .interactive-stars {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+
+          .star-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            height: 100%;
+
+            &:focus,
+            &:focus-visible {
+              outline: none;
+            }
+
+            .visually-hidden {
+              position: absolute;
+              width: 1px;
+              height: 1px;
+              padding: 0;
+              margin: -1px;
+              overflow: hidden;
+              clip: rect(0, 0, 0, 0);
+              white-space: nowrap;
+              border: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .comment-area {
+      width: 100%;
+      min-height: 160px;
+      border: none;
+      background-color: theme-config.$rating-modal-comment-bg;
+      padding: 10px 16px;
+      color: theme-config.$general-text-color;
+      font-family: inherit;
+      border: 2px;
+
+      &:focus {
+        outline: none;
+      }
+
+      &::placeholder {
+        color: #cbcede;
+      }
+    }
+
+    .btn-primary {
+      width: 100%;
+    }
+  }
+}

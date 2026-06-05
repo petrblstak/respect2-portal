@@ -1,0 +1,32 @@
+@if (currentLang === 'cs') {
+  <div class="container about-page">
+    <h1 class="text-blue text-center mb-5">EDUportály</h1>
+    <div class="row g-0 mb-5">
+      <div class="col-12">
+        <p>Vytvořili jsme už několik desítek EDUportálů pro firmy, neziskovky i vzdělávací instituce. Tady se můžete podívat na ty z nich, které jsou veřejně přístupné.</p>
+      </div>
+    </div>
+    @for (ptName of portals; track ptName) {
+      <div class="row g-0 mb-5">
+        <div class="col-12">
+          <h2 class="mb-3">{{ portalData[ptName].name }}</h2>
+          <p>{{ portalData[ptName].text }}</p>
+        </div>
+        <div class="col-12">
+          <ngb-carousel class="edup-carousel">
+            @for (image of images[ptName]; track image) {
+              <ng-template ngbSlide>
+                <div class="picsum-img-wrapper">
+                  <img [src]="imgLibUrl + ptName + '/' + image" class="crs-img" />
+                </div>
+              </ng-template>
+            }
+          </ngb-carousel>
+        </div>
+        <div class="col-12 text-center mt-4">
+          <a class="btn btn-primary" [href]="portalData[ptName].url" target="_blank" [innerHTML]="'Přejít na portál' | translate"></a>
+        </div>
+      </div>
+    }
+  </div>
+}

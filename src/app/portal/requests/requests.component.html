@@ -1,0 +1,49 @@
+<div class="container requests-page">
+
+  <h2 [innerHTML]="'REQUESTS_HEADER' | translate"></h2>
+  <!-- <div class="page-divider"></div> -->
+
+  <table class="requests-table">
+    <tr>
+      <th>{{'REQUESTS_TABLE_ACTIVITY' | translate}}</th>
+      <th>{{'REQUESTS_TABLE_CREATED' | translate}}</th>
+      <th>{{'REQUESTS_TABLE_RUN' | translate}}</th>
+      <th>{{'REQUESTS_TABLE_STATE' | translate}}</th>
+      <th></th>
+    </tr>
+    @for (request of requestsData.messages; track request; let index = $index) {
+      <tr>
+        <td ngClass="{{request.idTargetActivityMt ? 'current-activity' : 'new-activity'}}" (click)="openActivity(index)">
+          @if (request.idTargetActivityMt) {
+            <span>
+              {{requestsData.activities[request.idTargetActivityMt].localName}}
+            </span>
+          }
+          @if (request.idTargetActivityMt == null) {
+            <span>
+              {{'REQUESTS_TABLE_NEW_ACTIVITY' | translate}}
+            </span>
+          }
+        </td>
+        <td>{{request.created | date:'dd.MM.yyyy HH:mm'}}</td>
+        <td>
+          @if (request.idTargetActivityRun) {
+            <cmp-run-line class="actual-run"
+            [runObj]="requestsData.runs[request.idTargetActivityRun]"></cmp-run-line>
+          }
+        </td>
+        <td>
+          {{'REQUESTS_TABLE_STATE_' + messageStates[request.messageStateId] | translate}}
+        </td>
+        <td>
+          @if (msgWithdrawable[request.id]) {
+            <span [inlineSVG]="'assets/img/general/close.svg'"
+              (click)="withdrawRequest(request.id, index)" [ngbTooltip]="'CATALOG_ACTIVITY_REQUEST_WITHDRAW' | translate"
+            class="withdraw-icon"></span>
+          }
+        </td>
+      </tr>
+    }
+  </table>
+
+</div>

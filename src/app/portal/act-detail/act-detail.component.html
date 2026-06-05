@@ -1,0 +1,657 @@
+<!-- HIERARCHY NAVIGATION -->
+<div class="top-navigation">
+  <div class="nav-item" (click)="goBack()">
+    <span class="nav-ico" [inlineSVG]="'assets/img/general/arrow-left.svg'"></span>
+    @if (isActPage) {
+      <span class="nav-text" [innerHTML]="'NAVIGATION_COURSES' | translate"></span>
+    }
+    @if (!isActPage) {
+      <span class="nav-text" [innerHTML]="'NAVIGATION_CATALOG' | translate"></span>
+    }
+  </div>
+
+  @if (!isCoursesLoading && actId && courseData.activityData[actId].parentActId) {
+    <span class="nav-ico">/</span>
+  }
+  @if (!isCoursesLoading && actId && courseData.activityData[actId].parentActId) {
+    <div class="nav-item" (click)="upOneLevel()">
+      <span class="nav-text" [innerHTML]="courseData.activities[courseData.activityData[actId!].parentActId!].localNameSafe"></span>
+    </div>
+  }
+</div>
+
+<!-- LOADING INFO -->
+@if (isCoursesLoading) {
+  <div class="detail-body justify-content-center">
+    <h2 [innerHTML]="'COURSE_DETAIL_LOADING' | translate"></h2>
+  </div>
+}
+
+@if (!isCoursesLoading && activity == null) {
+  <div class="detail-body justify-content-center">
+    <h2 [innerHTML]="'COURSE_DETAIL_NO_DATA' | translate"></h2>
+  </div>
+}
+
+<!-- PAGE BODY -->
+@if (!isCoursesLoading && activity != null && rootItem != null) {
+  <div class="detail-body">
+    <h1 class="d-block d-lg-none" [innerHTML]="activity.localNameSafe"></h1>
+    <!-- COURSE TAGS -->
+    @if (courseData.extraData[rootItem.activityId] && courseData.extraData[rootItem.activityId].tags.length > 0) {
+      <cmp-course-tags
+        class="tags d-flex d-lg-none mb-3"
+        [courseData]="courseData"
+        [rootItem]="rootItem"
+        [optionsObj]="{ isShowMain: false, isShowCatalog: true, isShowDefaults: true, isShowSpecials: true }"></cmp-course-tags>
+    }
+    <!-- LEFT COLUMN-->
+    <div class="left-column">
+      <!-- COURSE IMAGE -->
+      <div class="c-image-wrapper">
+        <div class="course-image">
+          <img [src]="getActHeaderImg()" alt="course image" />
+        </div>
+        @if (activity != null && activity.ratingPreset != null) {
+          <div class="rating-block">
+            <cmp-act-stars [rating]="activity.rating == null ? 0 : activity.rating"></cmp-act-stars>
+            <div class="percent-and-num">
+              <span class="percentil">{{ activity.rating == null ? 0 : activity.rating }} %</span>
+              <span class="separator">•</span>
+              <span class="ratings-num">{{ activity.ratingCount == null ? 0 : activity.ratingCount }} {{ 'COURSE_DETAIL_RATINGS' | translate }}</span>
+            </div>
+          </div>
+        }
+      </div>
+      <div class="highlight-block" [ngClass]="{ 'top-margin': activity.ratingPreset == null }">
+        <!-- PROGRESS BAR -->
+        @if (isActPage && rootItem) {
+          <cmp-progress-bar
+            [completion]="getActCompletionPercentage()"
+            [treshold]="getActCompletionTreshold()"
+            [completionData]="getActCompletionData()"
+            class="completion-block"
+            [isInDetail]="true"></cmp-progress-bar>
+        }
+        <!-- BASIC DATA - TYPE, LENGTH, DATES -->
+        <cmp-act-data-line class="act-data" [courseData]="courseData" [rootItem]="rootItem" [refreshTrigger]="dataRefreshTrigger" [options]="{ isHighlightBox: true }"></cmp-act-data-line>
+        <!-- PLAY SECTION -->
+        @if (isActPage && hasPlayableContent()) {
+          <div
+            class="play-section"
+            [ngClass]="{ 'with-results': courseData.activities[rootItem.activityId].launchType === activityLaunchTypes.ITRIVIO && courseData.accesses[rootItem.accessId].idBestAttempt }">
+            @if (courseData.activities[rootItem.activityId].launchType === activityLaunchTypes.ITRIVIO && courseData.accesses[rootItem.accessId].idBestAttempt) {
+              <div
+                class="btn-results"
+                [ngbTooltip]="
+                  (courseData.activities[rootItem.activityId].launchContent_object?.course?.availableInUserReports == 0 ? 'COURSES_BTN_RESULTS_DISABLED' : 'COURSES_BTN_RESULTS') | translate
+                ">
+                <button
+                  [disabled]="courseData.activities[rootItem.activityId].launchContent_object?.course?.availableInUserReports == 0"
+                  class="btn btn-outline-primary"
+                  [inlineSVG]="'assets/img/courses/results.svg'"
+                  (click)="openResultLinkById()"></button>
+              </div>
+            }
+            <!-- FOR ACTIVITY -->
+            @if (isTypeActivity(rootItem.activityId)) {
+              <!-- @if (!courseData.accesses[rootItem.accessId].passed) {
+                <button class="btn btn-primary btn-play" [disabled]="!courseData.activityData[rootItem.activityId].isPlayable" (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+                  {{ 'COURSES_PLAY' | translate }}
+                </button>
+              }
+              @if (courseData.accesses[rootItem.accessId].passed) {
+                <button
+                  class="btn btn-outline-primary btn-play"
+                  [disabled]="!courseData.activityData[rootItem.activityId].isPlayable"
+                  (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+                  {{ 'COURSES_BTN_REPEAT' | translate }}
+                </button>
+              } -->
+              @if (courseData.activityData[rootItem.activityId].canDisplayPassedContent) {
+                <button class="btn btn-play btn-outline-primary" (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+                  {{ 'COURSES_PLAY_DISPLAY' | translate }}
+                </button>
+              } @else if (courseData.activityData[rootItem.activityId].isPlayable) {
+                <button
+                  class="btn btn-play"
+                  [ngClass]="{ 'btn-primary': !courseData.accesses[rootItem.accessId].passed, 'btn-outline-primary': courseData.accesses[rootItem.accessId].passed }"
+                  (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+                  {{ (courseData.accesses[rootItem.accessId].passed ? 'COURSES_BTN_REPEAT' : 'COURSES_PLAY') | translate }}
+                </button>
+              } @else {
+                <div
+                  class="course-not-playable"
+                  [ngbTooltip]="courseData.activityData[rootItem.activityId].noPlayReason || ('COURSES_NOT_PLAYABLE_DEFAULT' | translate)"
+                  placement="top"
+                  role="status"
+                  [attr.aria-label]="'COURSES_NOT_PLAYABLE' | translate">
+                  <span class="status-text">{{ 'COURSES_NOT_PLAYABLE' | translate }}</span>
+                  <span class="material-icons-round info-icon">info_outline</span>
+                </div>
+              }
+            }
+            <!-- FOR SETS -->
+            @if (!isTypeActivity(rootItem.activityId)) {
+              @if (isSimpleSet(rootItem.activityId) && isSetAllowedPlay) {
+                <!-- <button
+                  class="btn btn-play"
+                  [ngClass]="{ 'btn-primary': !courseData.accesses[rootItem.accessId].passed, 'btn-outline-primary': courseData.accesses[rootItem.accessId].passed }"
+                  [disabled]="!isSetPlayable(rootItem.activityId)"
+                  (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+                  {{ 'COURSES_PLAY' | translate }}
+                </button> -->
+                @if (isSetPlayable(rootItem.activityId)) {
+                  <button
+                    class="btn btn-play"
+                    [ngClass]="{ 'btn-primary': !courseData.accesses[rootItem.accessId].passed, 'btn-outline-primary': courseData.accesses[rootItem.accessId].passed }"
+                    (click)="playCourse({ activityId: rootItem.activityId, runId: null })">
+                    {{ 'COURSES_PLAY' | translate }}
+                  </button>
+                } @else {
+                  <div
+                    class="course-not-playable"
+                    [ngbTooltip]="'COURSE_ACTIVITY_NOT_PLAYABLE_REASON.NO_PLAYABLE_ACTIVITY_IN_SET' | translate"
+                    placement="top"
+                    role="status"
+                    [attr.aria-label]="'COURSES_NOT_PLAYABLE' | translate">
+                    <span class="status-text">{{ 'COURSES_NOT_PLAYABLE' | translate }}</span>
+                    <span class="material-icons-round info-icon">info_outline</span>
+                  </div>
+                }
+              }
+              @if (!isSimpleSet(rootItem.activityId) && isSetAllowedPlay) {
+                <div>
+                  {{ 'COURSES_ERROR_COMPLEX_COURSE' | translate }}
+                </div>
+              }
+            }
+          </div>
+        }
+        <!-- CATALOG ENROLL SECTION -->
+        @if (!isActPage) {
+          <div class="play-section flex-column">
+            @if (courseData.activities[activity.id].parentRegistration) {
+              <div class="text-16">
+                {{ 'CATALOG_ACTIVITY_PARENT_ACCESS' | translate }}
+              </div>
+            }
+            @if (!courseData.activities[activity.id].parentRegistration && !courseData.activityData[activity.id].requestAccess) {
+              @if (rootItem.isRunAct && runControl.runsAvailable != null && runControl.runsAvailable.length > 0) {
+                <button class="btn btn-primary" (click)="selectTab(tabs.tabEnum.runs)">
+                  {{ 'COURSE_DETAIL_SHOW_TERMS' | translate }}
+                </button>
+              }
+              @if (!rootItem.isRunAct || (rootItem.isRunAct && (runControl.runsAvailable == null || runControl.runsAvailable.length <= 0))) {
+                <button class="btn btn-primary" (click)="enlistCourse()">
+                  {{ 'CATALOG_ASSIGN_BUTTON' | translate }}
+                </button>
+              }
+              <!-- <button class="btn" [ngClass]="{'btn-link': rootItem.isRunAct, 'btn-primary': !rootItem.isRunAct}"
+              (click)="enlistCourse()">
+              {{'CATALOG_ASSIGN_BUTTON' | translate}}
+            </button> -->
+            }
+            @if (!courseData.activities[activity.id].parentRegistration && courseData.activityData[activity.id].requestAccess) {
+              @if (reqStates[activity.id]?.isProcessed) {
+                <div class="text-16">
+                  {{ 'CATALOG_ACTIVITY_REQUEST_ACC_PROCESSING' | translate }}
+                </div>
+              }
+              @if (reqStates[activity.id]?.isRejected) {
+                <div class="text-16">
+                  {{ 'CATALOG_ACTIVITY_REQUEST_ACC_REJECTED' | translate }}
+                </div>
+              }
+              @if (reqStates[activity.id]?.isWithdrawable) {
+                <button class="btn btn-primary" (click)="activityRequestWithdraw()">
+                  {{ 'CATALOG_ACTIVITY_REQUEST_WITHDRAW' | translate }}
+                </button>
+              }
+              @if (rootItem.isRunAct && runControl.runsAvailable != null && runControl.runsAvailable.length > 0) {
+                <button
+                  class="btn"
+                  [ngClass]="{
+                    'btn-link': reqStates[activity.id] != null && reqStates[activity.id].isWithdrawable,
+                    'btn-primary': reqStates[activity.id] == null || !reqStates[activity.id].isWithdrawable,
+                  }"
+                  (click)="selectTab(tabs.tabEnum.runs)">
+                  {{ 'COURSE_DETAIL_SHOW_TERMS' | translate }}
+                </button>
+              }
+              @if (
+                (!rootItem.isRunAct || (rootItem.isRunAct && (runControl.runsAvailable == null || runControl.runsAvailable.length <= 0))) &&
+                (reqStates[activity.id] == null || reqStates[activity.id].isRejected || reqStates[activity.id].isWithdrawn || reqStates[activity.id].isCompleted)
+              ) {
+                <button class="btn btn-primary" (click)="showRequestActivityModal(activity.id)">
+                  {{ 'CATALOG_ACTIVITY_REQUEST_ACC' | translate }}
+                </button>
+              }
+              <!-- <button class="btn" [ngClass]="{'btn-link': rootItem.isRunAct, 'btn-primary': !rootItem.isRunAct}"
+            *ngIf="reqStates[activity.id] == null || reqStates[activity.id].isRejected || reqStates[activity.id].isWithdrawn || reqStates[activity.id].isCompleted"
+            (click)="showRequestActivityModal(activity.id)">
+            {{'CATALOG_ACTIVITY_REQUEST_ACC' | translate}}
+          </button> -->
+            }
+          </div>
+        }
+        <!-- ACTIVITY RUN SECTION -->
+        @if (isActPage && rootItem!.isRunAct) {
+          <div class="run-section">
+            @if (!runControl.runEnrolled && runControl.runsAvailable != null && runControl.runsAvailable.length > 0) {
+              <button class="btn btn-primary" (click)="selectTab(tabs.tabEnum.runs)">
+                {{ 'COURSE_DETAIL_SHOW_TERMS' | translate }}
+              </button>
+            }
+            @if (runControl.runEnrolled && courseData.actRuns[runControl.runEnrolled].stateCategory === 'future') {
+              <button class="btn btn-outline-primary" (click)="signOffRun()">
+                {{ 'COURSES_RUNS_SIGN_OFF_SHORT' | translate }}
+              </button>
+            }
+          </div>
+        }
+        <!-- ACTIVITY SIGN OFF -->
+        @if (isActPage && isActSignOffAllowed && runControl.runEnrolled == null) {
+          <div class="run-section">
+            <button class="btn btn-outline-primary" (click)="signOffRun(true)">
+              {{ 'COURSES_RUNS_SIGN_OFF_SHORT' | translate }}
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+    <!-- RIGHT COLUMN -->
+    <div class="right-column">
+      <h1 class="d-none d-lg-block" [innerHTML]="activity.localNameSafe"></h1>
+      <!-- COURSE TAGS -->
+      @if (courseData.extraData[rootItem.activityId] && courseData.extraData[rootItem.activityId].tags.length > 0) {
+        <cmp-course-tags
+          class="tags d-none d-lg-flex"
+          [courseData]="courseData"
+          [rootItem]="rootItem"
+          [optionsObj]="{ isShowMain: false, isShowCatalog: true, isShowDefaults: true, isShowSpecials: true }"></cmp-course-tags>
+      }
+      <div class="tabs-row">
+        @for (tab of tabs.availableTabs; track tab) {
+          <div class="tab-item" [ngClass]="{ selected: tab === tabs.currentTab }" (click)="selectTab(tab)">
+            {{ 'COURSE_DETAIL_TAB_' + tab | translate }}
+          </div>
+        }
+      </div>
+      <!-- DESCRIPTION -->
+      @if (tabs.currentTab === 'about') {
+        <div class="tab-content">
+          @if (activity.description != null && activity.description.length > 0) {
+            <div class="description" [innerHTML]="activity.localDescSafe"></div>
+          }
+          @if (extraDescParams.length > 0) {
+            <div class="extra-params" [ngClass]="{ 'top-border': activity.description != null && activity.description.length > 0 }">
+              <!--
+          1: Object { id: 1, name: "STRING" }​​​​
+          2: Object { id: 2, name: "LONG" }​​​​
+          3: Object { id: 3, name: "BOOLEAN" }​​​​
+          4: Object { id: 4, name: "DATE" }​​​​
+          5: Object { id: 5, name: "OBJECT_ID" }​​​​
+          6: Object { id: 6, name: "EMAIL" }​​​​
+          8: Object { id: 8, name: "DOUBLE" }​​​​
+          9: Object { id: 9, name: "DATE_TIME" }​​​​
+          10: Object { id: 10, name: "ENUM_ID" }​​​​
+          12: Object { id: 12, name: "PASSWORD" }​​​​
+          13: Object { id: 13, name: "ID" }​​​​
+          14: Object { id: 14, name: "URL" }​​​​
+          15: Object { id: 15, name: "JSON" }​​​​
+          16: Object { id: 16, name: "ENUM" }​​​​
+          17: Object { id: 17, name: "MULTI_SELECT" }​​​​
+          18: Object { id: 18, name: "TEXT" }
+          -->
+              @for (paramObj of extraDescParams; track paramObj.translation) {
+                <div class="param-item">
+                  <span class="param-name">{{ paramObj.translation }}:</span>
+                  @if (paramObj.type === 'LONG') {
+                    <span class="param-value">{{ formatNumber(paramObj.value) }}</span>
+                  }
+                  @if (paramObj.type === 'DATE') {
+                    <span class="param-value">{{ paramObj.value | date: 'd.M. yyyy' }}</span>
+                  }
+                  @if (paramObj.type === 'DATE_TIME') {
+                    <span class="param-value">
+                      {{ paramObj.value | date: 'd.M. yyyy HH:mm' }}
+                    </span>
+                  }
+                  @if (paramObj.type !== 'LONG' && paramObj.type !== 'DATE' && paramObj.type !== 'DATE_TIME') {
+                    <span class="param-value">{{ paramObj.value }}</span>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+      <!-- MATERIALS -->
+      @if (
+        tabs.currentTab === 'materials' &&
+        courseData.extraData[rootItem.activityId] &&
+        ((courseData.extraData[rootItem.activityId].docs && courseData.extraData[rootItem.activityId].docs.length > 0) ||
+          (courseData.extraData[rootItem.activityId].docsFuture && courseData.extraData[rootItem.activityId].docsFuture.length > 0))
+      ) {
+        <div class="tab-content">
+          <div class="materials-section">
+            @if (courseData.extraData[rootItem.activityId].docs.length > 0) {
+              <div class="docs-columns">
+                <!-- Regular Materials Column -->
+                @if (docs.nonCertNum > 0) {
+                  <div class="docs-column">
+                    <h3 class="column-header">{{ 'COURSES_MATERIALS' | translate }}</h3>
+                    <button class="btn download-all-btn" (click)="downloadAllMaterials(false)">
+                      <span [inlineSVG]="'assets/img/courses/download.svg'"></span>
+                      <span class="download-text">{{ 'COURSES_MATERIALS_DOWNLOAD_ALL' | translate }}</span>
+                      <span class="download-info">({{ docs.nonCertNum }} {{ 'COURSES_MATERIALS_DOWNLOAD_ALL_FILES' | translate }})</span>
+                    </button>
+                    @for (docId of courseData.extraData[rootItem.activityId].docs; track docId) {
+                      <div
+                        class="doc-item"
+                        (click)="downloadDoc(docId, courseData.activityData[rootItem.activityId].accessId)"
+                        [ngbTooltip]="courseData.documents[docId].name"
+                        [ngClass]="{ hidden: courseData.documents[docId].docTemplate }">
+                        <span [inlineSVG]="'assets/img/general/doc.svg'"></span>
+                        <span class="attach-item-name">{{ courseData.documents[docId].name }}</span>
+                      </div>
+                    }
+                  </div>
+                }
+                <!-- Certificates Column -->
+                @if (docs.certNum > 0) {
+                  <div class="docs-column">
+                    <h3 class="column-header">{{ 'COURSES_MATERIALS_CERTIFICATES' | translate }}</h3>
+                    @for (docId of courseData.extraData[rootItem.activityId].docs; track docId) {
+                      <div
+                        class="doc-item ps-1"
+                        (click)="downloadDoc(docId, courseData.activityData[rootItem.activityId].accessId)"
+                        [ngbTooltip]="courseData.documents[docId].name"
+                        [ngClass]="{ hidden: !courseData.documents[docId].docTemplate }">
+                        <span [inlineSVG]="'assets/img/courses/cert.svg'"></span>
+                        <span class="ps-2 attach-item-name">{{ courseData.documents[docId].name }}</span>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+            @if (rootItem.future != null && courseData.extraData[rootItem.activityId].docsFuture.length > 0) {
+              <div class="docs-columns mt-4">
+                <div class="docs-column">
+                  <h3 class="column-header">{{ 'COURSES_MATERIALS_FUTURE' | translate }}</h3>
+                  <button class="btn download-all-btn" (click)="downloadAllMaterials(true)">
+                    <span [inlineSVG]="'assets/img/courses/download.svg'"></span>
+                    <span class="download-text">{{ 'COURSES_MATERIALS_DOWNLOAD_ALL' | translate }}</span>
+                    <span class="download-info">({{ courseData.extraData[rootItem.activityId].docsFuture.length }} {{ 'COURSES_MATERIALS_DOWNLOAD_ALL_FILES' | translate }})</span>
+                  </button>
+                  @for (docId of courseData.extraData[rootItem.activityId].docsFuture; track docId) {
+                    <div
+                      class="doc-item"
+                      (click)="downloadDoc(docId, courseData.activityData[rootItem.activityId].accessId)"
+                      [ngbTooltip]="courseData.documents[docId].name"
+                      [ngClass]="{ hidden: courseData.documents[docId].docTemplate }">
+                      <span [inlineSVG]="'assets/img/general/doc.svg'"></span>
+                      <span class="attach-item-name">{{ courseData.documents[docId].name }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+      <!-- COURSE CHILDREN -->
+      @if (tabs.currentTab === 'content') {
+        <div class="tab-content">
+          @if (!isTypeActivity(rootItem.activityId) && courseData.children[rootItem.activityId]) {
+            <div class="children-section">
+              @for (activityId of courseData.children[rootItem.activityId]; track activityId) {
+                <div class="child-item">
+                  @if (!isTypeActivity(activityId)) {
+                    <cmp-course-card-row
+                      [isCatalog]="!isActPage"
+                      class="set-child"
+                      [courseData]="courseData"
+                      [rootItem]="courseData.activityData[activityId]"
+                      (courseLaunched)="playCourse($event)"
+                      [isInDetail]="true"></cmp-course-card-row>
+                  }
+                  @if (isTypeActivity(activityId)) {
+                    <cmp-course-card-activity-row
+                      [isCatalog]="!isActPage"
+                      class="act-child"
+                      (courseLaunched)="playCourse($event)"
+                      [courseData]="courseData"
+                      [activityId]="activityId"
+                      [isRunAct]="courseData.activityData[activityId].isRunAct"
+                      [isInDetail]="true"></cmp-course-card-activity-row>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+      <!-- RUN DETAILS -->
+      @if (tabs.currentTab === 'runs') {
+        <div class="tab-content">
+          @if (runControl.runsAvailable == null || runControl.runsAvailable.length <= 0) {
+            <div class="run-notes" [innerHTML]="'COURSE_DETAIL_NO_TERMS' | translate"></div>
+          }
+          @if (runControl.runsAvailable != null && runControl.runsAvailable.length > 0) {
+            @for (runId of runControl.runsAvailable; track runId) {
+              <div class="run-item" [ngClass]="{ 'run-selected': runControl.runEnrolled == runId }">
+                <div class="data-part">
+                  @if (courseData.actRuns[runId].name) {
+                    <div class="run-name">{{ courseData.actRuns[runId].name }}</div>
+                  }
+                  <cmp-run-line
+                    class="actual-run"
+                    [runObj]="courseData.actRuns[runId]"
+                    [place]="courseData.actRuns[runId].idPlace ? courseData.places[courseData.actRuns[runId].idPlace].name : null"></cmp-run-line>
+                  @if (aggregatedRunStaff[runId]) {
+                    <div class="run-staff">
+                      @for (staffItem of aggregatedRunStaff[runId] | keyvalue; track staffItem.key) {
+                        <div class="staff-role-line">
+                          <div class="role-name">{{ userRoles[staffItem.key].localName }}</div>
+                          :
+                          @for (userId of staffItem.value; track userId; let last = $last) {
+                            <div class="staff-user">
+                              @if (courseData.users[userId].firstName && courseData.users[userId].lastName) {
+                                <span class="staff-name">
+                                  {{ courseData.users[userId].firstName }} {{ courseData.users[userId].lastName }}
+                                  @if (!last) {
+                                    <span>,</span>
+                                  }
+                                </span>
+                              }
+                              @if (courseData.users[userId].firstName == null || courseData.users[userId].lastName == null) {
+                                <span class="staff-name">
+                                  {{ courseData.users[userId].email }}
+                                  @if (!last) {
+                                    <span>,</span>
+                                  }
+                                </span>
+                              }
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+                  }
+                  @if (courseData.actRuns[runId].notesSafe) {
+                    <div class="run-notes" [innerHTML]="courseData.actRuns[runId].notesSafe"></div>
+                  }
+                </div>
+                <div class="actions-part">
+                  @if (isActPage && courseData.accesses[rootItem.accessId].idActivityRun == null) {
+                    @if (courseData.actRuns[runId].stateCategory === 'future') {
+                      <button class="btn btn-primary" [disabled]="runControl.runEnrolled != null || courseData.actRuns[runId].isLocked" (click)="signUpRun(runId)">
+                        {{ 'COURSES_RUNS_SIGN_UP' | translate }}
+                      </button>
+                    }
+                  }
+                  @if (isActPage && courseData.accesses[rootItem.accessId].idActivityRun != null) {
+                    @if (courseData.actRuns[runId].stateCategory === 'finished') {
+                      <div class="text-grey">
+                        {{ 'COURSES_RUNS_PAST_ENROLLED' | translate }}
+                      </div>
+                    }
+                    @if (courseData.actRuns[runId].stateCategory === 'running') {
+                      <div class="text-grey">
+                        {{ 'COURSES_RUNS_JUST_RUNNING' | translate }}
+                      </div>
+                    }
+                    @if (courseData.actRuns[runId].stateCategory === 'future' && runControl.runEnrolled != runId && !courseData.activityData[activity.id].requestAccess) {
+                      <button class="btn btn-primary" [disabled]="runControl.runEnrolled != null || courseData.actRuns[runId].isLocked" (click)="enlistCourse(runId)">
+                        {{ 'COURSES_RUNS_SIGN_UP' | translate }}
+                      </button>
+                    }
+                    @if (courseData.actRuns[runId].stateCategory === 'future' && runControl.runEnrolled != runId && courseData.activityData[activity.id].requestAccess) {
+                      <button
+                        class="btn btn-primary"
+                        [disabled]="(reqStates[activity.id] != null && (reqStates[activity.id].isWithdrawable || reqStates[activity.id].isProcessed)) || courseData.actRuns[runId].isLocked"
+                        (click)="showRequestActivityModal(activity.id, runId)">
+                        {{ 'CATALOG_ACTIVITY_REQUEST_ACC' | translate }}
+                      </button>
+                    }
+                    @if (runControl.runEnrolled == runId && courseData.actRuns[runId].stateCategory === 'future') {
+                      <button class="btn btn-outline-primary" (click)="signOffRun()">
+                        {{ 'COURSES_RUNS_SIGN_OFF_SHORT' | translate }}
+                      </button>
+                    }
+                  }
+                  @if (!isActPage) {
+                    @if (courseData.activities[activity.id].parentRegistration) {
+                      <div class="text-16">
+                        {{ 'CATALOG_ACTIVITY_PARENT_ACCESS' | translate }}
+                      </div>
+                    }
+                    @if (!courseData.activities[activity.id].parentRegistration && !courseData.activityData[activity.id].requestAccess) {
+                      <button class="btn btn-primary" [disabled]="courseData.actRuns[runId].isLocked" (click)="enlistCourse(runId)">
+                        {{ 'COURSES_RUNS_SIGN_UP' | translate }}
+                      </button>
+                    }
+                    @if (!courseData.activities[activity.id].parentRegistration && courseData.activityData[activity.id].requestAccess) {
+                      <button
+                        class="btn btn-primary"
+                        [disabled]="(reqStates[activity.id] != null && (reqStates[activity.id].isWithdrawable || reqStates[activity.id].isProcessed)) || courseData.actRuns[runId].isLocked"
+                        (click)="showRequestActivityModal(activity.id, runId)">
+                        {{ 'CATALOG_ACTIVITY_REQUEST_ACC' | translate }}
+                      </button>
+                    }
+                  }
+                </div>
+              </div>
+            }
+          }
+        </div>
+      }
+      <!-- REVIEWS -->
+      @if (tabs.currentTab === 'reviews' && activity != null && activity.ratingPreset != null) {
+        <div class="tab-content review-tab-content">
+          <!-- Review Summary -->
+          @if (!ratingData.isInitialized) {
+            <div class="review-summary">
+              {{ 'COURSE_DETAIL_RATING_REVIEWS_LOADING' | translate }}
+            </div>
+          }
+          <!-- Review Summary -->
+          @if (ratingData.isInitialized) {
+            <div class="review-summary">
+              <!-- Left side: Percentage, Stars, Count -->
+              <div class="percentage-part">
+                <h1>{{ activity.rating == null ? 0 : activity.rating }} %</h1>
+                <cmp-act-stars [rating]="activity.rating == null ? 0 : activity.rating"></cmp-act-stars>
+                <div class="small mt-1">
+                  {{ activity.ratingCount == null ? 0 : activity.ratingCount }}
+                  {{ 'COURSE_DETAIL_RATINGS' | translate }}
+                </div>
+              </div>
+              <!-- Middle: Rating distribution bars -->
+              <div class="rating-bars">
+                @for (starNum of [5, 4, 3, 2, 1]; track starNum) {
+                  <div class="bar-item">
+                    <!-- Display stars using the component -->
+                    <cmp-act-stars [rating]="starNum * 20" class="me-2 star-label"></cmp-act-stars>
+                    <div class="progress flex-grow-1">
+                      <div
+                        class="progress-bar"
+                        role="progressbar"
+                        [style.width.%]="getDistributionPercentage(starNum)"
+                        [attr.aria-valuenow]="getDistributionPercentage(starNum)"
+                        aria-valuemin="0"
+                        aria-valuemax="100"></div>
+                    </div>
+                    <!-- <span class="ms-2 text-muted"
+              style="min-width: 30px; text-align: right;">{{ratingData.distribution[starNum]}}</span> -->
+                  </div>
+                }
+              </div>
+              <!-- Right side: Rating Button -->
+              <div class="rating-button-container ms-auto">
+                @if (isActPage && access != null && access.passed) {
+                  <button class="btn btn-primary" (click)="openRatingModal()">
+                    {{ (access.rating || access.ratingText ? 'COURSE_DETAIL_RATING_BUTTON_CHANGE' : 'COURSE_DETAIL_RATING_BUTTON_ADD') | translate }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+          <!-- Review List -->
+          @if (ratingData.isInitialized) {
+            <h2 class="reviews-title">
+              {{ 'COURSE_DETAIL_RATING_REVIEWS_HEADER' | translate }}
+            </h2>
+          }
+          <!-- No Reviews State -->
+          @if (ratingData.isInitialized && ratingData.ratingItems.length === 0) {
+            <div class="text-center">
+              {{ 'COURSE_DETAIL_RATING_REVIEWS_NO_REVIEWS' | translate }}
+            </div>
+          }
+          @if (ratingData.isInitialized && ratingData.ratingItems.length > 0) {
+            <div class="review-list">
+              @for (review of ratingData.ratingItems; track review.userId; let i = $index) {
+                <div class="review-item">
+                  <div class="d-flex justify-content-between align-items-top mb-2">
+                    <div>
+                      @if (ratingData.users[review.userId]) {
+                        <span class="user-name">
+                          {{ ratingData.users[review.userId] }}
+                        </span>
+                      }
+                      @if (ratingData.users[review.userId] == null) {
+                        <span class="user-name-anonymous">
+                          {{ 'COURSE_DETAIL_RATING_ANONYMOUS' | translate }}
+                        </span>
+                      }
+                      @if (review.ratingScore != null) {
+                        <cmp-act-stars [rating]="review.ratingScore * 10"></cmp-act-stars>
+                      }
+                    </div>
+                    <span class="text-muted small">{{ review.ratingDate | date: 'd. M. yyyy' }}</span>
+                  </div>
+                  @if (review.ratingText) {
+                    <p class="review-text" [ngClass]="{ collapsed: !expandedReviews[i] && review.ratingText.length > REVIEW_TEXT_TRUNCATE_THRESHOLD }">
+                      {{ review.ratingText }}
+                    </p>
+                  }
+                  @if (review.ratingText && review.ratingText.length > REVIEW_TEXT_TRUNCATE_THRESHOLD) {
+                    <button class="btn btn-link btn-sm p-0 show-more-less" (click)="toggleReview(i)">
+                      {{ (expandedReviews[i] ? 'COURSE_DETAIL_RATING_SHOW_LESS' : 'COURSE_DETAIL_RATING_SHOW_MORE') | translate }}
+                      <span [inlineSVG]="expandedReviews[i] ? 'assets/img/general/expand_up.svg' : 'assets/img/general/expand_down.svg'"></span>
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          }
+          <!-- Original button location removed -->
+        </div>
+      }
+    </div>
+  </div>
+}

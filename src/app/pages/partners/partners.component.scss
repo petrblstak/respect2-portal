@@ -1,0 +1,21 @@
+@use '../../../assets/scss/theme-config';
+
+.partners-page {
+  max-width: 798px;
+  padding: 0 24px;
+  margin: 80px auto 64px;
+
+  a {
+    font-size: 20px;
+    font-weight: 700;
+  }
+}
+
+.partners-page-bottom {
+  background-color: theme-config.$edu-color-main;
+
+  .container {
+    padding: 64px 24px;
+    max-width: 798px;
+  }
+}

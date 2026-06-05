@@ -1,0 +1,47 @@
+@use '../../../../assets/scss/theme-config';
+
+:host {
+  display: block;
+}
+.search-input-cmp {
+  // display: flex;
+  // align-items: center;
+  position: relative;
+  .search-input {
+    border: none;
+    border-bottom: 1px solid theme-config.$search-border-color;
+    outline: none;
+    background: transparent;
+
+    width: 320px;
+    height: 40px;
+    padding: 8px 41px;
+    border-radius: 0;
+
+    font-weight: 400;
+    line-height: 140%;
+    font-size: 16px;
+
+    &::placeholder {
+      color: theme-config.$general-text-placeholder;
+      font-weight: 400;
+      line-height: 140%;
+      font-size: 16px;
+    }
+  }
+  .search-ico {
+    position: absolute;
+    left: 12px;
+    top: 7px;
+  }
+  .clear-ico {
+    position: absolute;
+    right: 12px;
+    top: 7px;
+    display: none;
+    cursor: pointer;
+    &.is-visible {
+      display: block;
+    }
+  }
+}

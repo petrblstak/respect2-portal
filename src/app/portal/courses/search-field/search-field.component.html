@@ -1,0 +1,7 @@
+<div class="search-input-cmp">
+  <div [inlineSVG]="'assets/img/general/search.svg'" class="search-ico"></div>
+  <input id="id-search-input" type="text" class="search-input" [(ngModel)]="searchTerm"
+    (ngModelChange)="onSearchChange($event)" [placeholder]="'COURSES_SEARCH_NAME_PLACEHOLDER' | translate">
+  <div [inlineSVG]="'assets/img/general/close.svg'" [ngClass]="{'is-visible': searchTerm && searchTerm !== ''}"
+    class="clear-ico" (click)="clearSearch()"></div>
+</div>

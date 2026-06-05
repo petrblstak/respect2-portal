@@ -1,0 +1,18 @@
+<div class="completion-data" [ngClass]="{ 'is-detail': isInDetail && isSmallScreen, 'is-passed': completionData.isPassed, 'no-gap': completionData.score == null || completionData.text === '' }">
+  <span class="completion-score">{{ completionData.score }}</span>
+  <span class="completion-text">{{ completionData.text }}</span>
+</div>
+@if (completionData.isDisplayBar) {
+  <svg width="180" height="4" viewBox="0 0 180 4" fill="none" class="progress-bar-svg" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_2468_1516)">
+      <rect class="progress-bg" width="180" height="3" transform="translate(0 0.5)" />
+      <rect class="progress-threshold" y="0.5" [attr.width]="treshold * 1.8" height="3" />
+      <rect class="progress-fill" y="0.5" [attr.width]="completion * 1.8" height="3" />
+    </g>
+    <defs>
+      <clipPath id="clip0_2468_1516">
+        <rect width="180" height="3" fill="white" transform="translate(0 0.5)" />
+      </clipPath>
+    </defs>
+  </svg>
+}

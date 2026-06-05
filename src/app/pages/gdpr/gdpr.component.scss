@@ -1,0 +1,17 @@
+@use '../../../assets/scss/theme-config';
+
+.gdpr-page {
+  max-width: 798px;
+  padding: 0 24px;
+  margin: 80px auto 64px;
+
+  td {
+    padding: 5px 20px 5px 0;
+  }
+
+  li {
+    padding-bottom: 10px;
+    font-weight: 400;
+    // font-size: 14px;
+  }
+}

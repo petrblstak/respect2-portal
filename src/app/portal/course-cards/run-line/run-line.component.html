@@ -1,0 +1,50 @@
+<div class="right-part" [ngClass]="{'is-disabled': isDisabled}">
+  @if (visualType === 0) {
+    <div class="date-time">
+      <div class="date-part">
+        <span [inlineSVG]="'assets/img/courses/calendar.svg'"></span>
+        <span>{{runObj.runStart | date: 'dd.MM.yyyy'}}</span>
+      </div>
+      <div class="date-part">
+        <span [inlineSVG]="'assets/img/courses/clock.svg'"></span>
+        <span>{{runObj.runStart | date: 'HH:mm'}}-{{runObj.runEnd | date: 'HH:mm'}}</span>
+      </div>
+    </div>
+  }
+  @if (visualType === 1) {
+    <div class="date-time">
+      <div class="date-part">
+        <span [inlineSVG]="'assets/img/courses/calendar.svg'"></span>
+        <span>{{runObj.runStart | date: 'dd.MM. HH:mm'}} - {{runObj.runEnd | date: 'dd.MM.yyyy HH:mm'}}</span>
+      </div>
+    </div>
+  }
+  @if (visualType === 2) {
+    <div class="date-time">
+      <div class="date-part">
+        <span [inlineSVG]="'assets/img/courses/calendar.svg'"></span>
+        <span>{{runObj.runStart | date: 'dd.MM.yyyy HH:mm'}} - {{runObj.runEnd | date: 'dd.MM.yyyy HH:mm'}}</span>
+      </div>
+    </div>
+  }
+  @if (place) {
+    <div class="location">
+      <span [inlineSVG]="'assets/img/courses/location.svg'"></span>
+      <span>{{place}}</span>
+    </div>
+  }
+  <div class="capacity">
+    <span [inlineSVG]="'assets/img/courses/users.svg'"></span>
+    <span>{{runObj.participantCount ? runObj.participantCount : 0}}/{{runObj.capacity ? runObj.capacity :
+    '&infin;'}}</span>
+  </div>
+</div>
+<div class="left-part">
+  @if (icon === 'drop') {
+    <span [inlineSVG]="'assets/img/general/arrow-down.svg'"></span>
+  }
+  @if (icon === 'check') {
+    <span [inlineSVG]="'assets/img/general/check.svg'"></span>
+  }
+  <!-- <span [inlineSVG]="'assets/img/courses/locked.svg'" *ngIf="icon == null && runObj.isLocked"></span> -->
+</div>

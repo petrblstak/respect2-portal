@@ -1,0 +1,246 @@
+@if (isCoursePreparing) {
+  <div class="course-preparing-overlay">
+    <div class="loading-message">
+      <div [inlineSVG]="'assets/img/register/spinner.svg'" class="input-icon"></div>
+      <div>{{ 'COURSES_ACTIVITY_LOADING' | translate }}</div>
+    </div>
+  </div>
+}
+
+@if (courseData != null && courseData.parentSetId == null) {
+  <div class="courses-top" [ngClass]="{ 'no-filter': !isCourseFilterEnabled }">
+    @if (isCourseFilterEnabled) {
+      <div class="btn more-filters-btn" role="button" (click)="filterPanel.isSideOpen = !filterPanel.isSideOpen" [ngClass]="{ 'is-open': filterPanel.isSideOpen }">
+        <span class="material-icons-round">tune</span>
+        @if (!filterPanel.isSideOpen) {
+          <span [innerHTML]="'CATALOG_FILTER_MORE_FILERS' | translate"></span>
+        }
+        @if (filterPanel.isSideOpen) {
+          <span [innerHTML]="'CATALOG_FILTER_HIDE_FILERS' | translate"></span>
+        }
+      </div>
+    }
+    <h1 [innerHTML]="'COURSES_HEADER' | translate"></h1>
+    <cmp-search-field #searchFieldRef [initialValue]="displayControl.search" (searchChanged)="runSearchName($event)"></cmp-search-field>
+  </div>
+}
+
+@if (isCoursesLoading) {
+  <div class="row g-0 my-5">
+    <div class="col hb-normal text-center" [innerHTML]="'COURSES_LOADING' | translate"></div>
+  </div>
+}
+
+@if (!isCoursesLoading && courseData.actualRootItems.length < 1) {
+  <div class="row g-0 my-5">
+    <div class="col hb-normal text-center" [innerHTML]="'COURSES_NO_DATA_STUDY' | translate"></div>
+  </div>
+}
+
+<div class="page-body" [ngClass]="{ 'no-filter': !isCourseFilterEnabled, 'no-banner': !isCourseBannerEnabled }">
+  @if (isCourseFilterEnabled) {
+    <div class="filter-block" [ngClass]="{ 'is-open': filterPanel.isSideOpen }">
+      @for (filterName of filterPanel.filterOrder; track filterName; let first = $first) {
+        <div class="filter-section" [ngClass]="{ 'no-border': first }">
+          <div class="section-header" (click)="filterPanel.filters[filterName].isExpanded = !filterPanel.filters[filterName].isExpanded">
+            <h3 class="mb-0">{{ filterPanel.filters[filterName].filterName | translate }}</h3>
+            @if (filterPanel.filters[filterName].isExpanded) {
+              <span [inlineSVG]="'assets/img/general/expand_up.svg'"></span>
+            }
+            @if (!filterPanel.filters[filterName].isExpanded) {
+              <span [inlineSVG]="'assets/img/general/expand_down.svg'"></span>
+            }
+          </div>
+          <div class="section-options" [ngClass]="{ 'is-visible': filterPanel.filters[filterName].isExpanded }">
+            @for (fOption of filterPanel.filters[filterName].options; track fOption) {
+              <div class="form-check" (click)="filterPanelChange(fOption)">
+                <input type="checkbox" class="form-check-input" [checked]="fOption.isChecked" />
+                <div class="check-label" [innerHTML]="fOption.name | translate"></div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+      @if (filterPanel.isActive) {
+        <div class="cancel-all" [ngClass]="{ 'is-active': filterPanel.isActive }" (click)="clearFilterPanel()">
+          <span [innerHTML]="'CATALOG_FILTER_CANCEL_ALL' | translate"></span>
+          <span [inlineSVG]="'assets/img/general/close.svg'"></span>
+        </div>
+      }
+    </div>
+  }
+  <div class="data-block">
+    @if (courseData != null && courseData.parentSetId == null && categories.catOrder.length > 0) {
+      <div class="categories">
+        <div class="cat-item" [innerHTML]="'COURSES_STATE_CONTROL_ALL' | translate" [ngClass]="{ 'is-active': displayControl.category === 0 }" (click)="changeCategoryDisplay(0)"></div>
+        @for (catId of categories.catOrder; track catId) {
+          <div class="cat-item" [ngClass]="{ 'is-active': displayControl.category === catId }" (click)="changeCategoryDisplay(catId)">
+            {{ categories.catObjects[catId] }}
+          </div>
+        }
+      </div>
+    }
+
+    @if (courseData != null && courseData.parentSetId == null && displayControl.category >= 0 && tags.catTags.length > 0) {
+      <div class="tag-section" [ngClass]="{ 'no-cats-gap': categories.catOrder.length <= 0 }">
+        @if (displayControl.category == 0) {
+          <button class="sub-cat-button" [ngClass]="{ 'is-open': tags.isSubCatOpen }" (click)="tags.isSubCatOpen = !tags.isSubCatOpen">
+            <span>{{ 'COURSES_TAGS_SUBCAT' | translate }}</span>
+            @if (!tags.isSubCatOpen) {
+              <span [inlineSVG]="'assets/img/courses/plus.svg'"></span>
+            }
+            @if (tags.isSubCatOpen) {
+              <span [inlineSVG]="'assets/img/courses/minus.svg'"></span>
+            }
+          </button>
+        }
+        @if (tags.catTags.length > 0) {
+          <div class="tags-block" [ngClass]="{ 'is-open': tags.isSubCatOpen }">
+            @for (tagObj of tags.catTags; track tagObj; let index = $index) {
+              <div class="tag-item" [ngClass]="{ 'is-active': tagObj.isActive }" (click)="toggleSelectedTag(index)">
+                {{ courseData.tags[tagObj.tagId].localName }}
+              </div>
+            }
+            @if (tags.activeCount > 0) {
+              <div class="tag-reset" (click)="resetSelectedTags()">
+                <span>{{ 'COURSES_TAGS_CANCEL_SELECT' | translate }}</span>
+                <span [inlineSVG]="'assets/img/general/close.svg'"></span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @if (courseData != null && courseData.parentSetId == null) {
+      <div class="state-control" [ngClass]="{ 'no-cats-gap': categories.catOrder.length <= 0 }">
+        <!-- ALL section, if allowed -->
+        @if (environmentVars.courseSectionAllDisplayed) {
+          <div
+            class="state-item"
+            [ngClass]="{ 'is-active': displayControl.state === stateType.All }"
+            [innerHTML]="'COURSES_STATE_CONTROL_ALL' | translate"
+            (click)="changeStateDisplay(stateType.All)"></div>
+        }
+
+        <!-- Finished section -->
+        <div
+          class="state-item"
+          [ngClass]="{ 'is-active': displayControl.state === stateType.Finish }"
+          [innerHTML]="'COURSES_STATE_CONTROL_PAST' | translate"
+          (click)="changeStateDisplay(stateType.Finish)"></div>
+
+        <!-- Actual section, possibly including future items as well if environmentVars.courseSectionFutureDisplayed is disabled so no future section is disaplyed separatelly -->
+        @if (environmentVars.courseSectionFutureDisplayed) {
+          <div
+            class="state-item"
+            [ngClass]="{ 'is-active': displayControl.state === stateType.Running }"
+            [innerHTML]="'COURSES_STATE_CONTROL_ACTUAL' | translate"
+            (click)="changeStateDisplay(stateType.Running)"></div>
+
+          <!-- Future section displayed only if user actually has any future courses assigned, so we avoid showing empty section if there are no future courses and environmentVars.courseSectionFutureDisplayed is enabled -->
+          @if (isSectionFutureExisting) {
+            <div
+              class="state-item"
+              [ngClass]="{ 'is-active': displayControl.state === stateType.Future }"
+              [innerHTML]="'COURSES_STATE_CONTROL_FUTURE' | translate"
+              (click)="changeStateDisplay(stateType.Future)"></div>
+          }
+        } @else {
+          <div
+            class="state-item"
+            [ngClass]="{ 'is-active': displayControl.state === stateType.NonFinish }"
+            [innerHTML]="'COURSES_STATE_CONTROL_ACTUAL' | translate"
+            (click)="changeStateDisplay(stateType.NonFinish)"></div>
+        }
+
+        <!-- Action section - for courses where user has to take action (choose run for now). Displayed only if user has any courses in "action" state, so we avoid showing empty section if there are no such courses assigned -->
+        @if (isSectionActionExisting) {
+          <div
+            class="state-item"
+            [ngClass]="{ 'is-active': displayControl.state === stateType.Action }"
+            [innerHTML]="'COURSES_STATE_CONTROL_ACTION' | translate"
+            (click)="changeStateDisplay(stateType.Action)"></div>
+        }
+      </div>
+    }
+
+    @if (courseData != null && courseData.parentSetId == null) {
+      <div class="count-and-sort">
+        <div class="items-count">
+          <span>{{ 'COURSES_ITEMS_COUNT' | translate }}:</span>
+          <span class="counter">{{ rootItems.length }}</span>
+        </div>
+        <div class="right-side">
+          <div class="sorting">
+            <div ngbDropdown class="selected-sort-drop">
+              <div class="selected-sort" id="is-selected-sort" ngbDropdownToggle aria-expanded="false">
+                <span>{{ 'COURSES_SORTING_HEADER' | translate }}:&nbsp;</span>
+                <span>{{ 'COURSES_SORTING_' + displayControl.sort | translate }}</span>
+                <span class="arrow-ico" [inlineSVG]="'assets/img/general/arrow-down.svg'"></span>
+              </div>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                @for (sortType of displayControlSort; track sortType) {
+                  <button ngbDropdownItem (click)="changeSorting(sortType)" [ngClass]="{ selected: displayControl.sort === sortType }">
+                    {{ 'COURSES_SORTING_' + sortType | translate }}
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+          @if (!isSmallScreen) {
+            <div class="card-type">
+              <div [inlineSVG]="'assets/img/courses/rows.svg'" class="c-type-item" [ngClass]="{ active: isListView }" (click)="setListView(true)"></div>
+              <div [inlineSVG]="'assets/img/courses/cards.svg'" class="c-type-item" [ngClass]="{ active: !isListView }" (click)="setListView(false)"></div>
+              <!-- <div class="toggle-btn-group">
+              <button type="button" class="toggle-btn" [ngClass]="{'active': isListView}" (click)="setListView(true)">
+                <span class="material-icons">view_headline</span>
+              </button>
+              <button type="button" class="toggle-btn" [ngClass]="{'active': !isListView}" (click)="setListView(false)">
+                <span class="material-icons">apps</span>
+              </button>
+            </div> -->
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- CARD ITEMS LIST -->
+    @if (!isCoursesLoading && isListView && rootItems.length > 0) {
+      <div class="courses-block mx-auto">
+        @for (rootItem of rootItems; track rootItem) {
+          <cmp-course-card-row [courseData]="courseData" [rootItem]="rootItem" (courseLaunched)="playCourse($event)"></cmp-course-card-row>
+        }
+      </div>
+    }
+
+    <!-- CARD ITEMS GRID -->
+    @if (!isCoursesLoading && !isListView && rootItems.length > 0) {
+      <div class="courses-block mx-auto in-grid">
+        @for (rootItem of rootItems; track rootItem) {
+          <cmp-course-card-simple-play [courseData]="courseData" [rootItem]="rootItem" (courseLaunched)="playCourse($event)"></cmp-course-card-simple-play>
+        }
+      </div>
+    }
+
+    <!-- NO ITEMS -->
+    @if (!isCoursesLoading && courseData.actualRootItems.length > 0 && rootItems.length <= 0) {
+      <div class="courses-block mx-auto">
+        <div class="col hb-normal text-center" [innerHTML]="'COURSES_NO_CATEGORY_DATA' | translate"></div>
+      </div>
+    }
+
+    @if (!isCoursesLoading && isCourseBannerEnabled) {
+      <div class="catalog-banner">
+        <div class="text-part">
+          <h1 [innerHTML]="'COURSES_CATALOG_BANNER_HEADER' | translate"></h1>
+          <div class="text-16" [innerHTML]="'COURSES_CATALOG_BANNER_TEXT' | translate"></div>
+          <button class="btn btn-outline-secondary" routerLink="/portal/catalog">
+            {{ 'COURSES_CATALOG_BANNER_BUTTON' | translate }}
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,452 @@
+@use '../../../assets/scss/theme-config';
+
+:host {
+  display: block;
+}
+
+.dash-header {
+  max-width: 1360px;
+  margin: 80px auto 0;
+  padding: 0 40px;
+  h1 {
+    margin-bottom: 20px;
+  }
+}
+
+.total-score {
+  width: 100%;
+
+  .score-num {
+    font-size: 56px;
+    font-weight: 500;
+    line-height: 120%;
+    color: theme-config.$dashboard-score-color;
+  }
+  .progress-bar {
+    width: 100%;
+    height: 5px;
+    background-color: theme-config.$dashboard-progress-bg;
+    position: relative;
+    .progress-bar-inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background-color: theme-config.$dashboard-progress-fill;
+    }
+  }
+}
+
+.dash-top {
+  max-width: 1360px;
+  margin: 60px auto 80px;
+  padding: 0 40px;
+  display: flex;
+  gap: 20px;
+
+  .block-summary {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    background-color: theme-config.$edu-color-white;
+    min-width: 330px;
+    max-width: 490px;
+    align-self: stretch;
+    flex-basis: 40%;
+    box-shadow: 1px 1px 6px 0px rgba(35, 30, 84, 0.15);
+
+    .header {
+      font-size: 36px;
+      font-weight: 500;
+      line-height: 120%;
+      margin-bottom: 15px;
+    }
+
+    .total-score {
+      margin: 30px 0 20px;
+    }
+  }
+
+  .block-banner-wrapper {
+    min-height: 300px;
+    align-self: stretch;
+    flex-basis: 60%;
+
+    .carousel-inner,
+    .carousel-item {
+      height: 100%;
+    }
+  }
+
+  .block-banner {
+    height: 100%;
+    padding: 30px;
+    // min-width: 560px;
+    display: flex;
+    flex-direction: column;
+    background-image: url('../../../assets/img/dash/banner-even.jpg');
+    background-size: cover;
+    color: theme-config.$edu-color-white;
+
+    &.is-even {
+      background-image: url('../../../assets/img/dash/banner.jpg');
+    }
+
+    h2 {
+      color: theme-config.$edu-color-white;
+      margin-bottom: 0;
+    }
+    .tag-items {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      .tag-item {
+        background-color: theme-config.$dashboard-tag-default;
+        color: theme-config.$edu-color-white;
+        padding: 4px 8px;
+        border-radius: theme-config.$border-radius-small;
+        box-shadow: 1px 1px 6px 0px rgba(0, 0, 0, 0.15);
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        cursor: default;
+
+        &.cat-main,
+        &.cat-catalog {
+          background-color: theme-config.$dashboard-tag-main;
+        }
+      }
+    }
+
+    .event-details {
+      margin-top: 18px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 16px;
+      row-gap: 8px;
+
+      // .data-item {
+      //   display: flex;
+      //   align-items: center;
+      //   gap: 4px;
+
+      //   .item-name {
+      //     font-size: 12px;
+      //     font-weight: 400;
+      //     line-height: 100%;
+      //   }
+      // }
+    }
+
+    .banner-bottom {
+      margin-top: auto;
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+    }
+  }
+}
+
+.dash-overview-back {
+  background-color: theme-config.$edu-color-main-dark;
+  .dash-overview {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 80px 40px 0;
+
+    h1 {
+      color: theme-config.$edu-color-white;
+      margin-bottom: 40px;
+    }
+
+    .overview-blocks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      .block-item {
+        background-color: theme-config.$edu-color-white;
+        padding: 32px;
+        max-width: 630px;
+        min-width: 330px;
+        flex: 1;
+        cursor: pointer;
+        box-shadow: 1px 1px 6px 0px rgba(35, 30, 84, 0.15);
+
+        h4 {
+          font-size: 30px;
+          font-weight: 500;
+          line-height: 120%;
+          margin-bottom: 12px;
+        }
+        .subheader {
+          height: 76px;
+        }
+        .total-score .score-num.certs {
+          color: theme-config.$edu-color-main-dark;
+        }
+
+        .result-text {
+          padding: 16px 0;
+        }
+        .text-12 {
+          padding-bottom: 12px;
+        }
+
+        &:hover {
+          box-shadow: 1px 1px 1px 1px rgba(200, 200, 200, 0.8);
+          h4 {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}
+
+.catalog-banner {
+  padding: 112px 120px;
+  max-width: 1360px;
+  margin: 80px auto 0;
+  height: 550px;
+  background-image: theme-config.$courses-banner-bg;
+
+  .text-part {
+    max-width: 447px;
+    color: theme-config.$edu-color-white;
+
+    h1 {
+      color: theme-config.$edu-color-white;
+      margin-bottom: 24px;
+    }
+
+    .text-16 {
+      margin-bottom: 32px;
+    }
+  }
+}
+
+.signpost-background {
+  background-color: theme-config.$edu-color-grey-light2;
+}
+.signpost {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 60px 40px 0;
+  .catalog-banner {
+    margin-top: 0;
+    background-image: url('../../../assets/img/dash/akademie.png');
+    background-size: 1280px;
+  }
+
+  .carousel-multi-block {
+    margin-bottom: 40px;
+
+    h1 {
+      margin-bottom: 20px;
+    }
+  }
+
+  .signpost-item {
+    width: 413px;
+    background-color: theme-config.$edu-color-white;
+    display: flex;
+    flex-direction: column;
+    min-height: 486px;
+    margin: 20px 0;
+
+    .item-header {
+      width: 413px;
+      height: 268px;
+      overflow: hidden;
+
+      .header-image {
+        min-width: 100%;
+        min-height: 160px;
+        object-fit: cover;
+      }
+    }
+
+    .item-body {
+      padding: 24px 32px 32px;
+      min-height: 218px;
+      .act-name {
+        margin-bottom: 6px;
+      }
+      .act-desc {
+        color: theme-config.$edu-color-grey1;
+        margin-bottom: 24px;
+        height: 66px;
+        overflow: hidden;
+      }
+      .btn-primary {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+      }
+    }
+  }
+}
+
+.feedback-form-back {
+  background-color: theme-config.$edu-color-white;
+  .feedback-form {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 120px 40px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    .form-right {
+      width: 100%;
+      max-width: 496px;
+    }
+    .text-16 {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .dash-header {
+    margin: 40px auto 0;
+    padding: 0 15px;
+  }
+
+  .dash-top {
+    flex-wrap: wrap;
+    margin: 30px auto 60px;
+    padding: 0 15px;
+    .block-summary {
+      max-width: 100%;
+      width: 100%;
+      flex-basis: auto;
+    }
+    .block-banner {
+      width: 100%;
+    }
+    .block-banner-wrapper {
+      width: 100%;
+      flex-basis: auto;
+    }
+  }
+
+  .dash-overview-back {
+    .dash-overview {
+      padding: 60px 20px 0;
+    }
+  }
+
+  .catalog-banner {
+    padding: 60px;
+    height: 480px;
+    background-size: cover;
+
+    .text-part {
+      max-width: 447px;
+      color: theme-config.$edu-color-white;
+
+      h1 {
+        color: theme-config.$edu-color-white;
+        margin-bottom: 24px;
+      }
+
+      .text-16 {
+        margin-bottom: 32px;
+      }
+    }
+  }
+
+  .signpost {
+    padding: 40px 20px 0;
+
+    .catalog-banner {
+      background-size: 1120px;
+    }
+
+    .carousel-multi-block {
+      margin-bottom: 40px;
+    }
+
+    .signpost-item {
+      margin: 0;
+    }
+  }
+
+  .feedback-form-back {
+    .feedback-form {
+      padding: 100px 20px;
+
+      .form-right {
+        max-width: 356px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .feedback-form-back {
+    .feedback-form {
+      padding: 40px 15px;
+      flex-wrap: wrap;
+
+      .form-right {
+        max-width: auto;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .dash-top {
+    .block-banner .banner-bottom .btn {
+      max-width: 150px;
+      padding: 5px 10px;
+    }
+  }
+  .dash-overview-back {
+    .dash-overview {
+      padding: 40px 15px 0;
+    }
+  }
+
+  .catalog-banner {
+    padding: 40px;
+  }
+
+  .signpost {
+    .signpost-item {
+      width: 330px;
+      min-height: 435px;
+
+      .item-header {
+        width: 330px;
+        height: 217px;
+      }
+
+      // .item-body {
+      //   padding: 24px 32px 32px;
+      //   min-height: 218px;
+      //   .act-name {
+      //     margin-bottom: 6px;
+      //   }
+      //   .act-desc {
+      //     color: theme-config.$edu-color-grey1;
+      //     margin-bottom: 24px;
+      //     height: 66px;
+      //     overflow: hidden;
+      //   }
+      //   .btn-primary {
+      //     width: 100%;
+      //     display: flex;
+      //     justify-content: space-between;
+      //     padding: 0 20px;
+      //   }
+      // }
+    }
+  }
+}

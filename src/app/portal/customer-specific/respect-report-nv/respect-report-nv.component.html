@@ -1,0 +1,75 @@
+<div class="container report-nv-page">
+
+  <h1>Výsledky NV</h1>
+
+  <div class="data-report" *ngIf="this.dataError.length <= 0">
+    <div class="select-part">
+      <div ngbDropdown class="report-nv-dropdown" *ngIf="reportData.years.length > 0">
+        <button class="btn btn-primary d-flex align-items-center drop-btn" id="dropdownBasic1" ngbDropdownToggle
+          aria-expanded="false">
+          <span *ngIf="currentYear != null">{{currentYear}}</span>
+          <span *ngIf="currentYear == null">{{'RESULTS_NV_SELECT_ALL' | translate}}</span>
+          <span [inlineSVG]="'assets/img/general/arrow-down.svg'"></span>
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="report-nv-dropdown-menu">
+          <button ngbDropdownItem (click)="selectYear(null)" [ngClass]="{'selected': currentYear == null}">
+            {{'RESULTS_NV_SELECT_ALL' | translate}}
+          </button>
+          <button ngbDropdownItem (click)="selectYear(year)" *ngFor="let year of reportData.years"
+            [ngClass]="{'selected': currentYear === year}">
+            {{year}}
+          </button>
+        </div>
+      </div>
+
+      <div class="total-sum">
+        <span class="text-16">{{'RESULTS_NV_TOTAL_SUM' | translate}}:</span>
+        <h2>{{currentSum}}</h2>
+      </div>
+
+    </div>
+    <div class="table-part" *ngIf="isDataLoaded">
+      <!-- table when I have some data -->
+      <table *ngIf="reportData.allCount > 0 && (currentYear == null || reportData.yearCount[currentYear] > 0)">
+        <tr>
+          <th class="slim-col">{{'RESULTS_NV_TABLE_HEAD_COMPLETED' | translate}}</th>
+          <th>{{'RESULTS_NV_TABLE_HEAD_ACTIVITY' | translate}}</th>
+          <th class="slim-col">{{'RESULTS_NV_TABLE_HEAD_TIME' | translate}}</th>
+        </tr>
+        <ng-container *ngFor="let actItem of reportData.actData">
+          <tr *ngIf="currentYear == null || actItem.year == currentYear">
+            <td class="text-bold">
+              <span *ngIf="actItem.date != null">{{actItem.date | date:'d.M. yyyy'}}</span>
+              <span *ngIf="actItem.date == null">-</span>
+            </td>
+            <td class="pe-4">{{actItem.actName}}</td>
+            <td class="text-bold">{{actItem.time}}</td>
+          </tr>
+        </ng-container>
+      </table>
+
+      <!-- Info messages when no activity data is available -->
+      <div class="text-center" *ngIf="reportData.allCount <= 0">
+        {{'RESULTS_NV_NO_DATA_ALL' | translate}}
+      </div>
+      <div class="text-center" *ngIf="currentYear != null && reportData.yearCount[currentYear] <= 0">
+        {{'RESULTS_NV_NO_DATA_YEAR' | translate}}
+      </div>
+    </div>
+
+    <!-- info message when data is loading -->
+    <div class="table-part" *ngIf="!isDataLoaded">
+      <div class="text-center">{{'RESULTS_NV_DATA_LOADING' | translate}}</div>
+    </div>
+  </div>
+
+
+  <div class="data-errors" *ngIf="this.dataError.length > 0">
+    <h2>{{'RESULTS_NV_ERROR_FINAL' | translate}}:</h2>
+    <ul>
+      <li class="error-msg" *ngFor="let errorMsg of this.dataError">{{errorMsg}}</li>
+    </ul>
+  </div>
+
+
+</div>

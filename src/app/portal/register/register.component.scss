@@ -1,0 +1,34 @@
+@use '../../../assets/scss/theme-config';
+
+.register-page {
+  padding: 64px 90px;
+
+  h2 {
+    margin-bottom: 32px;
+  }
+
+  hr {
+    background-color: theme-config.$login-page-divider-bg;
+  }
+
+  .user-type {
+    width: 120px;
+    cursor: pointer;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .form-check {
+    .form-text {
+      margin-left: -23px;
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .register-page {
+    padding: 64px 20px;
+  }
+}

@@ -1,0 +1,15 @@
+<div class="psw-meter">
+  <div class="d-flex align-items-center">
+    <span class="psw-label">{{'PASSWORD_STRENGTH' | translate}}</span>
+    <div id="id-psw-meter"></div>
+  </div>
+  <div id="id-pswmeter-message"></div>
+</div>
+<div class="d-flex align-items-center">
+  <span class="psw-label">{{'PASSWORD_RULES_LIST' | translate}} </span>
+  <span class="material-icons password-rules" [ngbTooltip]="htmlPwdRules">info_outline</span>
+</div>
+
+<ng-template #htmlPwdRules>
+  <div [innerHTML]="pwdSettings.pwdRules" class="d-flex flex-column align-items-start text-start"></div>
+</ng-template>

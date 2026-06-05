@@ -1,0 +1,58 @@
+@use '../../../assets/scss/theme-config';
+
+.requests-page {
+  max-width: theme-config.$container-max-width;
+  padding: 0 40px;
+  margin: 80px auto;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.requests-table {
+  width: 100%;
+  background-color: theme-config.$general-item-bg;
+  border-radius: 5px;
+
+  th {
+    padding: 8px 12px;
+    border-bottom: 2px solid theme-config.$divider-color;
+  }
+  td {
+    padding: 12px;
+    border-bottom: 1px solid theme-config.$divider-color;
+  }
+  tr:last-child td {
+    border-bottom: none;
+  }
+  .withdraw-icon {
+    cursor: pointer;
+
+    svg path {
+      fill: theme-config.$general-icons-color;
+    }
+    &:hover svg path {
+      fill: theme-config.$general-text-error-color;
+    }
+  }
+
+  .current-activity {
+    cursor: pointer;
+    text-decoration: underline;
+    &:hover {
+      color: theme-config.$general-text-color-hover;
+    }
+  }
+
+  .new-activity {
+    color: theme-config.$general-text-color-disabled;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .requests-page {
+    padding: 0 16px;
+    margin: 24px auto;
+  }
+}
