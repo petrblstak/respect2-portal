@@ -102,7 +102,7 @@ export class CatalogComponent implements OnInit, OnDestroy, AfterViewInit {
   environmentVars = environment;
   isCatalogFilterEnabled = environment.isCatalogFilterEnabled;
   isCatalogBannerEnabled = environment.isCatalogBannerEnabled;
-  isShowAssigned = false;
+  isShowAssigned = true;
   displayControl = {
     category: 0 as number,
     sort: SortType.Order,

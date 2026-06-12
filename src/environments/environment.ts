@@ -5,8 +5,8 @@ export const environment = {
   production: false,
   portalName: 'Respect Portal',
   description: 'Respect Portal, Angular 20, portal library manually loaded, Custom HP and static pages, Custom page for student results, with SSO, no Registration.',
-  version: '2.6.1',
-  buildTime: '260219120015',
+  version: '2.6.4',
+  buildTime: '260612165226',
   remoteServer: '/app/',
   portalBaseUrl: '/',
   isJwtLogin: false,
@@ -31,7 +31,7 @@ export const environment = {
   isPlaySetAllowed: true,
   defaultRootSetID: null,
   isRegistrationOpen: false,
-  isCourseFilterEnabled: true,
+  isCourseFilterEnabled: false,
   isCourseBannerEnabled: false,
   isCatalogFilterEnabled: true,
   isCatalogBannerEnabled: true,
@@ -43,7 +43,7 @@ export const environment = {
   isLinksAsSpecialCards: true,
   passedCoursesAsFinished: true, // used in library, sorts passed course into the "finished" section
   checkNonFinishedAttempts: true, // used in library for SCORM courses - checks if there are any non-finished attempts and gives user the option to start the course over. Userdto overcome Rise errors
-  filterOutAccessStates: [], // Example: [ 'CANCELLED', 'ARCHIVED' ] - used in library to filter out courses with specific access states
+  filterOutAccessStates: ['CANCELLED', 'ARCHIVED'], // Example: [ 'CANCELLED', 'ARCHIVED' ] - used in library to filter out courses with specific access states
   courseSectionAllDisplayed: true, // used in study to display section "All"
   courseSectionFutureDisplayed: false, // used in study to display section "Future"
   isCoursesWithFutureDisplayedInFuture: false, // used in study to display courses with actual AND future accesses in Future section (if allowed) in addition to their regular display based on actual access state.
@@ -56,7 +56,7 @@ export const environment = {
   cspScriptSrc: [],
   cspConnectSrc: [],
   cspImgSrc: [],
-  cspFrameSrc: [],
+  cspFrameSrc: ['https://respectcz.sharepoint.com'],
   cspStyleSrc: [],
   cspFontSrc: [],
   // *********************************************************

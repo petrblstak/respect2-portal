@@ -125,6 +125,10 @@
       h2 {
         color: theme-config.$card-simple-link-text;
       }
+      .item-name {
+        max-height: 40px;
+        min-height: 40px;
+      }
 
       .play-section {
         margin-top: auto;

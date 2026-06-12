@@ -24,17 +24,11 @@ export class AppComponent implements OnInit {
       if (event instanceof NavigationEnd) {
         this.actRoute = event.url;
         console.log('this.actRoute', this.actRoute);
-        // if (
-        //   this.actRoute === '/portal/courses' ||
-        //   this.actRoute === '/portal/register' ||
-        //   this.actRoute === '/portal/auth' ||
-        //   this.actRoute === '/portal/forgot' ||
-        //   this.actRoute.indexOf('/portal/operations') > -1
-        // ) {
-        //   this.isDarkPage = true;
-        // } else {
-        //   this.isDarkPage = false;
-        // }
+        if (this.actRoute === '/') {
+          this.isDarkPage = true;
+        } else {
+          this.isDarkPage = false;
+        }
       }
     });
   }

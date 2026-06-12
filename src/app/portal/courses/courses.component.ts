@@ -117,7 +117,7 @@ export class CoursesComponent implements OnInit, OnDestroy {
   rootItems: ActivityItemData[] = [];
 
   // View toggle: true = list, false = grid
-  isListView: boolean = true;
+  isListView: boolean = false;
   isSmallScreen = false;
   filterPanel: FilterPanel = {
     filterOrder: ['manager', 'form', 'fLength', 'term'],
